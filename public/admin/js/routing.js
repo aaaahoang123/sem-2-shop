@@ -24,8 +24,11 @@ $(document).ready(function () {
 function renderCss(hash) {
     let arrayCss = [];
     if (hash === '#home') {
-        arrayCss.push('/admin/plugins/morrisjs/morris.css');
+        arrayCss = [
+            '/admin/plugins/morrisjs/morris.min.css',
+        ];
     }
+
     let link, parent = document.getElementById('extra-css');
     for (let css of arrayCss) {
         link = document.createElement('link');
@@ -40,17 +43,9 @@ function renderJS(hash) {
     let arrayJS = [];
     if (hash === '#home') {
         arrayJS = [
-            '/admin/plugins/jquery-countto/jquery.countTo.min.js',
             '/admin/plugins/raphael/raphael.min.js',
             '/admin/plugins/morrisjs/morris.min.js',
-            '/admin/plugins/chartjs/Chart.bundle.min.js',
-            '/admin/plugins/flot-charts/jquery.flot.min.js',
-            '/admin/plugins/flot-charts/jquery.flot.resize.js',
-            '/admin/plugins/flot-charts/jquery.flot.pie.min.js',
-            '/admin/plugins/flot-charts/jquery.flot.categories.min.js',
-            '/admin/plugins/flot-charts/jquery.flot.time.min.js',
-            '/admin/plugins/jquery-sparkline/jquery.sparkline.min.js',
-            '/admin/js/pages/index.js'
+            '/admin/js/pages/charts/morris.js'
         ];
     }
 
