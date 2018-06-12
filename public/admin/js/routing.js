@@ -2,7 +2,7 @@ function callPageSingle() {
     let hash = location.hash;
     if (hash === "") hash = "#home";
     renderCss(hash);
-    let url = hash.replace("#", "/manager/");
+    let url = hash.replace("#", "/manager/dashboard/");
     $.ajax({
         url: url,
         method: "GET",
