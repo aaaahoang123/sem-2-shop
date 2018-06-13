@@ -44,8 +44,8 @@ block content
                                 .order_total_title Order Total:
                                 .order_total_amount $2000
                         .cart_buttons
-                            button.button.cart_button_clear(type='button') Add to Cart
-                            button.button.cart_button_checkout(type='button') Add to Cart
+                            a.button.cart_button_clear(href="/") Continue shopping
+                            button.button.cart_button_checkout(type='button') Place order
 
 block append script
     script(src='client/js/cart_custom.js')
