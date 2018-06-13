@@ -1,0 +1,64 @@
+extends ../layout/master
+
+block title
+    title Contact
+
+block append link
+    link(rel='stylesheet' type='text/css' href='client/styles/contact_styles.css')
+    link(rel='stylesheet' type='text/css' href='client/styles/contact_responsive.css')
+
+block content
+    // Contact Info
+    .contact_info
+        .container
+            .row
+                .col-lg-10.offset-lg-1
+                    .contact_info_container.d-flex.flex-lg-row.flex-column.justify-content-between.align-items-between
+                        // Contact Item
+                        .contact_info_item.d-flex.flex-row.align-items-center.justify-content-start
+                            .contact_info_image
+                                img(src='client/images/contact_1.png' alt='')
+                            .contact_info_content
+                                .contact_info_title Phone
+                                .contact_info_text +38 068 005 3570
+                        // Contact Item
+                        .contact_info_item.d-flex.flex-row.align-items-center.justify-content-start
+                            .contact_info_image
+                                img(src='client/images/contact_2.png' alt='')
+                            .contact_info_content
+                                .contact_info_title Email
+                                .contact_info_text fastsales@gmail.com
+                        // Contact Item
+                        .contact_info_item.d-flex.flex-row.align-items-center.justify-content-start
+                            .contact_info_image
+                                img(src='client/images/contact_3.png' alt='')
+                            .contact_info_content
+                                .contact_info_title Address
+                                .contact_info_text 10 Suffolk at Soho, London, UK
+    // Contact Form
+    .contact_form
+        .container
+            .row
+                .col-lg-10.offset-lg-1
+                    .contact_form_container
+                        .contact_form_title Get in Touch
+                        form#contact_form(action='#')
+                            .contact_form_inputs.d-flex.flex-md-row.flex-column.justify-content-between.align-items-between
+                                input#contact_form_name.contact_form_name.input_field(type='text' placeholder='Your name' required='required' data-error='Name is required.')
+                                input#contact_form_email.contact_form_email.input_field(type='text' placeholder='Your email' required='required' data-error='Email is required.')
+                                input#contact_form_phone.contact_form_phone.input_field(type='text' placeholder='Your phone number')
+                            .contact_form_text
+                                textarea#contact_form_message.text_field.contact_form_message(name='message' rows='4' placeholder='Message' required='required' data-error='Please, write us a message.')
+                            .contact_form_button
+                                button.button.contact_submit_button(type='submit') Send Message
+        .panel
+    // Map
+    .contact_map
+        #google_map.google_map
+            .map_container
+                #map
+
+block append script
+    script(src='client/js/contact_custom.js')
+    script(src='https://maps.googleapis.com/maps/api/js?v=3.exp&key=AIzaSyCIwF204lFZg1y4kPSIhKaHEXMLYxxuMhA')
+

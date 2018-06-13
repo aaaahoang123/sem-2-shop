@@ -1,0 +1,467 @@
+.top_bar
+    .container
+        .row
+            .col.d-flex.flex-row
+                .top_bar_contact_item
+                    .top_bar_icon
+                        img(src='client/images/phone.png' alt='')
+                    | +38 068 005 3570
+                .top_bar_contact_item
+                    .top_bar_icon
+                        img(src='client/images/mail.png' alt='')
+                    a(href='mailto:fastsales@gmail.com') fastsales@gmail.com
+                .top_bar_content.ml-auto
+                    .top_bar_menu
+                        ul.standard_dropdown.top_bar_dropdown
+                            li
+                                a(href='#')
+                                    | English
+                                    i.fas.fa-chevron-down
+                                ul
+                                    li
+                                        a(href='#') Italian
+                                    li
+                                        a(href='#') Spanish
+                                    li
+                                        a(href='#') Japanese
+                            li
+                                a(href='#')
+                                    | $ US dollar
+                                    i.fas.fa-chevron-down
+                                ul
+                                    li
+                                        a(href='#') EUR Euro
+                                    li
+                                        a(href='#') GBP British Pound
+                                    li
+                                        a(href='#') JPY Japanese Yen
+                    .top_bar_user
+                        .user_icon
+                            img(src='client/images/user.svg' alt='')
+                        div
+                            a(href='#') Register
+                        div
+                            a(href='#') Sign in
+// Header Main
+.header_main
+    .container
+        .row
+            // Logo
+            .col-lg-2.col-sm-3.col-3.order-1
+                .logo_container
+                    .logo
+                        a(href='#') OneTech
+            // Search
+            .col-lg-6.col-12.order-lg-2.order-3.text-lg-left.text-right
+                .header_search
+                    .header_search_content
+                        .header_search_form_container
+                            form.header_search_form.clearfix(action='#')
+                                input.header_search_input(type='search' required='required' placeholder='Search for products...')
+                                .custom_dropdown
+                                    .custom_dropdown_list
+                                        span.custom_dropdown_placeholder.clc All Categories
+                                        i.fas.fa-chevron-down
+                                        ul.custom_list.clc
+                                            li
+                                                a.clc(href='#') All Categories
+                                            li
+                                                a.clc(href='#') Computers
+                                            li
+                                                a.clc(href='#') Laptops
+                                            li
+                                                a.clc(href='#') Cameras
+                                            li
+                                                a.clc(href='#') Hardware
+                                            li
+                                                a.clc(href='#') Smartphones
+                                button.header_search_button.trans_300(type='submit' value='Submit')
+                                    img(src='client/images/search.png' alt='')
+            // Wishlist
+            .col-lg-4.col-9.order-lg-3.order-2.text-lg-left.text-right
+                .wishlist_cart.d-flex.flex-row.align-items-center.justify-content-end
+                    .wishlist.d-flex.flex-row.align-items-center.justify-content-end
+                        .wishlist_icon
+                            img(src='client/images/heart.png' alt='')
+                        .wishlist_content
+                            .wishlist_text
+                                a(href='#') Wishlist
+                            .wishlist_count 115
+                    // Cart
+                    .cart
+                        .cart_container.d-flex.flex-row.align-items-center.justify-content-end
+                            .cart_icon
+                                img(src='client/images/cart.png' alt='')
+                                .cart_count
+                                    span 10
+                            .cart_content
+                                .cart_text
+                                    a(href='#') Cart
+                                .cart_price $85
+// Main Navigation
+nav.main_nav
+    .container
+        .row
+            .col
+                .main_nav_content.d-flex.flex-row
+                    // Categories Menu
+                    .cat_menu_container
+                        .cat_menu_title.d-flex.flex-row.align-items-center.justify-content-start
+                            .cat_burger
+                                span
+                                span
+                                span
+                            .cat_menu_text categories
+                        ul.cat_menu
+                            li
+                                a(href='#')
+                                    | Computers &amp; Laptops
+                                    i.fas.fa-chevron-right.ml-auto
+                            li
+                                a(href='#')
+                                    | Cameras &amp; Photos
+                                    i.fas.fa-chevron-right
+                            li.hassubs
+                                a(href='#')
+                                    | Hardware
+                                    i.fas.fa-chevron-right
+                                ul
+                                    li.hassubs
+                                        a(href='#')
+                                            | Menu Item
+                                            i.fas.fa-chevron-right
+                                        ul
+                                            li
+                                                a(href='#')
+                                                    | Menu Item
+                                                    i.fas.fa-chevron-right
+                                            li
+                                                a(href='#')
+                                                    | Menu Item
+                                                    i.fas.fa-chevron-right
+                                            li
+                                                a(href='#')
+                                                    | Menu Item
+                                                    i.fas.fa-chevron-right
+                                            li
+                                                a(href='#')
+                                                    | Menu Item
+                                                    i.fas.fa-chevron-right
+                                    li
+                                        a(href='#')
+                                            | Menu Item
+                                            i.fas.fa-chevron-right
+                                    li
+                                        a(href='#')
+                                            | Menu Item
+                                            i.fas.fa-chevron-right
+                                    li
+                                        a(href='#')
+                                            | Menu Item
+                                            i.fas.fa-chevron-right
+                            li
+                                a(href='#')
+                                    | Smartphones &amp; Tablets
+                                    i.fas.fa-chevron-right
+                            li
+                                a(href='#')
+                                    | TV &amp; Audio
+                                    i.fas.fa-chevron-right
+                            li
+                                a(href='#')
+                                    | Gadgets
+                                    i.fas.fa-chevron-right
+                            li
+                                a(href='#')
+                                    | Car Electronics
+                                    i.fas.fa-chevron-right
+                            li
+                                a(href='#')
+                                    | Video Games &amp; Consoles
+                                    i.fas.fa-chevron-right
+                            li
+                                a(href='#')
+                                    | Accessories
+                                    i.fas.fa-chevron-right
+                    // Main Nav Menu
+                    .main_nav_menu.ml-auto
+                        ul.standard_dropdown.main_nav_dropdown
+                            li
+                                a(href='/')
+                                    | Home
+                                    i.fas.fa-chevron-down
+                            li.hassubs
+                                a(href='#')
+                                    | Super Deals
+                                    i.fas.fa-chevron-down
+                                ul
+                                    li
+                                        a(href='#')
+                                            | Menu Item
+                                            i.fas.fa-chevron-down
+                                        ul
+                                            li
+                                                a(href='#')
+                                                    | Menu Item
+                                                    i.fas.fa-chevron-down
+                                            li
+                                                a(href='#')
+                                                    | Menu Item
+                                                    i.fas.fa-chevron-down
+                                            li
+                                                a(href='#')
+                                                    | Menu Item
+                                                    i.fas.fa-chevron-down
+                                    li
+                                        a(href='#')
+                                            | Menu Item
+                                            i.fas.fa-chevron-down
+                                    li
+                                        a(href='#')
+                                            | Menu Item
+                                            i.fas.fa-chevron-down
+                                    li
+                                        a(href='#')
+                                            | Menu Item
+                                            i.fas.fa-chevron-down
+                            li.hassubs
+                                a(href='#')
+                                    | Featured Brands
+                                    i.fas.fa-chevron-down
+                                ul
+                                    li
+                                        a(href='#')
+                                            | Menu Item
+                                            i.fas.fa-chevron-down
+                                        ul
+                                            li
+                                                a(href='#')
+                                                    | Menu Item
+                                                    i.fas.fa-chevron-down
+                                            li
+                                                a(href='#')
+                                                    | Menu Item
+                                                    i.fas.fa-chevron-down
+                                            li
+                                                a(href='#')
+                                                    | Menu Item
+                                                    i.fas.fa-chevron-down
+                                    li
+                                        a(href='#')
+                                            | Menu Item
+                                            i.fas.fa-chevron-down
+                                    li
+                                        a(href='#')
+                                            | Menu Item
+                                            i.fas.fa-chevron-down
+                                    li
+                                        a(href='#')
+                                            | Menu Item
+                                            i.fas.fa-chevron-down
+                            li.hassubs
+                                a(href='#')
+                                    | Pages
+                                    i.fas.fa-chevron-down
+                                ul
+                                    li
+                                        a(href='/shop')
+                                            | Shop
+                                            i.fas.fa-chevron-down
+                                    li
+                                        a(href='/product')
+                                            | Product
+                                            i.fas.fa-chevron-down
+                                    li
+                                        a(href='/blog')
+                                            | Blog
+                                            i.fas.fa-chevron-down
+                                    li
+                                        a(href='/blog_single')
+                                            | Blog Post
+                                            i.fas.fa-chevron-down
+                                    li
+                                        a(href='/regular')
+                                            | Regular Post
+                                            i.fas.fa-chevron-down
+                                    li
+                                        a(href='/cart')
+                                            | Cart
+                                            i.fas.fa-chevron-down
+                                    li
+                                        a(href='/contact')
+                                            | Contact
+                                            i.fas.fa-chevron-down
+                            li
+                                a(href='/blog')
+                                    | Blog
+                                    i.fas.fa-chevron-down
+                            li
+                                a(href='/contact')
+                                    | Contact
+                                    i.fas.fa-chevron-down
+                    // Menu Trigger
+                    .menu_trigger_container.ml-auto
+                        .menu_trigger.d-flex.flex-row.align-items-center.justify-content-end
+                            .menu_burger
+                                .menu_trigger_text menu
+                                .cat_burger.menu_burger_inner
+                                    span
+                                    span
+                                    span
+// Menu
+.page_menu
+    .container
+        .row
+            .col
+                .page_menu_content
+                    .page_menu_search
+                        form(action='#')
+                            input.page_menu_search_input(type='search' required='required' placeholder='Search for products...')
+                    ul.page_menu_nav
+                        li.page_menu_item.has-children
+                            a(href='#')
+                                | Language
+                                i.fa.fa-angle-down
+                            ul.page_menu_selection
+                                li
+                                    a(href='#')
+                                        | English
+                                        i.fa.fa-angle-down
+                                li
+                                    a(href='#')
+                                        | Italian
+                                        i.fa.fa-angle-down
+                                li
+                                    a(href='#')
+                                        | Spanish
+                                        i.fa.fa-angle-down
+                                li
+                                    a(href='#')
+                                        | Japanese
+                                        i.fa.fa-angle-down
+                        li.page_menu_item.has-children
+                            a(href='#')
+                                | Currency
+                                i.fa.fa-angle-down
+                            ul.page_menu_selection
+                                li
+                                    a(href='#')
+                                        | US Dollar
+                                        i.fa.fa-angle-down
+                                li
+                                    a(href='#')
+                                        | EUR Euro
+                                        i.fa.fa-angle-down
+                                li
+                                    a(href='#')
+                                        | GBP British Pound
+                                        i.fa.fa-angle-down
+                                li
+                                    a(href='#')
+                                        | JPY Japanese Yen
+                                        i.fa.fa-angle-down
+                        li.page_menu_item
+                            a(href='#')
+                                | Home
+                                i.fa.fa-angle-down
+                        li.page_menu_item.has-children
+                            a(href='#')
+                                | Super Deals
+                                i.fa.fa-angle-down
+                            ul.page_menu_selection
+                                li
+                                    a(href='#')
+                                        | Super Deals
+                                        i.fa.fa-angle-down
+                                li.page_menu_item.has-children
+                                    a(href='#')
+                                        | Menu Item
+                                        i.fa.fa-angle-down
+                                    ul.page_menu_selection
+                                        li
+                                            a(href='#')
+                                                | Menu Item
+                                                i.fa.fa-angle-down
+                                        li
+                                            a(href='#')
+                                                | Menu Item
+                                                i.fa.fa-angle-down
+                                        li
+                                            a(href='#')
+                                                | Menu Item
+                                                i.fa.fa-angle-down
+                                        li
+                                            a(href='#')
+                                                | Menu Item
+                                                i.fa.fa-angle-down
+                                li
+                                    a(href='#')
+                                        | Menu Item
+                                        i.fa.fa-angle-down
+                                li
+                                    a(href='#')
+                                        | Menu Item
+                                        i.fa.fa-angle-down
+                                li
+                                    a(href='#')
+                                        | Menu Item
+                                        i.fa.fa-angle-down
+                        li.page_menu_item.has-children
+                            a(href='#')
+                                | Featured Brands
+                                i.fa.fa-angle-down
+                            ul.page_menu_selection
+                                li
+                                    a(href='#')
+                                        | Featured Brands
+                                        i.fa.fa-angle-down
+                                li
+                                    a(href='#')
+                                        | Menu Item
+                                        i.fa.fa-angle-down
+                                li
+                                    a(href='#')
+                                        | Menu Item
+                                        i.fa.fa-angle-down
+                                li
+                                    a(href='#')
+                                        | Menu Item
+                                        i.fa.fa-angle-down
+                        li.page_menu_item.has-children
+                            a(href='#')
+                                | Trending Styles
+                                i.fa.fa-angle-down
+                            ul.page_menu_selection
+                                li
+                                    a(href='#')
+                                        | Trending Styles
+                                        i.fa.fa-angle-down
+                                li
+                                    a(href='#')
+                                        | Menu Item
+                                        i.fa.fa-angle-down
+                                li
+                                    a(href='#')
+                                        | Menu Item
+                                        i.fa.fa-angle-down
+                                li
+                                    a(href='#')
+                                        | Menu Item
+                                        i.fa.fa-angle-down
+                        li.page_menu_item
+                            a(href='blog.html')
+                                | blog
+                                i.fa.fa-angle-down
+                        li.page_menu_item
+                            a(href='contact.html')
+                                | contact
+                                i.fa.fa-angle-down
+                    .menu_contact
+                        .menu_contact_item
+                            .menu_contact_icon
+                                img(src='/client/images/phone_white.png' alt='')
+                            | +38 068 005 3570
+                        .menu_contact_item
+                            .menu_contact_icon
+                                img(src='/client/images/mail_white.png' alt='')
+                            a(href='mailto:fastsales@gmail.com') fastsales@gmail.com
