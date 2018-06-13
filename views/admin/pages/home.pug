@@ -1,38 +1,6 @@
 .container-fluid
     .block-header
         h2 DASHBOARD
-    // Widgets
-    .row.clearfix
-        .col-lg-3.col-md-3.col-sm-6.col-xs-12
-            .info-box.bg-pink.hover-expand-effect
-                .icon
-                    i.material-icons playlist_add_check
-                .content
-                    .text NEW TASKS
-                    .number.count-to(data-from='0' data-to='125' data-speed='15' data-fresh-interval='20')
-        .col-lg-3.col-md-3.col-sm-6.col-xs-12
-            .info-box.bg-cyan.hover-expand-effect
-                .icon
-                    i.material-icons help
-                .content
-                    .text NEW TICKETS
-                    .number.count-to(data-from='0' data-to='257' data-speed='1000' data-fresh-interval='20')
-        .col-lg-3.col-md-3.col-sm-6.col-xs-12
-            .info-box.bg-light-green.hover-expand-effect
-                .icon
-                    i.material-icons forum
-                .content
-                    .text NEW COMMENTS
-                    .number.count-to(data-from='0' data-to='243' data-speed='1000' data-fresh-interval='20')
-        .col-lg-3.col-md-3.col-sm-6.col-xs-12
-            .info-box.bg-orange.hover-expand-effect
-                .icon
-                    i.material-icons person_add
-                .content
-                    .text NEW VISITORS
-                    .number.count-to(data-from='0' data-to='1225' data-speed='1000' data-fresh-interval='20')
-    // #END# Widgets
-    // CPU Usage
     .row.clearfix
         .col-lg-4.col-md-4.col-sm-12.col-xs-12
             .card
@@ -54,7 +22,7 @@
         .col-lg-8.col-md-8.col-sm-12.col-xs-12
             .card
                 .header
-                    h2 QUANTITY OF GOODS IN WEEK
+                    h2 QUANTITY OF ORDER IN WEEK
                     ul.header-dropdown.m-r--5
                         li.dropdown
                             a.dropdown-toggle(href='javascript:void(0);' data-toggle='dropdown' role='button' aria-haspopup='true' aria-expanded='false')
@@ -85,4 +53,3 @@
                                     a(href='javascript:void(0);') Something else here
                 .body
                     #line_chart.graph
-        // #END# Browser Usage
