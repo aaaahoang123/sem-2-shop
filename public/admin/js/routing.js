@@ -72,6 +72,7 @@ function renderCss(hash) {
         default:
             break;
     }
+
     let link, parent = document.getElementById('extra-css');
     for (let css of arrayCss) {
         link = document.createElement('link');
