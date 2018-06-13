@@ -33,6 +33,9 @@ function renderCss(hash) {
         case "#web-config/information":
             arrayCss = [];
             break;
+        case "#web-config/contact":
+            arrayCss = [];
+            break;
         case "#web-config/top-category":
             arrayCss = [];
             break;
@@ -102,6 +105,9 @@ function renderJS(hash) {
             ];
             break;
         case "#web-config/information":
+            arrayJS = [];
+            break;
+        case "#web-config/contact":
             arrayJS = [];
             break;
         case "#web-config/top-category":
