@@ -38,56 +38,66 @@ section
         .menu
             ul.list
                 li.header MAIN NAVIGATION
-                li(class={"active" : path === "/"})
-                    a(href='#')
+                li.sidebar-item.active(data-active="#home")
+                    a.menu-toggle(href='#')
                         i.material-icons home
                         span Home
-                li
+                li.sidebar-item(data-active="#web-config")
                     a.menu-toggle(href='javascript:void(0);')
-                        i.material-icons widgets
-                        span Widgets
+                        i.material-icons web
+                        span Website Config
                     ul.ml-menu
-                        li
-                            a.menu-toggle(href='javascript:void(0);')
-                                span Cards
-                            ul.ml-menu
-                                li
-                                    a(href='javascript:void(0);') Basic
-                                li
-                                    a(href='javascript:void(0);') Colored
-                                li
-                                    a(href='javascript:void(0);') No Header
-                        li
-                            a.menu-toggle(href='javascript:void(0);')
-                                span Info Box
-                            ul.ml-menu
-                                li
-                                    a(href='javascript:void(0);') Info Box 1
-                                li
-                                    a(href='javascript:void(0);') Info Box 2
-                                li
-                                    a(href='javascript:void(0);') Info Box 3
-                                li
-                                    a(href='javascript:void(0);') Info Box 4
-                                li
-                                    a(href='javascript:void(0);') Info Box 5
-                li
+                        li.sidebar-item(data-active="information")
+                            a(href='#web-config/information') Information
+
+                        li.sidebar-item(data-active="contact")
+                            a(href='#web-config/contact') Contact
+
+                        li.sidebar-item(data-active="top-category")
+                            a(href='#web-config/top-category') Top-Category
+
+                li.sidebar-item(data-active="#product-manager")
                     a.menu-toggle(href='javascript:void(0);')
-                        i.material-icons assignment
-                        span Forms
+                        i.material-icons shop
+                        span Product Manager
                     ul.ml-menu
-                        li
-                            a(href='javascript:void(0);') Basic Form Elements
-                        li
-                            a(href='javascript:void(0);') Advanced Form Elements
-                        li
-                            a(href='javascript:void(0);') Form Examples
-                        li
-                            a(href='javascript:void(0);') Form Validation
-                        li
-                            a(href='javascript:void(0);') Form Wizard
-                        li
-                            a(href='javascript:void(0);') Editors
+                        li.sidebar-item(data-active="categories")
+                            a(href='#product-manager/categories') Categories
+                        li.sidebar-item(data-active="add-category")
+                            a(href='#product-manager/add-category') Add Category
+                        li.sidebar-item(data-active="brands")
+                            a(href='#product-manager/brands') Brands
+                        li.sidebar-item(data-active="add-brand")
+                            a(href='#product-manager/add-brand') Add Brand
+                        li.sidebar-item(data-active="products")
+                            a(href='#product-manager/products') Products
+                        li.sidebar-item(data-active="add-product")
+                            a(href='#product-manager/add-product') Add Product
+
+
+                li.sidebar-item(data-active="#customer-manager")
+                    a.menu-toggle(href='javascript:void(0);')
+                        i.material-icons account_circle
+                        span Customer Manager
+                    ul.ml-menu
+                        li.sidebar-item(data-active="customers")
+                            a(href='#customer-manager/customers') Customers
+                        li.sidebar-item(data-active="add-customer")
+                            a(href='#customer-manager/add-customer') Add Customer
+
+
+                li.sidebar-item(data-active="#warehouse-manager")
+                    a.menu-toggle(href='javascript:void(0);')
+                        i.material-icons store
+                        span Warehouse Manager
+                    ul.ml-menu
+                        li.sidebar-item(data-active="check")
+                            a(href='#warehouse-manager/check') Check
+                        li.sidebar-item(data-active="edit")
+                            a(href='#warehouse-manager/edit') Edit
+                        li.sidebar-item(data-active="logs")
+                            a(href='#warehouse-manager/logs') Logs
+
                 li.header LABELS
                 li
                     a(href='javascript:void(0);')
