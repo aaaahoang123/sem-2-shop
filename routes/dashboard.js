@@ -8,6 +8,6 @@ router.get('/', function(req, res, next) {
     res.render('admin/pages/home');
 }).get('/user', function (req, res, next) {
     res.render('admin/pages/user');
-});
+}).use('/website-config', require('./website-config'));
 
 module.exports = router;

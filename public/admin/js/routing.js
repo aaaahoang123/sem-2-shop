@@ -1,8 +1,10 @@
 function callPageSingle() {
     let hash = location.hash;
     if (hash === "") hash = "#home";
+    console.log(hash);
     renderCss(hash);
     let url = hash.replace("#", "/manager/dashboard/");
+    console.log(url);
     $.ajax({
         url: url,
         method: "GET",
@@ -28,6 +30,17 @@ function renderCss(hash) {
             '/admin/plugins/morrisjs/morris.min.css',
         ];
     }
+    if (hash === '#website-config/information') {
+        arrayCss = [
+            '/admin/plugins/bootstrap-material-datetimepicker/css/bootstrap-material-datetimepicker.css',
+            '/admin/plugins/waitme/waitMe.min.css',
+            '/admin/plugins/bootstrap-select/css/bootstrap-select.min.css',
+            'https://use.fontawesome.com/releases/v5.0.13/css/all.css'
+        ];
+        // arrayCss = [
+        //
+        // ];
+    }
 
     let link, parent = document.getElementById('extra-css');
     for (let css of arrayCss) {
@@ -46,6 +59,15 @@ function renderJS(hash) {
             '/admin/plugins/raphael/raphael.min.js',
             '/admin/plugins/morrisjs/morris.min.js',
             '/admin/js/pages/charts/morris.js'
+        ];
+    }
+    if (hash === '#website-config/information') {
+        arrayJS = [
+            '/admin/plugins/autosize/autosize.min.js',
+            '/admin/plugins/momentjs/moment.min.js',
+            '/admin/plugins/bootstrap-material-datetimepicker/js/bootstrap-material-datetimepicker.min.js',
+            '/admin/js/pages/forms/basic-form-elements.js',
+            '/admin/js/form-init.js'
         ];
     }
 
