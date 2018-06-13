@@ -1,10 +1,8 @@
 function callPageSingle() {
     let hash = location.hash;
     if (hash === "") hash = "#home";
-    console.log(hash);
     renderCss(hash);
     let url = hash.replace("#", "/manager/dashboard/");
-    console.log(url);
     $.ajax({
         url: url,
         method: "GET",
@@ -14,7 +12,6 @@ function callPageSingle() {
         },
         error: function (res) {
             alert('Đã xảy ra lỗi khi tải trang, vui lòng check logs!');
-            console.log(res);
         }
     });
 }
@@ -37,9 +34,6 @@ function renderCss(hash) {
             '/admin/plugins/bootstrap-select/css/bootstrap-select.min.css',
             'https://use.fontawesome.com/releases/v5.0.13/css/all.css'
         ];
-        // arrayCss = [
-        //
-        // ];
     }
 
     let link, parent = document.getElementById('extra-css');
