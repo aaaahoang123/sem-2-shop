@@ -1,0 +1,1 @@
+$.AdminBSB.input.activate();

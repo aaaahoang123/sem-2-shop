@@ -1,0 +1,74 @@
+extends ../../layouts/master
+
+block extra-css
+    link(rel='stylesheet' href='/admin/plugins/bootstrap-material-datetimepicker/css/bootstrap-material-datetimepicker.css')
+    link(rel='stylesheet' href='https://use.fontawesome.com/releases/v5.0.13/css/all.css')
+    link(rel='stylesheet' href='/admin/plugins/bootstrap-select/css/bootstrap-select.min.css')
+    link(rel='stylesheet' href='/admin/plugins/waitme/waitMe.min.css')
+block extra-js
+    script(type='text/javascript' src='/admin/plugins/autosize/autosize.min.js')
+    script(type='text/javascript' src='/admin/plugins/momentjs/moment.min.js')
+    script(type='text/javascript' src='/admin/plugins/bootstrap-material-datetimepicker/js/bootstrap-material-datetimepicker.min.js')
+    script(type='text/javascript' src='/admin/js/pages/forms/basic-form-elements.js')
+
+block content
+    .container-fluid
+        .block-header
+            h2 CONFIG WEBSITE
+        // Input
+        .row.clearfix
+            .col-lg-12.col-md-12.col-sm-12.col-xs-12
+                .card
+                    .header
+                        h2
+                            | CONTACT
+                    .body
+                        .row.clearfix
+                            form(method='POST')
+                                .col-md-4
+                                    b Email Address
+                                    .input-group
+                                        span.input-group-addon
+                                            i.material-icons email
+                                        .form-line
+                                            input.form-control.email(type='email' placeholder='Ex: example@example.com')
+                                .col-md-4
+                                    b Mobile Phone Number
+                                    .input-group
+                                        span.input-group-addon
+                                            i.material-icons phone_iphone
+                                        .form-line
+                                            input.form-control.mobile-phone-number(type='text' placeholder='Ex: +00000000000')
+                                .col-md-4
+                                    b Address
+                                    .input-group
+                                        span.input-group-addon
+                                            i.material-icons store
+                                        .form-line
+                                            input.form-control(type='text')
+                                .col-md-4
+                                    b Link Facebook
+                                    .input-group
+                                        span.input-group-addon
+                                            i.fab.fa-facebook-square
+                                        .form-line
+                                            input.form-control(type='text')
+                                .col-md-4
+                                    b Link Instagram
+                                    .input-group
+                                        span.input-group-addon
+                                            i.fab.fa-instagram
+                                        .form-line
+                                            input.form-control(type='text')
+                                .col-md-4
+                                    b Link Twitter
+                                    .input-group
+                                        span.input-group-addon
+                                            i.fab.fa-twitter-square
+                                        .form-line
+                                            input.form-control(type='text')
+                                .col-md-12
+                                    div.col-md-1
+                                        button.btn.btn-primary.waves-effect(type='button') SUBMIT
+                                    div.col-md-1
+                                        button.btn.btn-warning.waves-effect(type='reset') RESET
