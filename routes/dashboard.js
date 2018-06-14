@@ -2,8 +2,8 @@ const express = require('express');
 const router = express.Router();
 
 /* GET users listing. */
-router.get('/', function(req, res, next) {
-    res.render('admin/layouts/master', {path: '/'});
+router.get('/', function (req, res, next) {
+    res.render('admin/pages/index', {path: '/'});
 }).get('/home', function (req, res, next) {
     res.render('admin/pages/home');
 }).get('/user', function (req, res, next) {
@@ -12,11 +12,11 @@ router.get('/', function(req, res, next) {
 
 router.use('/web-config', express.Router()
     .get('/information', function (req, res, next) {
-        res.render('admin/pages/demo');
+        res.render('admin/pages/web-config/information', {path:'/web-config/information'});
     }).get('/top-category', function (req, res, next) {
         res.render('admin/pages/demo');
     }).get('/contact', function (req, res, next) {
-        res.render('admin/pages/demo');
+        res.render('admin/pages/web-config/contact', {path:'/web-config/contact'});
     })
 );
 
