@@ -27,10 +27,22 @@ function renderCss(hash) {
     let arrayCss = [];
     switch (hash) {
         case "#home":
-            arrayCss.push('/admin/plugins/morrisjs/morris.css');
+            arrayCss = [
+                '',
+            ];
             break;
         case "#web-config/information":
-            arrayCss = [];
+            arrayCss = [
+
+            ];
+            break;
+        case "#web-config/contact":
+            arrayCss = [
+                '/admin/plugins/bootstrap-material-datetimepicker/css/bootstrap-material-datetimepicker.css',
+                '/admin/plugins/waitme/waitMe.min.css',
+                '/admin/plugins/bootstrap-select/css/bootstrap-select.min.css',
+                'https://use.fontawesome.com/releases/v5.0.13/css/all.css'
+            ];
             break;
         case "#web-config/top-category":
             arrayCss = [];
@@ -70,14 +82,6 @@ function renderCss(hash) {
             break;
         default:
             break;
-    }
-    if (hash === '#website-config/information') {
-        arrayCss = [
-            '/admin/plugins/bootstrap-material-datetimepicker/css/bootstrap-material-datetimepicker.css',
-            '/admin/plugins/waitme/waitMe.min.css',
-            '/admin/plugins/bootstrap-select/css/bootstrap-select.min.css',
-            'https://use.fontawesome.com/releases/v5.0.13/css/all.css'
-        ];
     }
 
     let link, parent = document.getElementById('extra-css');
@@ -98,6 +102,7 @@ function renderJS(hash) {
                 '/admin/plugins/jquery-countto/jquery.countTo.min.js',
                 '/admin/plugins/raphael/raphael.min.js',
                 '/admin/plugins/morrisjs/morris.min.js',
+                '/admin/js/pages/charts/morris.js',
                 '/admin/plugins/chartjs/Chart.bundle.min.js',
                 '/admin/plugins/flot-charts/jquery.flot.min.js',
                 '/admin/plugins/flot-charts/jquery.flot.resize.js',
@@ -109,7 +114,26 @@ function renderJS(hash) {
             ];
             break;
         case "#web-config/information":
-            arrayJS = [];
+            arrayJS = [
+                // '/admin/plugins/bootstrap-colorpicker/js/bootstrap-colorpicker.min.js',
+                // '/admin/plugins/dropzone/dropzone.min.js',
+                // '/admin/plugins/jquery-inputmask/jquery.inputmask.bundle.min.js',
+                // '/admin/plugins/multi-select/js/jquery.multi-select.min.js',
+                // '/admin/plugins/jquery-spinner/js/jquery.spinner.min.js',
+                // '/admin/plugins/bootstrap-tagsinput/bootstrap-tagsinput.min.js',
+                // '/admin/plugins/nouislider/nouislider.min.js',
+                // '/admin/js/pages/forms/advanced-form-elements.js',
+
+            ];
+            break;
+        case "#web-config/contact":
+            arrayJS = [
+                '/admin/plugins/autosize/autosize.min.js',
+                '/admin/plugins/momentjs/moment.min.js',
+                '/admin/plugins/bootstrap-material-datetimepicker/js/bootstrap-material-datetimepicker.min.js',
+                '/admin/js/pages/forms/basic-form-elements.js',
+                '/admin/js/form-init.js'
+            ];
             break;
         case "#web-config/top-category":
             arrayJS = [];
@@ -149,15 +173,6 @@ function renderJS(hash) {
             break;
         default:
             break;
-    }
-    if (hash === '#website-config/information') {
-        arrayJS = [
-            '/admin/plugins/autosize/autosize.min.js',
-            '/admin/plugins/momentjs/moment.min.js',
-            '/admin/plugins/bootstrap-material-datetimepicker/js/bootstrap-material-datetimepicker.min.js',
-            '/admin/js/pages/forms/basic-form-elements.js',
-            '/admin/js/form-init.js'
-        ];
     }
 
     let script;
