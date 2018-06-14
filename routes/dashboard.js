@@ -14,7 +14,7 @@ router.use('/web-config', express.Router()
     .get('/information', function (req, res, next) {
         res.render('admin/pages/demo');
     }).get('/top-category', function (req, res, next) {
-        res.render('admin/pages/demo');
+        res.render('admin/pages/website-config/top-category', {path:'/web-config/top-category'});
     }).get('/contact', function (req, res, next) {
         res.render('admin/pages/demo');
     })
