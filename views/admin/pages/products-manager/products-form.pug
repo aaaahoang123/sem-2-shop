@@ -1,0 +1,113 @@
+extends ../../layouts/master
+
+block extra-css
+    link(rel='stylesheet' href='/admin/plugins/dropzone/dropzone.min.css')
+    link(rel='stylesheet' href='/admin/plugins/multi-select/css/multi-select.min.css')
+    link(rel='stylesheet' href='/admin/plugins/bootstrap-select/css/bootstrap-select.css')
+
+block extra-js
+    script(type='text/javascript' src='/admin/plugins/ckeditor/ckeditor.js')
+    script(type='text/javascript' src='/admin/plugins/tinymce/tinymce.min.js')
+    script(type='text/javascript' src='/admin/js/pages/forms/editors.js')
+    script(type="text/javascript" src="/admin/plugins/bootstrap-colorpicker/js/bootstrap-colorpicker.min.js")
+    script(type="text/javascript" src="/admin/plugins/bootstrap-notify/bootstrap-notify.min.js")
+    script(type="text/javascript" src="/admin/js/pages/forms/advanced-form-elements.js")
+    script(type="text/javascript" src="/admin/plugins/multi-select/js/jquery.multi-select.min.js")
+    script(type="text/javascript" src="/admin/plugins/dropzone/dropzone.min.js")
+    script(type='text/javascript' src='/admin/js/pages/forms/basic-form-elements.js')
+    script(type='text/javascript' src='/admin/js/pages/products-manager/products-form.js')
+
+block content
+    .card
+        .header
+            h2
+                | ADD PRODUCT
+        .body
+            form
+                .row.clearfix
+                    .col-sm-6
+                        b Product Name
+                        .input-group
+                            span.input-group-addon
+                                i.material-icons games
+                            .form-line
+                                input.form-control.date(type='text' placeholder='Product Name')
+                    .col-sm-6
+                        b Product Price
+                        .input-group
+                            span.input-group-addon
+                                i.material-icons attach_money
+                            .form-line
+                                input.form-control.date(type='text' placeholder='Price')
+
+                .row.clearfix
+                    .col-sm-6
+                        b Categories
+                        .input-group
+                            span.input-group-addon
+                                i.material-icons collections
+                            select.form-control.show-tick(multiple='')
+                                option Phone
+                                option Laptop
+                                option Audio and Video
+
+                    .col-sm-6
+                        b Brands
+                        .input-group
+                            span.input-group-addon
+                                i.material-icons local_offer
+                            select.form-control.show-tick
+                                option(value='') -- Please select --
+                                option(value='10') Ipone
+                                option(value='20') SamSung
+                                option(value='30') Nokia
+                                option(value='40') LG
+                                option(value='50') Lenovo
+
+                h2.card-inside-title Product Description
+                .row.clearfix
+                    .col-sm-12
+                        textarea#ckeditor
+
+                h2.card-inside-title Product Images
+                .row.clearfix
+                    .col-sm-12
+                        #frmFileUpload.dropzone(action='/' method='post' enctype='multipart/form-data')
+                            .dz-message
+                                .drag-icon-cph
+                                    i.material-icons touch_app
+                                h3 Drop image here or click to upload.
+                                em
+                                    | (This is just a demo dropzone. Selected files are
+                                    strong not
+                                    |  actually uploaded.)
+                            .fallback
+                                input(name='file' type='file' multiple='')
+
+                h2.card-inside-title Specification
+                #spec
+                    .row.clearfix
+                        .col-sm-5
+                            .input-group
+                                span.input-group-addon
+                                    i.material-icons settings
+                                .form-line
+                                    input.form-control.date(type='text' placeholder='Feature')
+                        .col-sm-5
+                            .input-group
+                                span.input-group-addon
+                                    i.material-icons details
+                                .form-line
+                                    input.form-control.date(type='text' placeholder='Detail')
+
+                        .col-sm-2
+                            button#add-more.btn.btn-danger.btn-circle.waves-effect.waves-circle.waves-float(type='button' onclick="addFeature(this)")
+                                i.material-icons add
+
+                .row.clearfix
+                    .col-sm-4
+                    .col-sm-2
+                        button.btn.btn-block.btn-primary.waves-effect(type='button') SUBMIT
+                    .col-sm-2
+                        button.btn.btn-block.btn-warning.waves-effect(type='reset') RESET
+                    .col-sm-4

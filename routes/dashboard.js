@@ -20,7 +20,7 @@ router.use('/web-config', express.Router()
     })
 );
 
-router.use('/product-manager', express.Router()
+router.use('/products-manager', express.Router()
     .get('/categories', function (req, res, next) {
         res.render('admin/pages/demo');
     }).get('/add-category', function(req, res, next){
@@ -32,7 +32,7 @@ router.use('/product-manager', express.Router()
     }).get('/products', function (req, res, next) {
         res.render('admin/pages/demo');
     }).get('/add-product', function(req, res, next){
-        res.render('admin/pages/demo');
+        res.render('admin/pages/products-manager/products-form', {path: '/products-manager/add-product'});
     })
 );
 

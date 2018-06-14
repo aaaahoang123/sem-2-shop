@@ -39,7 +39,7 @@ section
             ul.list
                 li.header MAIN NAVIGATION
                 li(class={'active': path === '/'})
-                    a.menu-toggle(href='#')
+                    a(href='#')
                         i.material-icons home
                         span Home
                 li(class={'active': path.includes('/web-config')})
@@ -56,23 +56,23 @@ section
                         li(class={'active': path === '/web-config/top-category'})
                             a(href='/manager/dashboard/web-config/top-category') Top-Category
 
-                li(class={'active': path.includes('/product-manager')})
+                li(class={'active': path.includes('/products-manager')})
                     a.menu-toggle(href='javascript:void(0);')
                         i.material-icons shop
                         span Product Manager
                     ul.ml-menu
-                        li(class={'active': path === '/product-manager/categories'})
-                            a(href='/manager/dashboard/product-manager/categories') Categories
-                        li(class={'active': path === '/product-manager/add-category'})
-                            a(href='/manager/dashboard/product-manager/add-category') Add Category
-                        li(class={'active': path === '/product-manager/brands'})
-                            a(href='/manager/dashboard/product-manager/brands') Brands
-                        li(class={'active': path === '/product-manager/add-brand'})
-                            a(href='/manager/dashboard/product-manager/add-brand') Add Brand
-                        li(class={'active': path === '/product-manager/products'})
-                            a(href='/manager/dashboard/product-manager/products') Products
-                        li(class={'active': path === '/product-manager/add-product'})
-                            a(href='/manager/dashboard/product-manager/add-product') Add Product
+                        li(class={'active': path === '/products-manager/categories'})
+                            a(href='/manager/dashboard/products-manager/categories') Categories
+                        li(class={'active': path === '/products-manager/add-category'})
+                            a(href='/manager/dashboard/products-manager/add-category') Add Category
+                        li(class={'active': path === '/products-manager/brands'})
+                            a(href='/manager/dashboard/products-manager/brands') Brands
+                        li(class={'active': path === '/products-manager/add-brand'})
+                            a(href='/manager/dashboard/products-manager/add-brand') Add Brand
+                        li(class={'active': path === '/products-manager/products'})
+                            a(href='/manager/dashboard/products-manager/products') Products
+                        li(class={'active': path === '/products-manager/add-product'})
+                            a(href='/manager/dashboard/products-manager/add-product') Add Product
 
 
                 li(class={'active': path.includes('/customer-manager')})

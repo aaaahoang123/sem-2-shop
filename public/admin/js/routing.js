@@ -36,22 +36,22 @@ function renderCss(hash) {
         case "#web-config/top-category":
             arrayCss = [];
             break;
-        case "#product-manager/categories":
+        case "#products-manager/categories":
             arrayCss = [];
             break;
-        case "#product-manager/add-category":
+        case "#products-manager/add-category":
             arrayCss = [];
             break;
-        case "#product-manager/brands":
+        case "#products-manager/brands":
             arrayCss = [];
             break;
-        case "#product-manager/add-brand":
+        case "#products-manager/add-brand":
             arrayCss = [];
             break;
-        case "#product-manager/products":
+        case "#products-manager/products":
             arrayCss = [];
             break;
-        case "#product-manager/add-product":
+        case "#products-manager/add-product":
             arrayCss = [];
             break;
         case "#customer-manager/customers":
@@ -107,22 +107,22 @@ function renderJS(hash) {
         case "#web-config/top-category":
             arrayJS = [];
             break;
-        case "#product-manager/categories":
+        case "#products-manager/categories":
             arrayJS = [];
             break;
-        case "#product-manager/add-category":
+        case "#products-manager/add-category":
             arrayJS = [];
             break;
-        case "#product-manager/brands":
+        case "#products-manager/brands":
             arrayJS = [];
             break;
-        case "#product-manager/add-brand":
+        case "#products-manager/add-brand":
             arrayJS = [];
             break;
-        case "#product-manager/products":
+        case "#products-manager/products":
             arrayJS = [];
             break;
-        case "#product-manager/add-product":
+        case "#products-manager/add-product":
             arrayJS = [];
             break;
         case "#customer-manager/customers":
@@ -176,7 +176,7 @@ function activeSidebar(hash) {
 
 // function activeSidebar(hash) {
 //     let webConfig = document.getElementById("web-config");
-//     let productManager = document.getElementById("product-manager");
+//     let productManager = document.getElementById("products-manager");
 //     let customerManager = document.getElementById("customer-manager");
 //     let warehouseManager = document.getElementById("warehouse-manager");
 //     switch (hash) {
@@ -188,27 +188,27 @@ function activeSidebar(hash) {
 //             webConfig.className = "active";
 //             webConfig.querySelector("ul > li.top-category").className += " active";
 //             break;
-//         case "#product-manager/categories":
+//         case "#products-manager/categories":
 //             productManager.className = "active";
 //             productManager.querySelector("ul > li.categories").className += " active";
 //             break;
-//         case "#product-manager/add-category":
+//         case "#products-manager/add-category":
 //             productManager.className = "active";
 //             productManager.querySelector("ul > li.add-category").className += " active";
 //             break;
-//         case "#product-manager/brands":
+//         case "#products-manager/brands":
 //             productManager.className = "active";
 //             productManager.querySelector("ul > li.brands").className += " active";
 //             break;
-//         case "#product-manager/add-brand":
+//         case "#products-manager/add-brand":
 //             productManager.className = "active";
 //             productManager.querySelector("ul > li.add-brand").className += " active";
 //             break;
-//         case "#product-manager/products":
+//         case "#products-manager/products":
 //             productManager.className = "active";
 //             productManager.querySelector("ul > li.products").className += " active";
 //             break;
-//         case "#product-manager/add-product":
+//         case "#products-manager/add-product":
 //             productManager.className = "active";
 //             productManager.querySelector("ul > li.add-product").className += " active";
 //             break;
