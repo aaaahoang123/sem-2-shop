@@ -1,0 +1,53 @@
+extends ../../layouts/master
+
+block extra-css
+    link(rel='stylesheet' href='/admin/plugins/bootstrap-select/css/bootstrap-select.min.css')
+    link(rel='stylesheet' href='https://fonts.googleapis.com/icon?family=Material+Icons')
+
+block extra-js
+    script(type='text/javascript' src='/admin/js/pages/forms/basic-form-elements.js')
+    script(type='text/javascript' src='/admin/plugins/bootstrap-select/js/bootstrap-select.min.js')
+
+block content
+    .row.clearfix
+        .col-lg-12.col-md-12.col-sm-12.col-xs-12
+            .card
+                .header
+                    h2
+                        | TOP CATEGORY
+                    ul.header-dropdown.m-r--5
+                        li.dropdown
+                            a.dropdown-toggle(href='javascript:void(0);' data-toggle='dropdown' role='button' aria-haspopup='true' aria-expanded='false')
+                                i.material-icons more_vert
+                            ul.dropdown-menu.pull-right
+                                li
+                                    a.waves-effect.waves-block(href='javascript:void(0);') Action
+                                li
+                                    a.waves-effect.waves-block(href='javascript:void(0);') Another action
+                                li
+                                    a.waves-effect.waves-block(href='javascript:void(0);') Something else here
+                .body
+                    form(method='POST')
+                        .row.clearfix
+                            .col-sm-1
+                                i.material-icons view_list
+                            .col-sm-5
+                                select.form-control.show-tick
+                                    option(value='') -- Category 1 --
+                                    option(value='10') 10
+                                    option(value='20') 20
+                                    option(value='30') 30
+                                    option(value='40') 40
+                                    option(value='50') 50
+                            .col-sm-1
+                                i.material-icons view_list
+                            .col-sm-5
+                                select.form-control.show-tick
+                                    option(value='') -- Category 2 --
+                                    option(value='10') 10
+                                    option(value='20') 20
+                                    option(value='30') 30
+                                    option(value='40') 40
+                                    option(value='50') 50
+                        button.btn.btn-primary.waves-effect(type='submit') Submit
+
