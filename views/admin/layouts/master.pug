@@ -16,14 +16,13 @@ html
         // /Core css
 
         // Extra css
-
+        block extra-css
         // Extra css
 
         link(rel='stylesheet' href='/admin/css/style.min.css')
         link(rel='stylesheet' href='/admin/css/themes/all-themes.min.css')
 
     body.theme-red
-    #extra-css
     include loader
     // overlay
     .overlay
@@ -31,7 +30,8 @@ html
     include header
     include sidebar
 
-    section#main-content.content
+    section.content
+        block content
 
     // Script file
     script(type='text/javascript' src='/admin/plugins/jquery/jquery.min.js')
@@ -43,5 +43,5 @@ html
     script(type='text/javascript' src='/admin/js/demo.js')
     script(type='text/javascript' src='/admin/js/routing.js')
     // Extra script
-    #extra-js
+    block extra-js
     // /Extra script

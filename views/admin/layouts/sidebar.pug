@@ -38,65 +38,65 @@ section
         .menu
             ul.list
                 li.header MAIN NAVIGATION
-                li.sidebar-item.active(data-active="#home")
+                li(class={'active': path === '/'})
                     a.menu-toggle(href='#')
                         i.material-icons home
                         span Home
-                li.sidebar-item(data-active="#web-config")
+                li(class={'active': path.includes('/web-config')})
                     a.menu-toggle(href='javascript:void(0);')
                         i.material-icons web
                         span Website Config
                     ul.ml-menu
-                        li.sidebar-item(data-active="information")
-                            a(href='#web-config/information') Information
+                        li(class={'active': path === '/web-config/information'})
+                            a(href='/manager/dashboard/web-config/information') Information
 
-                        li.sidebar-item(data-active="contact")
-                            a(href='#web-config/contact') Contact
+                        li(class={'active': path === '/web-config/contact'})
+                            a(href='/manager/dashboard/web-config/contact') Contact
 
-                        li.sidebar-item(data-active="top-category")
-                            a(href='#web-config/top-category') Top-Category
+                        li(class={'active': path === '/web-config/top-category'})
+                            a(href='/manager/dashboard/web-config/top-category') Top-Category
 
-                li.sidebar-item(data-active="#product-manager")
+                li(class={'active': path.includes('/product-manager')})
                     a.menu-toggle(href='javascript:void(0);')
                         i.material-icons shop
                         span Product Manager
                     ul.ml-menu
-                        li.sidebar-item(data-active="categories")
-                            a(href='#product-manager/categories') Categories
-                        li.sidebar-item(data-active="add-category")
-                            a(href='#product-manager/add-category') Add Category
-                        li.sidebar-item(data-active="brands")
-                            a(href='#product-manager/brands') Brands
-                        li.sidebar-item(data-active="add-brand")
-                            a(href='#product-manager/add-brand') Add Brand
-                        li.sidebar-item(data-active="products")
-                            a(href='#product-manager/products') Products
-                        li.sidebar-item(data-active="add-product")
-                            a(href='#product-manager/add-product') Add Product
+                        li(class={'active': path === '/product-manager/categories'})
+                            a(href='/manager/dashboard/product-manager/categories') Categories
+                        li(class={'active': path === '/product-manager/add-category'})
+                            a(href='/manager/dashboard/product-manager/add-category') Add Category
+                        li(class={'active': path === '/product-manager/brands'})
+                            a(href='/manager/dashboard/product-manager/brands') Brands
+                        li(class={'active': path === '/product-manager/add-brand'})
+                            a(href='/manager/dashboard/product-manager/add-brand') Add Brand
+                        li(class={'active': path === '/product-manager/products'})
+                            a(href='/manager/dashboard/product-manager/products') Products
+                        li(class={'active': path === '/product-manager/add-product'})
+                            a(href='/manager/dashboard/product-manager/add-product') Add Product
 
 
-                li.sidebar-item(data-active="#customer-manager")
+                li(class={'active': path.includes('/customer-manager')})
                     a.menu-toggle(href='javascript:void(0);')
                         i.material-icons account_circle
                         span Customer Manager
                     ul.ml-menu
-                        li.sidebar-item(data-active="customers")
-                            a(href='#customer-manager/customers') Customers
-                        li.sidebar-item(data-active="add-customer")
-                            a(href='#customer-manager/add-customer') Add Customer
+                        li(class={'active': path === '/customer-manager/customers'})
+                            a(href='/manager/dashboard/customer-manager/customers') Customers
+                        li(class={'active': path === '/customer-manager/add-customer'})
+                            a(href='/manager/dashboard/customer-manager/add-customer') Add Customer
 
 
-                li.sidebar-item(data-active="#warehouse-manager")
+                li(class={'active': path.includes('/warehouse-manager')})
                     a.menu-toggle(href='javascript:void(0);')
                         i.material-icons store
                         span Warehouse Manager
                     ul.ml-menu
-                        li.sidebar-item(data-active="check")
-                            a(href='#warehouse-manager/check') Check
-                        li.sidebar-item(data-active="edit")
-                            a(href='#warehouse-manager/edit') Edit
-                        li.sidebar-item(data-active="logs")
-                            a(href='#warehouse-manager/logs') Logs
+                        li(class={'active': path === '/warehouse-manager/check'})
+                            a(href='/manager/dashboard/warehouse-manager/check') Check
+                        li(class={'active': path === '/warehouse-manager/edit'})
+                            a(href='/manager/dashboard/warehouse-manager/edit') Edit
+                        li(class={'active': path === '/warehouse-manager/logs'})
+                            a(href='/manager/dashboard/warehouse-manager/logs') Logs
 
                 li.header LABELS
                 li
