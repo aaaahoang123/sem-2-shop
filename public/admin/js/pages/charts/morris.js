@@ -29,13 +29,13 @@ function getMorris(type, element) {
         Morris.Bar({
             element: element,
             data: [
-                { y: 'T2', a: 100},
-                { y: 'T3', a: 75},
-                { y: 'T4', a: 50},
-                { y: 'T5', a: 75},
-                { y: 'T6', a: 50},
-                { y: 'T7', a: 75},
-                { y: 'CN', a: 100}
+                {y: 'T2', a: 100},
+                {y: 'T3', a: 75},
+                {y: 'T4', a: 50},
+                {y: 'T5', a: 75},
+                {y: 'T6', a: 50},
+                {y: 'T7', a: 75},
+                {y: 'CN', a: 100}
             ],
             xkey: 'y',
             ykeys: ['a'],
