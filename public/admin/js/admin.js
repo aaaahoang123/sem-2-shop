@@ -111,6 +111,25 @@ $.AdminBSB.leftSideBar = {
         Waves.attach('.menu .list a', ['waves-block']);
         Waves.init();
     },
+    refresh: function() {
+        var _this = this;
+        var $body = $('body');
+        var $overlay = $('.overlay');
+
+        $.each($('.menu-toggle.toggled'), function (i, val) {
+            $(val).next().slideToggle(0);
+        });
+
+        //When page load
+        $.each($('.menu .list li.active'), function (i, val) {
+            var $activeAnchors = $(val).find('a:eq(0)');
+
+            $activeAnchors.addClass('toggled');
+            $activeAnchors.next().show();
+        });
+
+
+    },
     setMenuHeight: function (isFirstTime) {
         if (typeof $.fn.slimScroll != 'undefined') {
             var configs = $.AdminBSB.options.leftSideBar;
