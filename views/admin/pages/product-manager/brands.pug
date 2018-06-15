@@ -1,7 +1,7 @@
 extends ../../layouts/master
 
 block extra-css
-
+    link(href='/admin/css/brands.css' rel='stylesheet')
 block extra-js
 
 block content
@@ -27,58 +27,58 @@ block content
                                     li
                                         a(href='javascript:void(0);') Something else here
                     .body.table-responsive
-                        table.table
+                        table.table.text-center
                             thead
                                 tr
-                                    th #
-                                    th NAME
-                                    th DESCRIPTION
-                                    th LOGO
-                                    th ACTION
+                                    th.text-center #
+                                    th.text-center NAME
+                                    th.text-center DESCRIPTION
+                                    th.text-center LOGO
+                                    th.text-center ACTION
                             tbody
                                 tr
-                                    th(scope='row') 1
+                                    th.text-center(scope='row') 1
                                     td Mark
                                     td Otto
                                     td
-                                        .card(style='background-image:url("/admin/images/download.png");background-size: cover; width: 60px; height: 60px;')
+                                        .logo
                                     td
                                         button.btn.btn-link(type='button') Edit
                                         button.btn.btn-link(type='button') Delete
                                 tr
-                                    th(scope='row') 2
+                                    th.text-center(scope='row') 2
                                     td Jacob
                                     td Thornton
                                     td
-                                        .card(style='background-image:url("/admin/images/download.png");background-size: cover; width: 60px; height: 60px;')
+                                        .logo
                                     td
                                         button.btn.btn-link(type='button') Edit
                                         button.btn.btn-link(type='button') Delete
 
                                 tr
-                                    th(scope='row') 3
+                                    th.text-center(scope='row') 3
                                     td Larry
                                     td the Bird
                                     td
-                                        .card(style='background-image:url("/admin/images/download.png");background-size: cover; width: 60px; height: 60px;')
+                                        .logo
                                     td
                                         button.btn.btn-link(type='button') Edit
                                         button.btn.btn-link(type='button') Delete
                                 tr
-                                    th(scope='row') 4
+                                    th.text-center(scope='row') 4
                                     td Larry
                                     td Jellybean
                                     td
-                                        .card(style='background-image:url("/admin/images/download.png");background-size: cover; width: 60px; height: 60px;')
+                                        .logo
                                     td
                                         button.btn.btn-link(type='button') Edit
                                         button.btn.btn-link(type='button') Delete
                                 tr
-                                    th(scope='row') 5
+                                    th.text-center(scope='row') 5
                                     td Larry
                                     td Kikat
                                     td
-                                        .card(style='background-image:url("/admin/images/download.png");background-size: cover; width: 60px; height: 60px;')
+                                        .logo
                                     td
                                         button.btn.btn-link(type='button') Edit
                                         button.btn.btn-link(type='button') Delete
