@@ -1,16 +1,32 @@
 
+$(function () {
+    CKEDITOR.replace('ckeditor');
+    CKEDITOR.config.height = 300;
+
+    //Dropzone
+    Dropzone.options.frmFileUpload = {
+        paramName: "file",
+        maxFilesize: 2
+    };
+
+    //Multi-select
+    $('#optgroup').multiSelect({ selectableOptgroup: true });
+
+
+});
+
 function addFeature(btn) {
 
     var inputF = createInput("settings", "Feature");
     var inputD = createInput("details", "Details");
 
-    var icon = document.createElement("i");
-    icon.className = "material-icons";
-    icon.innerHTML = "add";
-    var btnE = document.createElement("button");
-    btnE.className = "btn btn-danger btn-circle waves-effect waves-circle waves-float";
-    btnE.setAttribute("type", "button");
-    btnE.setAttribute("onclick", "addFeature(this)");
+    // var icon = document.createElement("i");
+    // icon.className = "material-icons";
+    // icon.innerHTML = "add";
+    // var btnE = document.createElement("button");
+    // btnE.className = "btn btn-danger btn-circle waves-effect waves-circle waves-float";
+    // btnE.setAttribute("type", "button");
+    // btnE.setAttribute("onclick", "addFeature(this)");
 
     var iconRe = document.createElement("i");
     iconRe.className = "material-icons";
@@ -31,9 +47,9 @@ function addFeature(btn) {
 
     var spec = document.getElementById("spec");
 
-    btnE.appendChild(icon);
+    // btnE.appendChild(icon);
     btnERe.appendChild(iconRe);
-    col1.appendChild(btnE);
+    // col1.appendChild(btnE);
     col1Re.appendChild(btnERe);
     rw.appendChild(inputF);
     rw.appendChild(inputD);
