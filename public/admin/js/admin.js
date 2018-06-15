@@ -2,10 +2,6 @@ if (typeof jQuery === "undefined") {
     throw new Error("jQuery plugins need to be before this file");
 }
 
-window.addEventListener('hashchange', function () {
-    callPageSingle();
-});
-
 $.AdminBSB = {};
 $.AdminBSB.options = {
     colors: {
