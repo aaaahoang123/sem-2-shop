@@ -1,0 +1,52 @@
+extends ../../layouts/master
+
+block extra-css
+
+block extra-js
+
+    script(type='text/javascript' src='/admin/plugins/ckeditor/ckeditor.js')
+    script(type='text/javascript' src='/admin/js/pages/web-config/information.js')
+
+block content
+    .container-fluid
+        .block-header
+            h2 CONFIG WEBSITE
+        // CKEditor
+        form#form1(method='POST')
+            .row.clearfix
+                .col-lg-12.col-md-12.col-sm-12.col-xs-12
+                    .card
+                        .header
+                            h2
+                                | INFORMATION
+                        .body
+                            .row.clearfix
+                                .row
+                                    .col-md-3(style="text-align:center")
+                                        img#blah(src="/admin/images/placeholder.png" alt="your image" style="width: 100%")
+                                        .file-field.input-field
+                                            .btn.btn-danger.m-t-20
+                                                span Browse
+                                                input#imgInp(type='file')
+                                    .col-md-9
+                                        textarea#ckeditor
+                                .row
+                                    .col-md-6
+                                        b Slogan
+                                        .input-group
+                                            span.input-group-addon
+                                                i.material-icons notes
+                                            .form-line
+                                                input.form-control(type='text')
+                                    .col-md-6
+                                        b Shop name
+                                        .input-group
+                                            span.input-group-addon
+                                                i.material-icons store
+                                            .form-line
+                                                input.form-control(type='text')
+                                .col-md-12
+                                    div.col-md-1
+                                        button.btn.btn-primary.waves-effect(type='button') SUBMIT
+                                    div.col-md-1
+                                        button.btn.btn-warning.waves-effect(type='reset') RESET

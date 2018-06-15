@@ -38,64 +38,60 @@ section
         .menu
             ul.list
                 li.header MAIN NAVIGATION
-                li(class={'active' : path === '/'})
+                li(class={'active': path === '/'})
                     a(href='/manager/dashboard')
                         i.material-icons home
                         span Home
-                li(class={'active' : path.includes('/web-config')})
+                li(class={'active': path.includes('/web-config')})
                     a.menu-toggle(href='javascript:void(0);')
                         i.material-icons web
                         span Website Config
                     ul.ml-menu
-                        li(class={'active' : path === '/web-config/information'})
+                        li(class={'active': path === '/web-config/information'})
                             a(href='/manager/dashboard/web-config/information') Information
 
-                        li(class={'active' : path === '/web-config/contact'})
+                        li(class={'active': path === '/web-config/contact'})
                             a(href='/manager/dashboard/web-config/contact') Contact
 
-                        li(class={'active' : path === '/web-config/top-category'})
+                        li(class={'active': path === '/web-config/top-category'})
                             a(href='/manager/dashboard/web-config/top-category') Top-Category
 
-                li(class={'active' : path.includes('/product-manager')})
+                li(class={'active': path.includes('/products-manager')})
                     a.menu-toggle(href='javascript:void(0);')
                         i.material-icons shop
                         span Product Manager
                     ul.ml-menu
-                        li(class={'active' : path === '/product-manager/categories'})
-                            a(href='/manager/dashboard/product-manager/categories') Categories
-                        li(class={'active' : path === '/product-manager/add-category'})
-                            a(href='/manager/dashboard/product-manager/add-category') Add Category
-                        li(class={'active' : path === '/product-manager/brands'})
-                            a(href='/manager/dashboard/product-manager/brands') Brands
-                        li(class={'active' : path === '/product-manager/add-brand'})
-                            a(href='/manager/dashboard/product-manager/add-brand') Add Brand
-                        li(class={'active' : path === '/product-manager/products'})
-                            a(href='/manager/dashboard/product-manager/products') Products
-                        li(class={'active' : path === '/product-manager/add-product'})
-                            a(href='/manager/dashboard/product-manager/add-product') Add Product
-
-
-                li(class={'active' : path.includes('/customer-manager')})
+                        li(class={'active': path === '/products-manager/categories'})
+                            a(href='/manager/dashboard/products-manager/categories') Categories
+                        li(class={'active': path === '/products-manager/add-category'})
+                            a(href='/manager/dashboard/products-manager/add-category') Add Category
+                        li(class={'active': path === '/products-manager/brands'})
+                            a(href='/manager/dashboard/products-manager/brands') Brands
+                        li(class={'active': path === '/products-manager/add-brand'})
+                            a(href='/manager/dashboard/products-manager/add-brand') Add Brand
+                        li(class={'active': path === '/products-manager/products'})
+                            a(href='/manager/dashboard/products-manager/products') Products
+                        li(class={'active': path === '/products-manager/add-product'})
+                            a(href='/manager/dashboard/products-manager/add-product') Add Product
+                li(class={'active': path.includes('/customer-manager')})
                     a.menu-toggle(href='javascript:void(0);')
                         i.material-icons account_circle
                         span Customer Manager
                     ul.ml-menu
-                        li(class={'active' : path === '/customer-manager/customers'})
+                        li(class={'active': path === '/customer-manager/customers'})
                             a(href='/manager/dashboard/customer-manager/customers') Customers
-                        li(class={'active' : path === '/customer-manager/add-customer'})
+                        li(class={'active': path === '/customer-manager/add-customer'})
                             a(href='/manager/dashboard/customer-manager/add-customer') Add Customer
-
-
-                li(class={'active' : path.includes('/warehouse-manager')})
+                li(class={'active': path.includes('/warehouse-manager')})
                     a.menu-toggle(href='javascript:void(0);')
                         i.material-icons store
                         span Warehouse Manager
                     ul.ml-menu
-                        li(class={'active' : path === '/warehouse-manager/check'})
+                        li(class={'active': path === '/warehouse-manager/check'})
                             a(href='/manager/dashboard/warehouse-manager/check') Check
-                        li(class={'active' : path === '/warehouse-manager/edit'})
+                        li(class={'active': path === '/warehouse-manager/edit'})
                             a(href='/manager/dashboard/warehouse-manager/edit') Edit
-                        li(class={'active' : path === '/warehouse-manager/logs'})
+                        li(class={'active': path === '/warehouse-manager/logs'})
                             a(href='/manager/dashboard/warehouse-manager/logs') Logs
 
                 li.header LABELS

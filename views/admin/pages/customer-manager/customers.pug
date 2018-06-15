@@ -1,0 +1,76 @@
+extends ../../layouts/master
+
+block extra-css
+
+block extra-js
+
+block content
+    .container-fluid
+        .row.clearfix
+            .col-lg-12.col-md-12.col-sm-12.col-xs-12
+                .card
+                    .header
+                        h2
+                            | CUSTOMERS
+                        ul.header-dropdown.m-r--5
+                            li.dropdown
+                                a.dropdown-toggle(href='javascript:void(0);' data-toggle='dropdown' role='button' aria-haspopup='true' aria-expanded='false')
+                                    i.material-icons more_vert
+                                ul.dropdown-menu.pull-right
+                                    li
+                                        a(href='javascript:void(0);') Action
+                                    li
+                                        a(href='javascript:void(0);') Another action
+                                    li
+                                        a(href='javascript:void(0);') Something else here
+                    .body.table-responsive
+                        table.table
+                            thead
+                                tr
+                                    th.text-center EMAIL
+                                    th.text-center PHONE
+                                    th.text-center AVATAR
+                                    th.text-center TYPE
+                                    th.text-center BIRTHDAY
+                                    th.text-center CREATED AT
+                                    th.text-center UPDATED AT
+                                    th.text-center STATUS
+                                    th.text-center ACTION
+                            tbody.text-center
+                                tr
+                                    td @mdo
+                                    td 09231290
+                                    td Nani
+                                    td Hentai
+                                    td Tsuna Kimura
+                                    td Hasagi
+                                    td 06-09-2017
+                                    td 1
+                                    td
+                                        a.btn.btn-link
+                                            i.material-icons edit
+                                        a.btn.btn-link
+                                            i.material-icons delete
+
+                        .row
+                            .col-md-7
+                            .col-md-5
+                                #DataTables_Table_0_paginate.dataTables_paginate.paging_simple_numbers(style='text-align: right')
+                                    ul.pagination
+                                        li#DataTables_Table_0_previous.paginate_button.previous.disabled
+                                            a(href='#' aria-controls='DataTables_Table_0' data-dt-idx='0' tabindex='0') Previous
+                                        li.paginate_button.active
+                                            a(href='#' aria-controls='DataTables_Table_0' data-dt-idx='1' tabindex='0') 1
+                                        li.paginate_button
+                                            a(href='#' aria-controls='DataTables_Table_0' data-dt-idx='2' tabindex='0') 2
+                                        li.paginate_button
+                                            a(href='#' aria-controls='DataTables_Table_0' data-dt-idx='3' tabindex='0') 3
+                                        li.paginate_button
+                                            a(href='#' aria-controls='DataTables_Table_0' data-dt-idx='4' tabindex='0') 4
+                                        li.paginate_button
+                                            a(href='#' aria-controls='DataTables_Table_0' data-dt-idx='5' tabindex='0') 5
+                                        li.paginate_button
+                                            a(href='#' aria-controls='DataTables_Table_0' data-dt-idx='6' tabindex='0') 6
+                                        li#DataTables_Table_0_next.paginate_button.next
+                                            a(href='#' aria-controls='DataTables_Table_0' data-dt-idx='7' tabindex='0') Next
+
