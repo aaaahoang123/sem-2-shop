@@ -1,16 +1,22 @@
+$(function () {
+    CKEDITOR.replace('ckeditor');
+    CKEDITOR.config.height = 300;
 
-function addFeature(btn) {
+    //Dropzone
+    Dropzone.options.frmFileUpload = {
+        paramName: "file",
+        maxFilesize: 2
+    };
 
+    //Multi-select
+    $('#optgroup').multiSelect({ selectableOptgroup: true });
+
+
+});
+
+$("#add-spec-btn").click(function () {
     var inputF = createInput("settings", "Feature");
     var inputD = createInput("details", "Details");
-
-    var icon = document.createElement("i");
-    icon.className = "material-icons";
-    icon.innerHTML = "add";
-    var btnE = document.createElement("button");
-    btnE.className = "btn btn-danger btn-circle waves-effect waves-circle waves-float";
-    btnE.setAttribute("type", "button");
-    btnE.setAttribute("onclick", "addFeature(this)");
 
     var iconRe = document.createElement("i");
     iconRe.className = "material-icons";
@@ -18,7 +24,9 @@ function addFeature(btn) {
     var btnERe = document.createElement("button");
     btnERe.className = "btn btn-danger btn-circle waves-effect waves-circle waves-float";
     btnERe.setAttribute("type", "button");
-    btnERe.setAttribute("onclick", "removeFeature(this)");
+    btnERe.onclick = function () {
+        spec.removeChild(rw);
+    };
 
     var col1 = document.createElement("div");
     col1.className = "col-sm-1";
@@ -31,23 +39,16 @@ function addFeature(btn) {
 
     var spec = document.getElementById("spec");
 
-    btnE.appendChild(icon);
     btnERe.appendChild(iconRe);
-    col1.appendChild(btnE);
     col1Re.appendChild(btnERe);
     rw.appendChild(inputF);
     rw.appendChild(inputD);
     rw.appendChild(col1);
     rw.appendChild(col1Re);
 
-    // btn.parentNode.removeChild(btn);
-
     spec.appendChild(rw);
-};
-
-function removeFeature(btn) {
-    btn.parentNode.parentNode.parentNode.removeChild(btn.parentNode.parentNode);
-}
+    $.AdminBSB.input.activate();
+});
 
 var createInput = function(icon, placeholder) {
 
