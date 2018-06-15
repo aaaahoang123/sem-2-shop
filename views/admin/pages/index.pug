@@ -1,0 +1,64 @@
+extends ../layouts/master
+
+block extra-css
+    link(rel='stylesheet' href='/admin/plugins/morrisjs/morris.min.css')
+block extra-js
+    script(type='text/javascript' src='/admin/plugins/raphael/raphael.min.js')
+    script(type='text/javascript' src='/admin/plugins/morrisjs/morris.min.js')
+    script(type='text/javascript' src='/admin/js/pages/charts/morris.js')
+block content
+    .container-fluid
+        .block-header
+            h2 DASHBOARD
+        .row.clearfix
+            .col-lg-4.col-md-4.col-sm-12.col-xs-12
+                .card
+                    .header
+                        h2 RATIO OF PRODUCTS
+                        ul.header-dropdown.m-r--5
+                            li.dropdown
+                                a.dropdown-toggle(href='javascript:void(0);' data-toggle='dropdown' role='button' aria-haspopup='true' aria-expanded='false')
+                                    i.material-icons more_vert
+                                ul.dropdown-menu.pull-right
+                                    li
+                                        a(href='javascript:void(0);') Action
+                                    li
+                                        a(href='javascript:void(0);') Another action
+                                    li
+                                        a(href='javascript:void(0);') Something else here
+                    .body
+                        #donut_chart.graph
+            .col-lg-8.col-md-8.col-sm-12.col-xs-12
+                .card
+                    .header
+                        h2 QUANTITY OF ORDER IN WEEK
+                        ul.header-dropdown.m-r--5
+                            li.dropdown
+                                a.dropdown-toggle(href='javascript:void(0);' data-toggle='dropdown' role='button' aria-haspopup='true' aria-expanded='false')
+                                    i.material-icons more_vert
+                                ul.dropdown-menu.pull-right
+                                    li
+                                        a(href='javascript:void(0);') Action
+                                    li
+                                        a(href='javascript:void(0);') Another action
+                                    li
+                                        a(href='javascript:void(0);') Something else here
+                    .body
+                        #bar_chart.graph
+            .col-lg-12.col-md-12.col-sm-12.col-xs-12
+                .card
+                    .header
+                        h2 REVENUE IN WEEK
+                        ul.header-dropdown.m-r--5
+                            li.dropdown
+                                a.dropdown-toggle(href='javascript:void(0);' data-toggle='dropdown' role='button' aria-haspopup='true' aria-expanded='false')
+                                    i.material-icons more_vert
+                                ul.dropdown-menu.pull-right
+                                    li
+                                        a(href='javascript:void(0);') Action
+                                    li
+                                        a(href='javascript:void(0);') Another action
+                                    li
+                                        a(href='javascript:void(0);') Something else here
+                    .body
+                        #line_chart.graph

@@ -3,7 +3,7 @@ const router = express.Router();
 
 /* GET users listing. */
 router.get('/', function(req, res, next) {
-    res.render('admin/layouts/master', {path: '/'});
+    res.render('admin/pages/index', {path: '/'});
 }).get('/home', function (req, res, next) {
     res.render('admin/pages/home');
 }).get('/user', function (req, res, next) {
