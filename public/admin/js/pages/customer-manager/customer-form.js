@@ -1,5 +1,14 @@
-function readURL(input) {
+$(function () {
+    autosize($('textarea.auto-growth'));
+    $('.datepicker').bootstrapMaterialDatePicker({
+        format: 'dddd DD MMMM YYYY',
+        clearButton: true,
+        weekStart: 1,
+        time: false
+    });
+});
 
+function readURL(input) {
     if (input.files && input.files[0]) {
         var reader = new FileReader();
 
@@ -14,5 +23,3 @@ function readURL(input) {
 $("#imgInp").change(function() {
     readURL(this);
 });
-CKEDITOR.replace('ckeditor');
-CKEDITOR.config.height = 300;

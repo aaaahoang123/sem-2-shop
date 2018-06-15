@@ -1,0 +1,84 @@
+extends ../../layouts/master
+
+block extra-css
+    link(rel='stylesheet' href='/admin/plugins/bootstrap-material-datetimepicker/css/bootstrap-material-datetimepicker.css')
+    link(rel='stylesheet' href='/admin/plugins/waitme/waitMe.min.css')
+
+block extra-js
+    script(type='text/javascript' src='/admin/plugins/autosize/autosize.js')
+    script(type='text/javascript' src='/admin/plugins/momentjs/moment.min.js')
+    script(type='text/javascript' src='/admin/plugins/bootstrap-material-datetimepicker/js/bootstrap-material-datetimepicker.min.js')
+    script(type='text/javascript' src='/admin/js/pages/customer-manager/customer-form.js')
+
+
+block content
+    .container-fluid
+        .row.clearfix
+            .col-lg-12.col-md-12.col-sm-12.col-xs-12
+                .card
+                    .header
+                        h2
+                            | ADD CUSTOMERS
+                        ul.header-dropdown.m-r--5
+                            li.dropdown
+                                a.dropdown-toggle(href='javascript:void(0);' data-toggle='dropdown' role='button' aria-haspopup='true' aria-expanded='false')
+                                    i.material-icons more_vert
+                                ul.dropdown-menu.pull-right
+                                    li
+                                        a(href='javascript:void(0);') Action
+                                    li
+                                        a(href='javascript:void(0);') Another action
+                                    li
+                                        a(href='javascript:void(0);') Something else here
+                    .body
+                        form(method='POST')
+                            .row.clearfix
+                                .col-md-8
+                                    .row
+                                        .col-sm-1
+                                            i.material-icons person
+                                        .col-sm-11
+                                            .form-group.form-float
+                                                .form-line
+                                                    input.form-control(type='text')
+                                                    label.form-label Full name
+                                    .row
+                                        .col-sm-1
+                                            i.material-icons home
+                                        .col-sm-11
+                                            .form-group.form-float
+                                                .form-line
+                                                    input.form-control(type='text')
+                                                    label.form-label Address
+                                    .row
+                                        .col-sm-1
+                                            i.material-icons email
+                                        .col-sm-11
+                                            .form-group.form-float
+                                                .form-line
+                                                    input.form-control(type='text')
+                                                    label.form-label Email
+                                    .row
+                                        .col-sm-1
+                                            i.material-icons home
+                                        .col-sm-11
+                                            .form-group.form-float
+                                                .form-line
+                                                    input.form-control(type='text')
+                                                    label.form-label Phone
+                                    .row
+                                        .col-sm-1
+                                            i.material-icons date_range
+                                        .col-sm-11
+                                            .form-group
+                                                .form-line
+                                                    input.datepicker.form-control(type='text' placeholder='Birthday')
+                                .col-md-4(style="text-align:center")
+                                    .dz-message
+                                        h3 Click to upload.
+                                    img#blah(src="/admin/images/placeholder.png" alt="your image" style='width: 100%')
+                                    .file-field.input-field
+                                        .btn.btn-danger.m-t-20
+                                            span Browse
+                                            input#imgInp(type='file')
+                            button.btn.btn-primary.waves-effect(type='submit') Submit
