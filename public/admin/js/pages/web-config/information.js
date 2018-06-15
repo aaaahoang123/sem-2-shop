@@ -14,3 +14,6 @@ function readURL(input) {
 $("#imgInp").change(function() {
     readURL(this);
 });
+
+CKEDITOR.replace('ckeditor');
+CKEDITOR.config.height = 300;
