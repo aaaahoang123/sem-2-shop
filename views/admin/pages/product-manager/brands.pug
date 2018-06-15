@@ -1,0 +1,95 @@
+extends ../../layouts/master
+
+block extra-css
+    link(href='/admin/css/brands.css' rel='stylesheet')
+block extra-js
+
+block content
+    .container-fluid
+        .block-header
+            h2 PRODUCT MANAGER
+        // Basic Table
+        .row.clearfix
+            .col-lg-12.col-md-12.col-sm-12.col-xs-12
+                .card
+                    .header
+                        h2
+                            | Brand listing
+                        ul.header-dropdown.m-r--5
+                            li.dropdown
+                                a.dropdown-toggle(href='javascript:void(0);' data-toggle='dropdown' role='button' aria-haspopup='true' aria-expanded='false')
+                                    i.material-icons more_vert
+                                ul.dropdown-menu.pull-right
+                                    li
+                                        a(href='javascript:void(0);') Action
+                                    li
+                                        a(href='javascript:void(0);') Another action
+                                    li
+                                        a(href='javascript:void(0);') Something else here
+                    .body.table-responsive
+                        table.table.text-center
+                            thead
+                                tr
+                                    th.text-center #
+                                    th.text-center NAME
+                                    th.text-center DESCRIPTION
+                                    th.text-center LOGO
+                                    th.text-center ACTION
+                            tbody
+                                tr
+                                    th.text-center(scope='row') 1
+                                    td Mark
+                                    td Otto
+                                    td
+                                        .logo
+                                    td
+                                        button.btn.btn-link(type='button') Edit
+                                        button.btn.btn-link(type='button') Delete
+                                tr
+                                    th.text-center(scope='row') 2
+                                    td Jacob
+                                    td Thornton
+                                    td
+                                        .logo
+                                    td
+                                        button.btn.btn-link(type='button') Edit
+                                        button.btn.btn-link(type='button') Delete
+
+                                tr
+                                    th.text-center(scope='row') 3
+                                    td Larry
+                                    td the Bird
+                                    td
+                                        .logo
+                                    td
+                                        button.btn.btn-link(type='button') Edit
+                                        button.btn.btn-link(type='button') Delete
+                                tr
+                                    th.text-center(scope='row') 4
+                                    td Larry
+                                    td Jellybean
+                                    td
+                                        .logo
+                                    td
+                                        button.btn.btn-link(type='button') Edit
+                                        button.btn.btn-link(type='button') Delete
+                                tr
+                                    th.text-center(scope='row') 5
+                                    td Larry
+                                    td Kikat
+                                    td
+                                        .logo
+                                    td
+                                        button.btn.btn-link(type='button') Edit
+                                        button.btn.btn-link(type='button') Delete
+                        ul.pagination(style='float:right')
+                            li.disabled
+                                a(href='#!')
+                                    i.material-icons chevron_left
+                            li.active
+                                a(href='#!') 1
+                            li.waves-effect
+                                a(href='#!') 2
+                            li.waves-effect
+                                a(href='#!')
+                                    i.material-icons chevron_right

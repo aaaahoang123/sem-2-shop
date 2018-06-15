@@ -26,7 +26,7 @@ router.use('/products-manager', express.Router()
     }).get('/add-category', function(req, res, next){
         res.render('admin/pages/demo');
     }).get('/brands', function (req, res, next) {
-        res.render('admin/pages/demo');
+        res.render('admin/pages/product-manager/brands', {path:'/product-manager/brands'});
     }).get('/add-brand', function(req, res, next){
         res.render('admin/pages/demo');
     }).get('/products', function (req, res, next) {
