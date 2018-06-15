@@ -22,9 +22,9 @@ router.use('/web-config', express.Router()
 
 router.use('/product-manager', express.Router()
     .get('/categories', function (req, res, next) {
-        res.render('admin/pages/demo');
+        res.render('admin/pages/product-manager/categories', {path: '/product-manager/categories'});
     }).get('/add-category', function(req, res, next){
-        res.render('admin/pages/demo');
+        res.render('admin/pages/product-manager/categories-form', {path: '/product-manager/add-category'});
     }).get('/brands', function (req, res, next) {
         res.render('admin/pages/product-manager/brands', {path:'/product-manager/brands'});
     }).get('/add-brand', function(req, res, next){
@@ -38,9 +38,9 @@ router.use('/product-manager', express.Router()
 
 router.use('/customer-manager', express.Router()
     .get('/customers', function (req, res, next) {
-        res.render('admin/pages/demo');
+        res.render('admin/pages/customer-manager/customers', {path: '/customer-manager/customers'});
     }).get('/add-customer', function (req, res, next) {
-        res.render('admin/pages/demo');
+        res.render('admin/pages/customer-manager/customers-form', {path: '/customer-manager/add-customer'});
     })
 );
 
