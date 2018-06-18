@@ -3,7 +3,7 @@ $(function () {
     // sweetalert
     $('.js-sweetalert button').on('click', function () {
         var type = $(this).data('type');
-        if(type === 'ajax-loader'){
+        if (type === 'ajax-loader') {
             showAjaxLoaderMessage();
         }
     });
@@ -11,7 +11,8 @@ $(function () {
     // modal
     $('.js-modal-buttons .btn.btn-detail').on('click', function () {
         let products = JSON.parse($(this).attr('data-p'));
-        // console.log(products.code);
+        // console.log($('#specificationsbody').html() === "");
+        console.log(products.hasOwnProperty('specifications'));
         $('.productCode-modal').text(products.code);
         $('.productImg-modal').css('background-image', 'url(' + products.images + ')');
         $('.productName-modal').text(products.name);
@@ -19,6 +20,22 @@ $(function () {
         $('.productCategory-modal').text(products.categories);
         $('.productBrand-modal').text(products.brand);
         $('.productPrice-modal').text(products.price + "$");
+
+            if (products.hasOwnProperty('specifications') === true) {
+                if ($('#specificationsbody').html() === "") {
+                    let i = 1;
+                    for (let specification in products.specifications) {
+                        $('#specificationsbody').append("<tr>" +
+                                                            "<td>" + i + "</td>" +
+                                                            "<td>" + specification + "</td>" +
+                                                            "<td>" + products.specifications[specification] + "</td>" +
+                                                        "</tr>"
+                        );
+                        i++;
+                    }
+                $('#specifications').show();
+            }
+        }
         $('#largeModal').modal();
     });
 
