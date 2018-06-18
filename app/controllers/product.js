@@ -11,10 +11,31 @@ module.exports = {
                 res.send(err);
                 return;
             }
-            req.products = [
-                result
-            ];
+            req.products = result;
             next();
         });
+    },
+
+    productView: function (req, res, next) {
+        let length = req.products.length;
+        console.log(req.products);
+        res.locals.path = '/products-manager/products';
+        if (length === 0) {
+            res.render('admin/pages/products-manager/products', {
+                type: 0,
+            });
+        }
+        else if (length === 1) {
+            res.render('admin/pages/products-manager/products', {
+                type: 1,
+                products: req.products,
+            });
+        }
+        else {
+            res.render('admin/pages/products-manager/products', {
+                type: 2,
+                products: req.products
+            });
+        }
     }
 };

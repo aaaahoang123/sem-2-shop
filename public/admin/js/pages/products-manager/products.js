@@ -9,10 +9,17 @@ $(function () {
     });
 
     // modal
-    $('.js-modal-buttons .btn').on('click', function () {
-        var color = $(this).data('color');
-        $('#mdModal .modal-content').removeAttr('class').addClass('modal-content modal-col-' + color);
-        $('#mdModal').modal('show');
+    $('.js-modal-buttons .btn.btn-detail').on('click', function () {
+        let products = JSON.parse($(this).attr('data-p'));
+        // console.log(products.code);
+        $('.productCode-modal').text(products.code);
+        $('.productImg-modal').css('background-image', 'url(' + products.images + ')');
+        $('.productName-modal').text(products.name);
+        $('.productDescription-modal').text(products.description);
+        $('.productCategory-modal').text(products.categories);
+        $('.productBrand-modal').text(products.brand);
+        $('.productPrice-modal').text(products.price + "$");
+        $('#largeModal').modal();
     });
 
 });
