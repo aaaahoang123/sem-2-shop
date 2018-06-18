@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-
+const productsController = require('../app/controllers/product');
 /* GET users listing. */
 router.get('/', function (req, res, next) {
     res.render('admin/pages/index', {path: '/'});
@@ -34,6 +34,8 @@ router.use('/products-manager', express.Router()
     }).get('/add-product', function(req, res, next){
         res.render('admin/pages/products-manager/products-form', {path: '/products-manager/add-product'});
     })
+
+    .post('/products/:code', productsController.getOne)
 );
 
 router.use('/customer-manager', express.Router()
