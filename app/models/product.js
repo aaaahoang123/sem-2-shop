@@ -27,11 +27,7 @@ module.exports = mongoose.model('products', {
         type: Number,
         required: true
     },
-    specifications: [{
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'products',
-        require: true
-    }],
+    specifications: Object,
     updated_by: {
         type: mongoose.Schema.Types.ObjectId,
         required: true
