@@ -11,7 +11,7 @@ block content
                 .card
                     .header
                         h2
-                            | CUSTOMERS
+                            | LIST CATEGORIES
                         ul.header-dropdown.m-r--5
                             li.dropdown
                                 a.dropdown-toggle(href='javascript:void(0);' data-toggle='dropdown' role='button' aria-haspopup='true' aria-expanded='false')
@@ -37,31 +37,65 @@ block content
                             table.table.table-bordered.table-hover
                                 thead
                                     tr
-                                        th.text-center EMAIL
-                                        th.text-center PHONE
-                                        th.text-center AVATAR
-                                        th.text-center TYPE
-                                        th.text-center BIRTHDAY
-                                        th.text-center CREATED AT
+                                        th #
+                                        th.text-center NAME
+                                        th.text-center DESCRIPTION
+                                        th.text-center CHILDREN
                                         th.text-center UPDATED AT
-                                        th.text-center STATUS
                                         th.text-center ACTION
                                 tbody.text-center
                                     tr
-                                        td @mdo
-                                        td 09231290
-                                        td Nani
-                                        td Hentai
-                                        td Tsuna Kimura
-                                        td Hasagi
-                                        td 06-09-2017
-                                        td 1
+                                        th(scope='row') 1
+                                        td Markg
+                                        td Ottog
+                                        td @mdogd
                                         td
+                                        td
+                                            a.btn.btn-link(title="details")
+                                                i.material-icons details
                                             a.btn.btn-link
                                                 i.material-icons edit
                                             a.btn.btn-link
                                                 i.material-icons delete
-
+                                    tr
+                                        th(scope='row') 2
+                                        td Jacob
+                                        td Thornton
+                                        td @fat
+                                        td
+                                        td
+                                            a.btn.btn-link(title="details")
+                                                i.material-icons details
+                                            a.btn.btn-link
+                                                i.material-icons edit
+                                            a.btn.btn-link
+                                                i.material-icons delete
+                                    tr
+                                        th(scope='row') 3
+                                        td Larry
+                                        td the Bird
+                                        td @twitter
+                                        td
+                                        td
+                                            a.btn.btn-link(title="details")
+                                                i.material-icons details
+                                            a.btn.btn-link
+                                                i.material-icons edit
+                                            a.btn.btn-link
+                                                i.material-icons delete
+                                    tr
+                                        th(scope='row') 4
+                                        td Larry
+                                        td Jellybean
+                                        td @lajelly
+                                        td
+                                        td
+                                            a.btn.btn-link(title="details")
+                                                i.material-icons details
+                                            a.btn.btn-link
+                                                i.material-icons edit
+                                            a.btn.btn-link
+                                                i.material-icons delete
                         .row
                             .col-md-7
                             .col-md-5
@@ -83,4 +117,3 @@ block content
                                             a(href='#' aria-controls='DataTables_Table_0' data-dt-idx='6' tabindex='0') 6
                                         li#DataTables_Table_0_next.paginate_button.next
                                             a(href='#' aria-controls='DataTables_Table_0' data-dt-idx='7' tabindex='0') Next
-
