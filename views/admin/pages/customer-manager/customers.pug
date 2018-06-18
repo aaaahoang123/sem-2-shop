@@ -24,33 +24,43 @@ block content
                                     li
                                         a(href='javascript:void(0);') Something else here
                     .body.table-responsive
-                        table.table
-                            thead
-                                tr
-                                    th.text-center EMAIL
-                                    th.text-center PHONE
-                                    th.text-center AVATAR
-                                    th.text-center TYPE
-                                    th.text-center BIRTHDAY
-                                    th.text-center CREATED AT
-                                    th.text-center UPDATED AT
-                                    th.text-center STATUS
-                                    th.text-center ACTION
-                            tbody.text-center
-                                tr
-                                    td @mdo
-                                    td 09231290
-                                    td Nani
-                                    td Hentai
-                                    td Tsuna Kimura
-                                    td Hasagi
-                                    td 06-09-2017
-                                    td 1
-                                    td
-                                        a.btn.btn-link
-                                            i.material-icons edit
-                                        a.btn.btn-link
-                                            i.material-icons delete
+                        .row
+                            .col-sm-8
+
+                            .col-sm-3
+                                .form-group
+                                    .form-line
+                                        input.form-control(type='text', placeholder='Search')
+                            .col-sm-1
+                                button.btn.btn-danger.btn-circle.waves-effect.waves-circle.waves-float(type='button')
+                                    i.material-icons search
+                            table.table.table-bordered.table-hover
+                                thead
+                                    tr
+                                        th.text-center EMAIL
+                                        th.text-center PHONE
+                                        th.text-center AVATAR
+                                        th.text-center TYPE
+                                        th.text-center BIRTHDAY
+                                        th.text-center CREATED AT
+                                        th.text-center UPDATED AT
+                                        th.text-center STATUS
+                                        th.text-center ACTION
+                                tbody.text-center
+                                    tr
+                                        td @mdo
+                                        td 09231290
+                                        td Nani
+                                        td Hentai
+                                        td Tsuna Kimura
+                                        td Hasagi
+                                        td 06-09-2017
+                                        td 1
+                                        td
+                                            a.btn.btn-link
+                                                i.material-icons edit
+                                            a.btn.btn-link
+                                                i.material-icons delete
 
                         .row
                             .col-md-7
