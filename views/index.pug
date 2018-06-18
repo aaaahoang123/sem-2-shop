@@ -2,4 +2,10 @@ extends layout
 
 block content
   h1= title
-  p Welcome to #{title}
+  p= detail
+  p Redirect to the before page in 2s
+
+  script(type='text/javascript' src='/admin/js/')
+    | setTimeout(function() {
+    |   location.href = '#{link}';
+    | }, 2000);
