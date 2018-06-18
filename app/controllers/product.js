@@ -1,6 +1,6 @@
 'use strict';
 
-var model = require('../models/product');
+const model = require('../models/product');
 
 module.exports = {
     add: function (req, res, next) {
@@ -19,3 +19,23 @@ module.exports = {
     }
 
 };
+
+module.exports = {
+    getOne: function (req, res, next) {
+        let query = {
+            code: req.params.code
+        };
+        model.find(query, function (err, result) {
+            if (err) {
+                console.log(err);
+                res.send(err);
+                return;
+            }
+            req.products = [
+                result
+            ];
+        });
+        next();
+    }
+};
+
