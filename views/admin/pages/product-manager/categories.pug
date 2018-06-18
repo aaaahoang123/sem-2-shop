@@ -24,65 +24,96 @@ block content
                                     li
                                         a(href='javascript:void(0);') Something else here
                     .body.table-responsive
-                        table.table
-                            thead
-                                tr
-                                    th #
-                                    th.text-center NAME
-                                    th.text-center DESCRIPTION
-                                    th.text-center CHILDREN
-                                    th.text-center UPDATED AT
-                                    th.text-center ACTION
-                            tbody.text-center
-                                tr
-                                    th(scope='row') 1
-                                    td Markg
-                                    td Ottog
-                                    td @mdogd
-                                    td
-                                    td
-                                        a.btn.btn-link(title="details")
-                                            i.material-icons details
-                                        a.btn.btn-link
-                                            i.material-icons edit
-                                        a.btn.btn-link
-                                            i.material-icons delete
-                                tr
-                                    th(scope='row') 2
-                                    td Jacob
-                                    td Thornton
-                                    td @fat
-                                    td
-                                    td
-                                        a.btn.btn-link(title="details")
-                                            i.material-icons details
-                                        a.btn.btn-link
-                                            i.material-icons edit
-                                        a.btn.btn-link
-                                            i.material-icons delete
-                                tr
-                                    th(scope='row') 3
-                                    td Larry
-                                    td the Bird
-                                    td @twitter
-                                    td
-                                    td
-                                        a.btn.btn-link(title="details")
-                                            i.material-icons details
-                                        a.btn.btn-link
-                                            i.material-icons edit
-                                        a.btn.btn-link
-                                            i.material-icons delete
-                                tr
-                                    th(scope='row') 4
-                                    td Larry
-                                    td Jellybean
-                                    td @lajelly
-                                    td
-                                    td
-                                        a.btn.btn-link(title="details")
-                                            i.material-icons details
-                                        a.btn.btn-link
-                                            i.material-icons edit
-                                        a.btn.btn-link
-                                            i.material-icons delete
+                        .row
+                            .col-sm-8
+
+                            .col-sm-3
+                                .form-group
+                                    .form-line
+                                        input.form-control(type='text', placeholder='Search')
+                            .col-sm-1
+                                button.btn.btn-danger.btn-circle.waves-effect.waves-circle.waves-float(type='button')
+                                    i.material-icons search
+                            table.table.table-bordered.table-hover
+                                thead
+                                    tr
+                                        th #
+                                        th.text-center NAME
+                                        th.text-center DESCRIPTION
+                                        th.text-center CHILDREN
+                                        th.text-center UPDATED AT
+                                        th.text-center ACTION
+                                tbody.text-center
+                                    tr
+                                        th(scope='row') 1
+                                        td Markg
+                                        td Ottog
+                                        td @mdogd
+                                        td
+                                        td
+                                            a.btn.btn-link(title="details")
+                                                i.material-icons details
+                                            a.btn.btn-link
+                                                i.material-icons edit
+                                            a.btn.btn-link
+                                                i.material-icons delete
+                                    tr
+                                        th(scope='row') 2
+                                        td Jacob
+                                        td Thornton
+                                        td @fat
+                                        td
+                                        td
+                                            a.btn.btn-link(title="details")
+                                                i.material-icons details
+                                            a.btn.btn-link
+                                                i.material-icons edit
+                                            a.btn.btn-link
+                                                i.material-icons delete
+                                    tr
+                                        th(scope='row') 3
+                                        td Larry
+                                        td the Bird
+                                        td @twitter
+                                        td
+                                        td
+                                            a.btn.btn-link(title="details")
+                                                i.material-icons details
+                                            a.btn.btn-link
+                                                i.material-icons edit
+                                            a.btn.btn-link
+                                                i.material-icons delete
+                                    tr
+                                        th(scope='row') 4
+                                        td Larry
+                                        td Jellybean
+                                        td @lajelly
+                                        td
+                                        td
+                                            a.btn.btn-link(title="details")
+                                                i.material-icons details
+                                            a.btn.btn-link
+                                                i.material-icons edit
+                                            a.btn.btn-link
+                                                i.material-icons delete
+                        .row
+                            .col-md-7
+                            .col-md-5
+                                #DataTables_Table_0_paginate.dataTables_paginate.paging_simple_numbers(style='text-align: right')
+                                    ul.pagination
+                                        li#DataTables_Table_0_previous.paginate_button.previous.disabled
+                                            a(href='#' aria-controls='DataTables_Table_0' data-dt-idx='0' tabindex='0') Previous
+                                        li.paginate_button.active
+                                            a(href='#' aria-controls='DataTables_Table_0' data-dt-idx='1' tabindex='0') 1
+                                        li.paginate_button
+                                            a(href='#' aria-controls='DataTables_Table_0' data-dt-idx='2' tabindex='0') 2
+                                        li.paginate_button
+                                            a(href='#' aria-controls='DataTables_Table_0' data-dt-idx='3' tabindex='0') 3
+                                        li.paginate_button
+                                            a(href='#' aria-controls='DataTables_Table_0' data-dt-idx='4' tabindex='0') 4
+                                        li.paginate_button
+                                            a(href='#' aria-controls='DataTables_Table_0' data-dt-idx='5' tabindex='0') 5
+                                        li.paginate_button
+                                            a(href='#' aria-controls='DataTables_Table_0' data-dt-idx='6' tabindex='0') 6
+                                        li#DataTables_Table_0_next.paginate_button.next
+                                            a(href='#' aria-controls='DataTables_Table_0' data-dt-idx='7' tabindex='0') Next
