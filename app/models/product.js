@@ -1,6 +1,5 @@
 'use strict';
 const mongoose = require('mongoose');
-const mongoosePaginate = require('mongoose-paginate');
 
 let schema = new mongoose.Schema({
     code: {
@@ -52,7 +51,5 @@ let schema = new mongoose.Schema({
         required: true
     },
 });
-
-schema.plugin(mongoosePaginate);
 
 module.exports = mongoose.model('products', schema);

@@ -40,31 +40,59 @@ module.exports = {
     },
 
     getList: function (req, res, next) {
-        let limit = 10, offset = 0, page = 1, query = {};
-        if(req.query.limit) limit = Number(req.query.limit);
-        if (req.query.page) {
-            page = Number(req.query.page);
-            offset = (page-1)*limit;
+        let limit = 10, skip = 0, page = 1;
+        if (req.query.limit && /^\d+$/.test(req.query.limit)) limit = Math.abs(Number(req.query.limit));
+        if (req.query.page && !['-1', '1'].includes(req.query.page) && /^\d+$/.test(req.query.page)) {
+            page = Math.abs(Number(req.query.page));
+            skip = (page - 1) * limit - 1;
         }
-        if(req.query.q) {
+        /**
+         * Sử dụng mongodb aggregate, $facet
+         * Cấu trúc result trả về, bao gồm 2 trường meta và data, meta là thông số phân trang, data là dữ liệu lấy được
+         * Tham khảo: https://docs.mongodb.com/manual/reference/operator/aggregation/facet/
+         */
+        let query = [{
+            '$facet': {
+                meta: [{$count: "totalItems"}],
+                data: [{$skip: skip}, {$limit: limit}] // add projection here wish you re-shape the docs
+            }
+        }];
+
+        /**
+         * Nếu có tìm kiếm, tạo match và đẩy vào đầu array query
+         * Tham khảo: https://docs.mongodb.com/manual/reference/operator/aggregation/match/
+         */
+        if (req.query.q) {
             let pattern = new RegExp(req.query.q, 'i');
-            query = {
-                $or: [
-                    {code: pattern},
-                    {description: pattern},
-                    {name: pattern}
-                ]
-            };
+            query.unshift({
+                $match: {
+                    $or: [
+                        {code: pattern},
+                        {description: pattern},
+                        {name: pattern}
+                    ]
+                }
+            });
         }
-        model.paginate(query, { offset: offset, limit: limit }).then(function(result) {
-            if (!res.locals) res.locals = {};
-            req.products = result.docs;
-            console.log(result);
+
+        // Thực thi aggregate query
+        model.aggregate(query, function (err, result) {
+            if (err) {
+                console.log(err);
+            }
+            // Kết quả trả về có dạng [{meta: [{}], data: [{}]}]. Trong trường hợp không tìm thấy thì đặt req.products = [] và next()
+            if (result.length === 0 || result[0].meta.length === 0) {
+                req.products = [];
+                next();
+                return;
+            }
+            req.products = result[0].data;
+            let totalItems = result[0].meta[0].totalItems;
             req.meta = {
-                totalItems: result.total,
-                total: Math.ceil(result.total/limit),
-                limit: result.limit,
-                offset: result.offset,
+                totalItems: totalItems,
+                total: Math.ceil(totalItems / limit),
+                limit: limit,
+                offset: skip,
                 page: page,
                 q: req.query.q
             };

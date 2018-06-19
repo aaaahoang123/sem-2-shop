@@ -58,28 +58,28 @@ function showAjaxLoaderMessage() {
     });
 }
 
-function searchProduct() {
-    var query = $('#search-input').val();
-    // var href = location.href;
-    // if(!location.search) href += '?q=' + query;
-    // else if(!href.includes('q=')) href += '&q=' + query;
-    // else href.replace()
+$('#search-btn').click(function () {
+    changeSearchByInput('#search-input', 'q=');
+});
+
+$('#search-input').keyup(function (ev) {
+    if(ev.keyCode === 13 || ev.which === 13) {
+        changeSearchByInput(this, 'q=');
+    }
+});
+
+$('#select-limit').change(function () {
+    changeSearchByInput(this, 'limit=')
+});
+
+function changeSearchByInput(el, except) {
     var searchArray = location.search.split('&');
     var href = '?';
     for (var i = 0; i < searchArray.length; i++) {
-        if (searchArray[i].includes('page=') || searchArray[i].includes('limit=')) {
-            href += searchArray[i] + '&';
+        if (!searchArray[i].includes('page=') && !searchArray[i].includes(except)) {
+            href += searchArray[i].replace("?", "") + '&';
         }
     }
-    href += 'q=' + query;
+    href += except + $(el).val();
     location.search = href;
 }
-
-$('#search-btn').click(function () {
-    searchProduct();
-});
-$('#search-input').keyup(function (ev) {
-    if(ev.keyCode === 13 || ev.which === 13) {
-        searchProduct();
-    }
-});

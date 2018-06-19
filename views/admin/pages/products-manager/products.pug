@@ -3,8 +3,7 @@ extends ../../layouts/master
 block extra-css
     link(rel='stylesheet' href='/admin/plugins/jquery-datatable/skin/bootstrap/css/dataTables.bootstrap.min.css')
     link(rel='stylesheet' href='/admin/plugins/sweetalert/sweetalert.min.css')
-    link(href='https://fonts.googleapis.com/css?family=Roboto:400,700&subset=latin,cyrillic-ext' rel='stylesheet' type='text/css')
-    link(href='https://fonts.googleapis.com/icon?family=Material+Icons' rel='stylesheet' type='text/css')
+    link(rel='stylesheet' href='/admin/plugins/bootstrap-select/css/bootstrap-select.min.css')
 
 block extra-js
     script(type='text/javascript' src='/admin/plugins/bootstrap-notify/bootstrap-notify.js')
@@ -28,15 +27,30 @@ block content
                         li
                             a(href='javascript:void(0);') Something else here
         .row.m-t-20
-            .col-sm-8
-
-            .col-sm-3
-                .form-group
-                    .form-line
-                        input#search-input.form-control(type='text', placeholder='Search')
-            .col-sm-1
-                button#search-btn.btn.btn-danger.btn-circle.waves-effect.waves-circle.waves-float(type='button')
-                    i.material-icons search
+            .col-sm-6
+                - if (meta)
+                    - let limit = meta.limit
+                    .col-xs-1.m-t-25
+                        label Show
+                    .col-lg-3.col-md-4.col-sm-5.col-xs-3.m-t-15
+                        select#select-limit.form-control.show-tick
+                            option(selected disabled) #{limit}
+                            option(value='5') 5
+                            option(value='10') 10
+                            option(value='20') 20
+                            option(value='30') 30
+                            option(value='40') 40
+                            option(value='50') 50
+                    .col-xs-2.m-t-25
+                        label entries
+            .col-sm-6
+                .col-sm-5.col-xs-5.m-t-15(style='float: right')
+                    .form-group
+                        .form-line
+                            input#search-input.form-control(type='text', placeholder='Search' value=meta && meta.q ? meta.q : '')
+                .col-lg-1.col-sm-2.col-xs-1.m-t-15(style='float: right')
+                    button#search-btn.btn.btn-danger.btn-circle.waves-effect.waves-circle.waves-float(type='button')
+                        i.material-icons search
         - if (type === 0)
             include no-product-plug
         - else
@@ -82,7 +96,7 @@ block content
                                         a First
                                 - else
                                     li.paginate_button
-                                        a(href='/manager/dashboard/products-manager/products?' + limit + q) First
+                                        a(href='/manager/dashboard/products-manager/products?' + limit.substring(1) + q) First
                                 - let i = meta.page > 5 ? meta.page - 4 : 1
                                 - if (i !== 1)
                                     li.paginate_button.disabled
@@ -175,5 +189,3 @@ block content
                         .col-sm-3
                             button.btn.btn-link.waves-effect(type='button' data-dismiss='modal') CLOSE
                         .col-sm-1
-
-
