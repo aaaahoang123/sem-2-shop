@@ -1,7 +1,8 @@
 'use strict';
 const mongoose = require('mongoose');
+const mongoosePaginate = require('mongoose-paginate');
 
-module.exports = mongoose.model('products', {
+let schema = new mongoose.Schema({
     code: {
         type: String,
         required: true,
@@ -51,3 +52,7 @@ module.exports = mongoose.model('products', {
         required: true
     },
 });
+
+schema.plugin(mongoosePaginate);
+
+module.exports = mongoose.model('products', schema);
