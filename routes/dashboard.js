@@ -29,13 +29,14 @@ router.use('/products-manager', express.Router()
         res.render('admin/pages/product-manager/brands', {path:'/products-manager/brands'});
     }).get('/add-brand', function(req, res, next){
         res.render('admin/pages/products-manager/brands-form', {path: '/products-manager/add-brand'});
-    }).get('/products', productsController.productView)
+    }).get('/products', productsController.getList, productsController.productView)
     .get('/products/:code', productsController.getOne, productsController.productView)
     .get('/add-product', function(req, res, next){
         res.render('admin/pages/products-manager/products-form', {path: '/products-manager/add-product'});
     })
 
     .post('/products/:code', productsController.getOne)
+    .post('/products', productsController.getList)
 );
 
 router.use('/customer-manager', express.Router()
