@@ -28,9 +28,7 @@ let schema = new mongoose.Schema({
         type: Number,
         required: true
     },
-    specifications: {
-        type: Object
-    },
+    specifications: Object,
     updated_by: {
         type: mongoose.Schema.Types.ObjectId,
         required: true
