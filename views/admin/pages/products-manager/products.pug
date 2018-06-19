@@ -3,11 +3,13 @@ extends ../../layouts/master
 block extra-css
     link(rel='stylesheet' href='/admin/plugins/jquery-datatable/skin/bootstrap/css/dataTables.bootstrap.min.css')
     link(rel='stylesheet' href='/admin/plugins/sweetalert/sweetalert.min.css')
+    link(rel='stylesheet' href='/admin/plugins/bootstrap-select/css/bootstrap-select.min.css')
 
 block extra-js
     script(type='text/javascript' src='/admin/plugins/bootstrap-notify/bootstrap-notify.js')
     script(type='text/javascript' src='/admin/plugins/sweetalert/sweetalert.min.js')
     script(type='text/javascript' src='/admin/js/pages/products-manager/products.js')
+
 block content
     .card
         .header
@@ -24,21 +26,36 @@ block content
                             a(href='javascript:void(0);') Another action
                         li
                             a(href='javascript:void(0);') Something else here
-        .body
-            .table-responsive
-                .row
-                    .col-sm-8
-
-                    .col-sm-3
-                        .form-group
-                            .form-line
-                                input.form-control(type='text', placeholder='Search')
-                    .col-sm-1
-                        button.btn.btn-danger.btn-circle.waves-effect.waves-circle.waves-float(type='button')
-                            i.material-icons search
-                - if (type === 0)
-                    | No products
-                - else
+        .row.m-t-20
+            .col-sm-6
+                - if (meta)
+                    - let limit = meta.limit
+                    .col-xs-1.m-t-25
+                        label Show
+                    .col-lg-3.col-md-4.col-sm-5.col-xs-3.m-t-15
+                        select#select-limit.form-control.show-tick
+                            option(selected disabled) #{limit}
+                            option(value='5') 5
+                            option(value='10') 10
+                            option(value='20') 20
+                            option(value='30') 30
+                            option(value='40') 40
+                            option(value='50') 50
+                    .col-xs-2.m-t-25
+                        label entries
+            .col-sm-6
+                .col-sm-5.col-xs-5.m-t-15(style='float: right')
+                    .form-group
+                        .form-line
+                            input#search-input.form-control(type='text', placeholder='Search' value=meta && meta.q ? meta.q : '')
+                .col-lg-1.col-sm-2.col-xs-1.m-t-15(style='float: right')
+                    button#search-btn.btn.btn-danger.btn-circle.waves-effect.waves-circle.waves-float(type='button')
+                        i.material-icons search
+        - if (type === 0)
+            include no-product-plug
+        - else
+            .body
+                .table-responsive
                     .row
                         .col-sm-12
                             table.table.table-bordered.table-hover
@@ -53,7 +70,7 @@ block content
                                     - let length = products.length;
                                     - for (let i = 0; i < length; i ++)
                                         tr
-                                            th(scope='row') #{i}
+                                            th(scope='row') #{i + 1}
                                             td #{products[i].code}
                                             td(align="center")
                                                 div(style='background-image: url('+products[i].images[0]+');background-size: cover; height: 70px; width: 100px;')
@@ -65,29 +82,41 @@ block content
                                                     i.material-icons mode_edit
                                                 button.btn.btn-link.waves-effect(type='button', data-type="ajax-loader")
                                                     i.material-icons delete
-                - if (type === 2)
-                    .row
-                        .col-sm-7
-
-                        .col-sm-5
-                            ul.pagination
-                                li#DataTables_Table_0_previous.paginate_button.previous.disabled
-                                    a(href='#', aria-controls='DataTables_Table_0', data-dt-idx='0', tabindex='0') Previous
-                                li.paginate_button.active
-                                    a(href='#', aria-controls='DataTables_Table_0', data-dt-idx='1', tabindex='0') 1
-                                li.paginate_button
-                                    a(href='#', aria-controls='DataTables_Table_0', data-dt-idx='2', tabindex='0') 2
-                                li.paginate_button
-                                    a(href='#', aria-controls='DataTables_Table_0', data-dt-idx='3', tabindex='0') 3
-                                li.paginate_button
-                                    a(href='#', aria-controls='DataTables_Table_0', data-dt-idx='4', tabindex='0') 4
-                                li.paginate_button
-                                    a(href='#', aria-controls='DataTables_Table_0', data-dt-idx='3', tabindex='0') 5
-                                li.paginate_button
-                                    a(href='#', aria-controls='DataTables_Table_0', data-dt-idx='4', tabindex='0') 6
-                                li#DataTables_Table_0_next.paginate_button.next
-                                    a(href='#', aria-controls='DataTables_Table_0', data-dt-idx='7', tabindex='0') Next
-
+                    - if (type === 2)
+                        - let limit = ''
+                        - let q = ''
+                        - if (meta.limit !== 10)
+                            - limit += '&limit=' + meta.limit
+                        -if (meta.q)
+                            - q = '&q=' + meta.q
+                        .row.text-right
+                            ul.pagination(style='margin-right: 1%')
+                                - if (meta.page === 1)
+                                    li.paginate_button.disabled
+                                        a First
+                                - else
+                                    li.paginate_button
+                                        a(href='/manager/dashboard/products-manager/products?' + limit.substring(1) + q) First
+                                - let i = meta.page > 5 ? meta.page - 4 : 1
+                                - if (i !== 1)
+                                    li.paginate_button.disabled
+                                        a ...
+                                - for (; i <= meta.page + 4 && i <= meta.total; i ++)
+                                    - if (i === meta.page)
+                                        li.paginate_button.active
+                                            a= i
+                                    - else
+                                        li.paginate_button
+                                            a(href='/manager/dashboard/products-manager/products?page=' + i + limit + q)= i
+                                    - if (i === meta.page + 4 && i < meta.total)
+                                        li.paginate_button.disabled
+                                            a ...
+                                - if (meta.page === meta.total)
+                                    li.paginate_button.disabled
+                                        a Last
+                                - else
+                                    li.paginate_button
+                                        a(href='/manager/dashboard/products-manager/products?page=' + meta.total + limit + q) Last
 
     #largeModal.modal.fade(tabindex='-1' role='dialog')
         .modal-dialog.modal-lg(role='document')
@@ -160,5 +189,3 @@ block content
                         .col-sm-3
                             button.btn.btn-link.waves-effect(type='button' data-dismiss='modal') CLOSE
                         .col-sm-1
-
-

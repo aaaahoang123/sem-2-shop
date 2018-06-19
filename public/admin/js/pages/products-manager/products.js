@@ -22,20 +22,22 @@ $(function () {
         $(tableRows[5]).find('td').last().text(products.brand);
         $(tableRows[6]).find('td').last().text(products.price + "$");
 
-            if (products.hasOwnProperty('specifications') === true) {
-                if ($('#specificationsbody').html() === "") {
-                    let i = 1;
-                    for (let specification in products.specifications) {
-                        $('#specificationsbody').append("<tr>" +
-                                                            "<td>" + i + "</td>" +
-                                                            "<td>" + specification + "</td>" +
-                                                            "<td>" + products.specifications[specification] + "</td>" +
-                                                        "</tr>"
-                        );
-                        i++;
-                    }
-                $('#specifications').show();
+        if (products.hasOwnProperty('specifications') === true) {
+            $('#specificationsbody').html('');
+            let i = 1;
+            for (let specification in products.specifications) {
+                $('#specificationsbody').append("<tr>" +
+                    "<td>" + i + "</td>" +
+                    "<td>" + specification + "</td>" +
+                    "<td>" + products.specifications[specification] + "</td>" +
+                    "</tr>"
+                );
+                i++;
             }
+            $('#specifications').show();
+        }
+        else {
+            $('#specifications').hide();
         }
         $('#largeModal').modal();
     });
@@ -54,4 +56,30 @@ function showAjaxLoaderMessage() {
             swal("Ajax request finished!");
         }, 2000);
     });
+}
+
+$('#search-btn').click(function () {
+    changeSearchByInput('#search-input', 'q=');
+});
+
+$('#search-input').keyup(function (ev) {
+    if(ev.keyCode === 13 || ev.which === 13) {
+        changeSearchByInput(this, 'q=');
+    }
+});
+
+$('#select-limit').change(function () {
+    changeSearchByInput(this, 'limit=')
+});
+
+function changeSearchByInput(el, except) {
+    var searchArray = location.search.split('&');
+    var href = '?';
+    for (var i = 0; i < searchArray.length; i++) {
+        if (!searchArray[i].includes('page=') && !searchArray[i].includes(except)) {
+            href += searchArray[i].replace("?", "") + '&';
+        }
+    }
+    href += except + $(el).val();
+    location.search = href;
 }
