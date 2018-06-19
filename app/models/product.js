@@ -1,7 +1,8 @@
 'use strict';
 const mongoose = require('mongoose');
+const mongoosePaginate = require('mongoose-paginate');
 
-module.exports = mongoose.model('products', {
+let schema = new mongoose.Schema({
     code: {
         type: String,
         required: true,
@@ -27,11 +28,9 @@ module.exports = mongoose.model('products', {
         type: Number,
         required: true
     },
-    specifications: [{
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'products',
-        require: true
-    }],
+    specifications: {
+        type: Object
+    },
     updated_by: {
         type: mongoose.Schema.Types.ObjectId,
         required: true
@@ -55,3 +54,7 @@ module.exports = mongoose.model('products', {
         required: true
     },
 });
+
+schema.plugin(mongoosePaginate);
+
+module.exports = mongoose.model('products', schema);
