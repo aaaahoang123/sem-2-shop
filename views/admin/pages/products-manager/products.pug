@@ -3,11 +3,14 @@ extends ../../layouts/master
 block extra-css
     link(rel='stylesheet' href='/admin/plugins/jquery-datatable/skin/bootstrap/css/dataTables.bootstrap.min.css')
     link(rel='stylesheet' href='/admin/plugins/sweetalert/sweetalert.min.css')
+    link(href='https://fonts.googleapis.com/css?family=Roboto:400,700&subset=latin,cyrillic-ext' rel='stylesheet' type='text/css')
+    link(href='https://fonts.googleapis.com/icon?family=Material+Icons' rel='stylesheet' type='text/css')
 
 block extra-js
     script(type='text/javascript' src='/admin/plugins/bootstrap-notify/bootstrap-notify.js')
     script(type='text/javascript' src='/admin/plugins/sweetalert/sweetalert.min.js')
     script(type='text/javascript' src='/admin/js/pages/products-manager/products.js')
+
 block content
     .card
         .header
@@ -38,7 +41,7 @@ block content
             include no-product-plug
         - else
             .body
-                .table-bordered
+                .table-responsive
                     .row
                         .col-sm-12
                             table.table.table-bordered.table-hover
