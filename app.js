@@ -9,7 +9,7 @@ const usersRouter = require('./routes/users');
 const adminRouter = require('./routes/manager');
 const app = express();
 mongoose.Promise = global.Promise;
-mongoose.connect("mongodb://localhost/demo");
+mongoose.connect("mongodb://admin:admin1@ds159400.mlab.com:59400/sem2shop");
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'pug');

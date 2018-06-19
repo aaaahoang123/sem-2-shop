@@ -22,20 +22,22 @@ $(function () {
         $(tableRows[5]).find('td').last().text(products.brand);
         $(tableRows[6]).find('td').last().text(products.price + "$");
 
-            if (products.hasOwnProperty('specifications') === true) {
-                if ($('#specificationsbody').html() === "") {
-                    let i = 1;
-                    for (let specification in products.specifications) {
-                        $('#specificationsbody').append("<tr>" +
-                                                            "<td>" + i + "</td>" +
-                                                            "<td>" + specification + "</td>" +
-                                                            "<td>" + products.specifications[specification] + "</td>" +
-                                                        "</tr>"
-                        );
-                        i++;
-                    }
-                $('#specifications').show();
+        if (products.hasOwnProperty('specifications') === true) {
+            $('#specificationsbody').html('');
+            let i = 1;
+            for (let specification in products.specifications) {
+                $('#specificationsbody').append("<tr>" +
+                    "<td>" + i + "</td>" +
+                    "<td>" + specification + "</td>" +
+                    "<td>" + products.specifications[specification] + "</td>" +
+                    "</tr>"
+                );
+                i++;
             }
+            $('#specifications').show();
+        }
+        else {
+            $('#specifications').hide();
         }
         $('#largeModal').modal();
     });
@@ -55,3 +57,29 @@ function showAjaxLoaderMessage() {
         }, 2000);
     });
 }
+
+function searchProduct() {
+    var query = $('#search-input').val();
+    // var href = location.href;
+    // if(!location.search) href += '?q=' + query;
+    // else if(!href.includes('q=')) href += '&q=' + query;
+    // else href.replace()
+    var searchArray = location.search.split('&');
+    var href = '?';
+    for (var i = 0; i < searchArray.length; i++) {
+        if (searchArray[i].includes('page=') || searchArray[i].includes('limit=')) {
+            href += searchArray[i] + '&';
+        }
+    }
+    href += 'q=' + query;
+    location.search = href;
+}
+
+$('#search-btn').click(function () {
+    searchProduct();
+});
+$('#search-input').keyup(function (ev) {
+    if(ev.keyCode === 13 || ev.which === 13) {
+        searchProduct();
+    }
+});
