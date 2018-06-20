@@ -1,6 +1,59 @@
 'use strict';
+
 const model = require('../models/product');
+
 module.exports = {
+    checkNull: function (req,res,next) {
+        var data = req.body;
+        console.log(req.body);
+        console.log(data.specifications);
+        if (!data.code || !data.name || !data.description || !data.categories || !data.brand || !data.price) {
+            res.status(403);
+            res.send({
+                'status': '403',
+                'message': 'Product code,  name, description, categories, brand, price can\'t be null or undefined'
+            });
+            return;
+        }
+        next();
+    },
+
+    checkUnique: function(req, res, next) {
+        if(req.products.length !== 0 ){
+            res.status(409);
+            res.send({
+                'status': '409',
+                'message': 'Product code is unique'
+            });
+            return;
+        }
+        next();
+    },
+
+    setCodeFromBody: function(req, res, next){
+        if (!req.params) req.params = {};
+        req.params.code = req.body.code;
+        next();
+    },
+
+    insertOne: function (req, res, next) {
+        var newProduct = new model(req.body);
+        newProduct.save(function (err, result) {
+            if(err){
+                res.status(400);
+                res.send({
+                    code : 400,
+                    title: 'Server Error',
+                    detail: 'Server Error'
+                });
+                console.log(err);
+                return;
+            }
+            res.status(201);
+            res.send(result);
+        })
+    },
+
     getOne: function (req, res, next) {
         let query = {
             code: req.params.code
@@ -12,6 +65,7 @@ module.exports = {
                 return;
             }
             req.products = result;
+            console.log( req.products);
             next();
         });
     },
@@ -100,4 +154,5 @@ module.exports = {
         });
     }
 };
+
 
