@@ -22,11 +22,11 @@ router.use('/web-config', express.Router()
 
 router.use('/products-manager', express.Router()
     .get('/categories', function (req, res, next) {
-        res.render('admin/pages/product-manager/categories', {path: '/products-manager/categories'});
+        res.render('admin/pages/products-manager/categories', {path: '/products-manager/categories'});
     }).get('/add-category', function(req, res, next){
-        res.render('admin/pages/product-manager/categories-form', {path: '/products-manager/add-category'});
+        res.render('admin/pages/products-manager/categories-form', {path: '/products-manager/add-category'});
     }).get('/brands', function (req, res, next) {
-        res.render('admin/pages/product-manager/brands', {path:'/products-manager/brands'});
+        res.render('admin/pages/products-manager/brands', {path:'/products-manager/brands'});
     }).get('/add-brand', function(req, res, next){
         res.render('admin/pages/products-manager/brands-form', {path: '/products-manager/add-brand'});
     }).get('/products', function (req, res, next) {
