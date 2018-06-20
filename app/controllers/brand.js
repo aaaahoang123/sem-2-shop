@@ -1,9 +1,84 @@
 'use strict';
-const model = require('../models/product');
+
+const model = require('../models/brand');
+
 module.exports = {
+
+    validate: function(req, res, next){
+        if(!req.errs) req.errs = {};
+
+        if(!req.body.name || req.body.name === null || req.body.name === '') req.errs.name = 'Brand name can not be null';
+
+        if(!req.body.description || req.body.description === null || req.body.description === '') req.errs.description = 'Brand description can not be null';
+
+        if(!req.body.logo || req.body.logo === null || req.body.logo === '') req.errs.logo = 'Brand logo can not be null';
+
+        next();
+    },
+
+    insertOne: function (req, res, next) {
+        if(req.errs && req.errs.length !== 0) {
+            next();
+            return;
+        }
+
+        let brand = new model(req.body);
+        brand.save(function (err, result) {
+            if(err) {
+                console.log(err);
+                res.send(err);
+                return;
+            }
+            req.successResponse = {
+                title: 'Success',
+                detail: 'Add brand successfully',
+                link: '/manager/dashboard/products-manager/add-brand',
+                added: result
+            };
+            next();
+        })
+    },
+
+    responseBrandFormView: function(req, res, next) {
+        if (!req.errs && !req.successResponse) {
+            res.render('admin/pages/products-manager/brands-form', {path: '/products-manager/add-product'});
+        } else if (req.errs) {
+            res.render('admin/pages/products-manager/brands-form', {
+                path: '/products-manager/add-product',
+                errs: req.errs,
+                currentData: req.body
+            });
+        } else {
+            res.render('index', req.successResponse);
+        }
+    },
+
+    productView: function (req, res, next) {
+        let length = req.brands.length;
+        res.locals.path = '/products-manager/brands';
+        if (length === 0) {
+            res.render('admin/pages/products-manager/brands', {
+                type: 0,
+            });
+        }
+        else if (!req.meta) {
+            res.render('admin/pages/products-manager/brands', {
+                type: 1,
+                brands: req.brands,
+            });
+        }
+        else {
+            res.render('admin/pages/products-manager/brands', {
+                type: 2,
+                brands: req.brands,
+                meta: req.meta
+            });
+        }
+    },
+
     getOne: function (req, res, next) {
         let query = {
-            code: req.params.code
+            id: req.params.id
         };
         model.find(query, function (err, result) {
             if (err) {
@@ -11,32 +86,9 @@ module.exports = {
                 res.send(err);
                 return;
             }
-            req.products = result;
+            req.brands = result;
             next();
         });
-    },
-
-    productView: function (req, res, next) {
-        let length = req.products.length;
-        res.locals.path = '/products-manager/products';
-        if (length === 0) {
-            res.render('admin/pages/products-manager/products', {
-                type: 0,
-            });
-        }
-        else if (!req.meta) {
-            res.render('admin/pages/products-manager/products', {
-                type: 1,
-                products: req.products,
-            });
-        }
-        else {
-            res.render('admin/pages/products-manager/products', {
-                type: 2,
-                products: req.products,
-                meta: req.meta
-            });
-        }
     },
 
     getList: function (req, res, next) {
@@ -67,7 +119,6 @@ module.exports = {
             query.unshift({
                 $match: {
                     $or: [
-                        {code: pattern},
                         {description: pattern},
                         {name: pattern}
                     ]
@@ -82,11 +133,11 @@ module.exports = {
             }
             // Kết quả trả về có dạng [{meta: [{}], data: [{}]}]. Trong trường hợp không tìm thấy thì đặt req.products = [] và next()
             if (result.length === 0 || result[0].meta.length === 0) {
-                req.products = [];
+                req.brands = [];
                 next();
                 return;
             }
-            req.products = result[0].data;
+            req.brands = result[0].data;
             let totalItems = result[0].meta[0].totalItems;
             req.meta = {
                 totalItems: totalItems,
@@ -100,4 +151,3 @@ module.exports = {
         });
     }
 };
-
