@@ -1,7 +1,7 @@
 'use strict';
 const mongoose = require('mongoose');
 
-module.exports = mongoose.model('products', {
+let schema = new mongoose.Schema({
     code: {
         type: String,
         required: true,
@@ -27,20 +27,19 @@ module.exports = mongoose.model('products', {
         type: Number,
         required: true
     },
-    specifications: [{
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'products',
-        require: true
-    }],
+
+    specifications: Object,
+
+    // updated_by: {
+    //     type: mongoose.Schema.Types.ObjectId,
+    //     required: true
+    // },
+
     images: {
         type: [String],
         required: true
     },
-    updated_by: {
-        type: mongoose.Schema.Types.ObjectId,
-        // default: {"qwe": 'eqwe'},
-        // required: true
-    },
+
     created_at: {
         type: Date,
         default: Date.now,
@@ -56,3 +55,5 @@ module.exports = mongoose.model('products', {
         default: 1
     },
 });
+
+module.exports = mongoose.model('products', schema);

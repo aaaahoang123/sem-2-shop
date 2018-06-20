@@ -1,18 +1,37 @@
+
+const UPLOAD_IMG_URL = "https://api.cloudinary.com/v1_1/fpt-aptech/image/upload";
+
 $(function () {
     CKEDITOR.replace('ckeditor');
     CKEDITOR.config.height = 300;
 
     //Dropzone
-    // Dropzone.options.frmFileUpload = {
-    //     paramName: "file",
-    //     maxFilesize: 2
-    // };
+    Dropzone.options.frmFileUpload = {
+        url: UPLOAD_IMG_URL,
+        paramName: "file",
+        params: {
+            upload_preset: 'gwq6ik7v'
+        },
+        maxFilesize: 2,
+        error: function (file, err) {
+            console.log(err);
+        },
+        success: function (file, res) {
+            var ip = document.createElement("input");
+            ip.setAttribute("type", "hidden");
+            ip.setAttribute("class", "urlImg");
+            ip.value = res.secure_url;
+            var urlImages = document.getElementById("url-images");
+            urlImages.appendChild(ip);
+        }
+    };
 
     //Multi-select
     $('#optgroup').multiSelect({ selectableOptgroup: true });
 
 
 });
+
 
 $("#add-spec-btn").click(function () {
     var inputF = createInput("settings", "Feature");
@@ -49,6 +68,7 @@ $("#add-spec-btn").click(function () {
     spec.appendChild(rw);
     $.AdminBSB.input.activate();
 });
+
 
 var createInput = function(icon, placeholder) {
 
@@ -91,8 +111,9 @@ $("#btn-submit").click(function () {
 
     var btn = this;
 
-    var specName, specValue, speccification = {};
-    if($('#spec').innerHTML !== ""){
+    var specName, specValue, inputUrlImg, images = [], speccification = {};
+
+    if($('#spec').innerHTML !== "" || $('#spec').innerHTML !== null){
        specName = document.getElementsByClassName("spec-name");
        specValue = document.getElementsByClassName("spec-value");
        for(var i=0; i< specName.length; i++){
@@ -100,25 +121,34 @@ $("#btn-submit").click(function () {
        }
     }
 
+    if($('#url-images').innerHTML !== "" || $('#url-images').innerHTML !== null){
+        inputUrlImg = document.getElementsByClassName("urlImg");
+        for (var i = 0; i < inputUrlImg.length; i++){
+            images.push(inputUrlImg[i].value);
+        }
+    }
+
     var forms = document.forms['product-form'];
     var n = validateProductName(forms['name']);
     var p = validateProductPrice(forms['price']);
+    var pc = validateProductCode(forms['code']);
     var d = validateDescription(forms['description']);
     var c = validateCategory(forms['category']);
     var b = validateBrand(forms['brand']);
-    if (n && p && d && c && b) {
+
+    if (n && p && pc && d && c && b) {
         createButtonLoader(btn);
         var productData = {
-            "code": 'A212',
+            "code": forms['code'].value,
             "name": forms['name'].value,
             "description": CKEDITOR.instances.ckeditor.getData(),
             "categories": $('#category select').val(),
             "brand": forms['brand'].value,
             "price": parseInt(forms['price'].value),
             "specifications": speccification,
-            "images": ['1.png','2.png']
+            "images": images
         };
-        console.log(productData);
+
         var req = new XMLHttpRequest();
         req.open("POST", "http://localhost:3000/api/products");
         req.setRequestHeader("Content-Type", "application/json");
@@ -132,17 +162,16 @@ $("#btn-submit").click(function () {
                 }, 500);
 
             } else {
-                // creatAlertResponeErrorServer(btn);
+                showNotification("alert-danger", "Thêm Sản phẩm không thành công", "bottom", "right", "animated bounceIn", "animated bounceOut");
+                creatAlertResponeErrorServer(this);
             }
         };
         req.onerror = function () {
             console.log(req.status);
         };
         req.onloadend = function () {
-            setTimeout(function () {
-                btn.removeAttribute("disabled");
-                btn.innerHTML = "SUBMIT";
-            }, 3000);
+            btn.removeAttribute("disabled");
+            btn.innerHTML = "SUBMIT";
         };
         req.send(JSON.stringify(productData));
     }
@@ -163,6 +192,9 @@ $('#btn-reset').click(function () {
     for(var i = 0; i < labels.length; i++){
         labels[i].innerHTML = "";
         labels[i].removeAttribute('class');
+        if(labels[i].parentElement.querySelector("div.form-line") === null || labels[i].parentElement.querySelector("div.form-line") === undefined){
+            continue;
+        }
         if(labels[i].parentElement.querySelector("div.form-line").className.includes("success")){
             labels[i].parentElement.querySelector("div.form-line").className = labels[i].parentElement.querySelector("div.form-line").className.replace(" success","");
             labels[i].parentElement.querySelector("div.form-line").className = labels[i].parentElement.querySelector("div.form-line").className.replace(" focused","");
@@ -172,10 +204,11 @@ $('#btn-reset').click(function () {
             labels[i].parentElement.querySelector("div.form-line").className = labels[i].parentElement.querySelector("div.form-line").className.replace(" focused","");
         }
     }
-    // if(document.getElementById("alert-error").className !== ""){
-    //     document.getElementById("alert-error").className = "";
-    //     document.getElementById("alert-error").innerHTML = "";
-    // }
+
+    if(document.getElementById("alert-error").className !== ""){
+        document.getElementById("alert-error").className = "";
+        document.getElementById("alert-error").innerHTML = "";
+    }
 });
 
 function createButtonLoader(e) {
@@ -244,6 +277,17 @@ var validateProductPrice = function (elm) {
     }
 };
 
+var validateProductCode = function (elm) {
+    var alert = elm.parentElement.parentElement.querySelector("label");
+    if(checkNull(elm.value)){
+        createAlert(alert,elm,"Please enter Product Code.");
+        return false;
+    }else {
+        removeAlert(alert,elm);
+        return true;
+    }
+};
+
 var validateCategory = function (elm) {
 
     var alert = elm.parentElement.parentElement.parentElement.querySelector("label");
@@ -290,23 +334,37 @@ function checkNull(value) {
 function createAlert(alert, elm, str) {
     alert.innerHTML = str;
     alert.className = "error";
-    if(elm.parentElement.className.includes("success")){
-        elm.parentElement.className = elm.parentElement.className.replace(" success", "");
-    }
-    if(!elm.parentElement.className.includes("error")){
-        elm.parentElement.className += " error";
+    if(elm.parentElement.className.includes('form-line')){
+        if(elm.parentElement.className.includes("success")){
+            elm.parentElement.className = elm.parentElement.className.replace(" success", "");
+        }
+        if(!elm.parentElement.className.includes("error")){
+            elm.parentElement.className += " error";
+        }
     }
 }
 
 function removeAlert(alert, elm) {
     alert.removeAttribute('class');
     alert.innerHTML = "";
-
-    if(elm.parentElement.className.includes("error")){
-        elm.parentElement.className = elm.parentElement.className.replace(" error", "");
+    if(elm.parentElement.className.includes('form-line')){
+        if(elm.parentElement.className.includes("error")){
+            elm.parentElement.className = elm.parentElement.className.replace(" error", "");
+        }
+        if(!elm.parentElement.className.includes("success")){
+            elm.parentElement.className += " success";
+        }
     }
-    if(!elm.parentElement.className.includes("success")){
-        elm.parentElement.className += " success";
-    }
+}
 
+function creatAlertResponeErrorServer(e) {
+    var alertError = document.getElementById("alert-error");
+    if(!alertError.className.includes("alert bg-red")){
+        alertError.className = "alert bg-red";
+    }
+    alertError.innerHTML = JSON.parse(e.responseText).message;
+
+    if(document.getElementById('code').className.includes("success")){
+        document.getElementById('code').className = document.getElementById('code').className.replace("success", "error");
+    }
 }

@@ -7,11 +7,11 @@ block extra-css
 
 block extra-js
     script(type='text/javascript' src='/admin/plugins/ckeditor/ckeditor.js')
-    script(type='text/javascript' src='/admin/js/pages/products-manager/products-form.js')
     script(type='text/javascript' src='/admin/js/pages/products-manager/xregexp-all.js')
     script(type="text/javascript" src="/admin/plugins/bootstrap-notify/bootstrap-notify.min.js")
     script(type="text/javascript" src="/admin/plugins/multi-select/js/jquery.multi-select.min.js")
     script(type="text/javascript" src="/admin/plugins/dropzone/dropzone.min.js")
+    script(type='text/javascript' src='/admin/js/pages/products-manager/products-form.js')
 
 block content
     .card
@@ -19,6 +19,7 @@ block content
             h2
                 | ADD PRODUCT
         .body
+            #alert-error
             form(name="product-form")
                 .row.clearfix
                     .col-sm-6
@@ -39,24 +40,33 @@ block content
                             label
 
                 .row.clearfix
-                    .col-sm-6
+                    .col-sm-4
+                        b Product Code
+                        .input-group
+                            span.input-group-addon
+                                i.material-icons code
+                            #code.form-line
+                                input.form-control.date(name='code' type='text' placeholder='Code' onkeyup="validateProductCode(this)")
+                            label
+
+                    .col-sm-4
                         b Categories
                         .input-group
                             span.input-group-addon
                                 i.material-icons collections
-                            #category.form-line
+                            #category
                                 select.form-control.show-tick(name='category' multiple='' onchange="validateCategory(this)")
                                     option Phone
                                     option Laptop
                                     option Audio and Video
                             label
 
-                    .col-sm-6
+                    .col-sm-4
                         b Brands
                         .input-group
                             span.input-group-addon
                                 i.material-icons local_offer
-                            #brand.form-line
+                            #brand
                                 select.form-control.show-tick(name='brand' onchange="validateBrand(this)")
                                     option(value='') -- Please select --
                                     option(value='10') Ipone
@@ -77,7 +87,7 @@ block content
                 h2.card-inside-title Product Images
                 .row.clearfix
                     .col-sm-12
-                        #frmFileUpload.dropzone(action='/app/img' method='post' enctype='multipart/form-data')
+                        #frm-file-upload.dropzone.custom-dropzone(action='https://api.cloudinary.com/v1_1/fpt-aptech/image/upload' enctype='multipart/form-data')
                             .dz-message
                                 .drag-icon-cph
                                     i.material-icons touch_app
@@ -87,7 +97,8 @@ block content
                                     strong not
                                     |  actually uploaded.)
                             .fallback
-                                input(name='file' type='file' multiple='')
+                                input(name='myImg' type='file' multiple='')
+                                input(type='hidden' name = 'upload_preset' value='gwq6ik7v')
 
                 h2.card-inside-title Specification
                 #spec
@@ -97,6 +108,8 @@ block content
                         button#add-spec-btn.btn.btn-danger.waves-effect.waves-float(type='button')
                             i.material-icons add
                             span ADD PROPERTIES
+
+                #url-images(style="display: none;")
 
                 .row.clearfix
                     .col-sm-4
