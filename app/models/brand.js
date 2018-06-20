@@ -11,7 +11,7 @@ let schema = new mongoose.Schema({
         required: true
     },
     logo: {
-        type: [String],
+        type: String,
         required: true
     },
     created_at: {
@@ -26,6 +26,9 @@ let schema = new mongoose.Schema({
     },
     status: {
         type: Number,
+        default: 1,
         required: true
     }
 });
+
+module.exports = mongoose.model('brands', schema);
