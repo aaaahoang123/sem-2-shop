@@ -4,6 +4,15 @@ const model = require('../models/brand');
 
 module.exports = {
 
+    /**
+     * Validate dữ liệu từ req.body
+     * name, description, logo không null
+     * Nếu không thỏa mãn, nhét lỗi vào req.errs
+     * Sau khi validate hoàn tất thì next()
+     * @param req
+     * @param res
+     * @param next
+     */
     validate: function(req, res, next){
         if(!req.errs) req.errs = {};
 
@@ -16,17 +25,30 @@ module.exports = {
         next();
     },
 
+    /**
+     * Thực hiện sau khi chạy hàm validate
+     * Nếu có lỗi, và object req.errs không empty thì next() luôn, sang hàm response view (hoặc có thể là response json)
+     * Nếu không lỗi, thực hiện insert brand mới vào db
+     * Nếu insert vào db có lỗi, log lỗi, nhét lỗi vào req.errs và next()
+     * Nếu thành công, setup req.successResponse (là option để hiển thị trang thông báo thành công), và next();
+     * @param req
+     * @param res
+     * @param next
+     */
     insertOne: function (req, res, next) {
-        if(req.errs && req.errs.length !== 0) {
+        if (req.errs && Object.keys(req.errs).length !== 0) {
             next();
             return;
         }
 
         let brand = new model(req.body);
         brand.save(function (err, result) {
-            if(err) {
+            if (err) {
                 console.log(err);
-                res.send(err);
+                if (!req.errs) req.errs = {};
+                if (err.code === 11000) req.errs.name = "This brand name has already existed";
+                req.errs.database = err.message;
+                next();
                 return;
             }
             req.successResponse = {
@@ -37,20 +59,6 @@ module.exports = {
             };
             next();
         })
-    },
-
-    responseBrandFormView: function(req, res, next) {
-        if (!req.errs && !req.successResponse) {
-            res.render('admin/pages/products-manager/brands-form', {path: '/products-manager/add-product'});
-        } else if (req.errs) {
-            res.render('admin/pages/products-manager/brands-form', {
-                path: '/products-manager/add-product',
-                errs: req.errs,
-                currentData: req.body
-            });
-        } else {
-            res.render('index', req.successResponse);
-        }
     },
 
     productView: function (req, res, next) {
@@ -83,10 +91,12 @@ module.exports = {
         model.find(query, function (err, result) {
             if (err) {
                 console.log(err);
-                res.send(err);
+                if (!req.errs) req.errs = {};
+                req.errs.database = err.message;
+                next();
                 return;
             }
-            req.brands = result;
+            req.brands = result[0];
             next();
         });
     },
@@ -130,6 +140,10 @@ module.exports = {
         model.aggregate(query, function (err, result) {
             if (err) {
                 console.log(err);
+                if (!req.errs) req.errs = {};
+                req.errs.database = err.message;
+                next();
+                return;
             }
             // Kết quả trả về có dạng [{meta: [{}], data: [{}]}]. Trong trường hợp không tìm thấy thì đặt req.products = [] và next()
             if (result.length === 0 || result[0].meta.length === 0) {
@@ -149,5 +163,28 @@ module.exports = {
             };
             next();
         });
+    },
+
+    /**
+     * Trả về view brand form sau khi đã chạy qua các middleware
+     * Nếu không có lỗi, và không có successResponse, thì trả về brand-form trắng (chạy ghi vào brand-form lần đầu)
+     * Nếu có lỗi, trả về form, kèm lỗi và dữ liệu đã nhập
+     * Nếu đã success, gửi về trang success, kèm successResponse
+     * @param req
+     * @param res
+     * @param next
+     */
+    responseBrandFormView: function(req, res, next) {
+        if ((!req.errs || Object.keys(req.errs).length === 0) && (!req.successResponse || Object.keys(req.successResponse).length === 0)) {
+            res.render('admin/pages/products-manager/brands-form', {path: '/products-manager/add-product'});
+        } else if (req.errs && Object.keys(req.errs).length !== 0) {
+            res.render('admin/pages/products-manager/brands-form', {
+                path: '/products-manager/add-product',
+                errs: req.errs,
+                brand: req.body
+            });
+        } else {
+            res.render('index', req.successResponse);
+        }
     }
 };

@@ -1,19 +1,21 @@
 'use strict';
 const mongoose = require('mongoose');
 
-let schema = new mongoose.Schema({
+let schema = mongoose.Schema({
     name: {
         type: String,
-        unique: true,
         required: true
     },
     description: {
         type: String,
         required: true
     },
-    logo: {
-        type: String,
-        required: true
+    level: {
+        type: Number,
+        required: true,
+    },
+    children: {
+        type: [Object]
     },
     created_at: {
         type: Date,
@@ -27,9 +29,8 @@ let schema = new mongoose.Schema({
     },
     status: {
         type: Number,
-        default: 1,
         required: true
     }
 });
 
-module.exports = mongoose.model('brands', schema);
+module.exports = mongoose.model('categories', schema);
