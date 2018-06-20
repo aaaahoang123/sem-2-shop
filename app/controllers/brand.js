@@ -40,7 +40,8 @@ module.exports = {
             }
             res.render('index', {
                 title: 'Success',
-                detail: 'Add brand successfully'
+                detail: 'Add brand successfully',
+                link: '/manager/dashboard/products-manager/add-brand'
             })
         })
     }

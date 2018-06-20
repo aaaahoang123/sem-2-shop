@@ -8052,3 +8052,27 @@ html.ie11 .bs-searchbox .form-control {
   font-size: 20px;
   cursor: pointer;
   opacity: 0;}
+.mask{
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    overflow: hidden;
+    top: 0;
+    left: 0;
+    display: -webkit-box;
+     display: -webkit-flex;
+    display: -ms-flexbox;
+     display: flex;
+     -webkit-box-pack: center;
+    -webkit-justify-content: center;
+    -ms-flex-pack: center;
+     justify-content: center;
+    -webkit-box-align: center;
+    -webkit-align-items: center;
+    -ms-flex-align: center;
+     align-items: center;
+    opacity: 0;
+}
+.mask.show-bitch {
+    opacity: 1;
+}

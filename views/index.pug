@@ -5,7 +5,7 @@ block content
   p= detail
   p Redirect to the before page in 2s
 
-  script(type='text/javascript' src='/admin/js/')
+  script(type='text/javascript')
     | setTimeout(function() {
     |   location.href = '#{link}';
     | }, 2000);
