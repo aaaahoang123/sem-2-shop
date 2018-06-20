@@ -98,7 +98,7 @@ module.exports = {
         if (req.query.limit && /^\d+$/.test(req.query.limit)) limit = Math.abs(Number(req.query.limit));
         if (req.query.page && !['-1', '1'].includes(req.query.page) && /^\d+$/.test(req.query.page)) {
             page = Math.abs(Number(req.query.page));
-            skip = (page - 1) * limit - 1;
+            skip = (page - 1) * limit;
         }
         /**
          * Sử dụng mongodb aggregate, $facet

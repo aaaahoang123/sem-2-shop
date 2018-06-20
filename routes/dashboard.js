@@ -2,6 +2,7 @@ const express = require('express');
 const router = express.Router();
 
 const productsController = require('../app/controllers/product');
+const brandController = require('../app/controllers/brand');
 
 /* GET users listing. */
 router.get('/', function (req, res, next) {
@@ -22,14 +23,13 @@ router.use('/web-config', express.Router()
     })
 );
 
-router.use('/products-manager', express.Router()
+router.use('/products-manager', express.Router({})
     .get('/categories', function (req, res, next) {
-        res.render('admin/pages/product-manager/categories', {path: '/products-manager/categories'});
+        res.render('admin/pages/products-manager/categories', {path: '/products-manager/categories'});
     }).get('/add-category', function(req, res, next){
-        res.render('admin/pages/product-manager/categories-form', {path: '/products-manager/add-category'});
-    }).get('/brands', function (req, res, next) {
-        res.render('admin/pages/product-manager/brands', {path:'/products-manager/brands'});
-    }).get('/add-brand', function(req, res, next){
+        res.render('admin/pages/products-manager/categories-form', {path: '/products-manager/add-category'});
+    }).get('/brands', brandController.getList, brandController.productView
+    ).get('/add-brand', function(req, res, next){
         res.render('admin/pages/products-manager/brands-form', {path: '/products-manager/add-brand'});
     }).get('/products', productsController.getList, productsController.productView)
     .get('/products/:code', productsController.getOne, productsController.productView)
@@ -37,8 +37,11 @@ router.use('/products-manager', express.Router()
         res.render('admin/pages/products-manager/products-form', {path: '/products-manager/add-product'});
     })
 
+    .post('/products/:code', productsController.getOne)
+    .post('/products', productsController.getList)
 
-
+    //.post('/brands/:id', brandController.validate, brandController.insertOne, brandController.getOne)
+    .post('/brands', brandController.validate, brandController.insertOne, brandController.responseBrandFormView)
 );
 
 router.use('/customer-manager', express.Router()
