@@ -32,13 +32,14 @@ module.exports = mongoose.model('products', {
         ref: 'products',
         require: true
     }],
-    updated_by: {
-        type: mongoose.Schema.Types.ObjectId,
-        required: true
-    },
     images: {
         type: [String],
         required: true
+    },
+    updated_by: {
+        type: mongoose.Schema.Types.ObjectId,
+        // default: {"qwe": 'eqwe'},
+        // required: true
     },
     created_at: {
         type: Date,
@@ -52,6 +53,6 @@ module.exports = mongoose.model('products', {
     },
     status: {
         type: Number,
-        required: true
+        default: 1
     },
 });

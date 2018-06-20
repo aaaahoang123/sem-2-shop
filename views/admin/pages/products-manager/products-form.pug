@@ -1,13 +1,14 @@
 extends ../../layouts/master
 
 block extra-css
-    link(rel='stylesheet' href='/admin/plugins/dropzone/dropzone.min.css')
+    link(rel='stylesheet' href='/admin/plugins/dropzone/min/dropzone.min.css')
     link(rel='stylesheet' href='/admin/plugins/multi-select/css/multi-select.min.css')
     link(rel='stylesheet' href='/admin/plugins/bootstrap-select/css/bootstrap-select.css')
 
 block extra-js
     script(type='text/javascript' src='/admin/plugins/ckeditor/ckeditor.js')
     script(type='text/javascript' src='/admin/js/pages/products-manager/products-form.js')
+    script(type='text/javascript' src='/admin/js/pages/products-manager/xregexp-all.js')
     script(type="text/javascript" src="/admin/plugins/bootstrap-notify/bootstrap-notify.min.js")
     script(type="text/javascript" src="/admin/plugins/multi-select/js/jquery.multi-select.min.js")
     script(type="text/javascript" src="/admin/plugins/dropzone/dropzone.min.js")
@@ -18,7 +19,7 @@ block content
             h2
                 | ADD PRODUCT
         .body
-            form
+            form(name="product-form")
                 .row.clearfix
                     .col-sm-6
                         b Product Name
@@ -26,14 +27,16 @@ block content
                             span.input-group-addon
                                 i.material-icons games
                             .form-line
-                                input.form-control.date(type='text' placeholder='Product Name')
+                                input.form-control.date(name='name' type='text' placeholder='Product Name' onkeyup="validateProductName(this)")
+                            label
                     .col-sm-6
                         b Product Price
                         .input-group
                             span.input-group-addon
                                 i.material-icons attach_money
                             .form-line
-                                input.form-control.date(type='text' placeholder='Price')
+                                input.form-control.date(name='price' type='text' placeholder='Price' onkeyup="validateProductPrice(this)")
+                            label
 
                 .row.clearfix
                     .col-sm-6
@@ -41,33 +44,40 @@ block content
                         .input-group
                             span.input-group-addon
                                 i.material-icons collections
-                            select.form-control.show-tick(multiple='')
-                                option Phone
-                                option Laptop
-                                option Audio and Video
+                            #category.form-line
+                                select.form-control.show-tick(name='category' multiple='' onchange="validateCategory(this)")
+                                    option Phone
+                                    option Laptop
+                                    option Audio and Video
+                            label
 
                     .col-sm-6
                         b Brands
                         .input-group
                             span.input-group-addon
                                 i.material-icons local_offer
-                            select.form-control.show-tick
-                                option(value='') -- Please select --
-                                option(value='10') Ipone
-                                option(value='20') SamSung
-                                option(value='30') Nokia
-                                option(value='40') LG
-                                option(value='50') Lenovo
+                            #brand.form-line
+                                select.form-control.show-tick(name='brand' onchange="validateBrand(this)")
+                                    option(value='') -- Please select --
+                                    option(value='10') Ipone
+                                    option(value='20') SamSung
+                                    option(value='30') Nokia
+                                    option(value='40') LG
+                                    option(value='50') Lenovo
+                            label
 
                 h2.card-inside-title Product Description
                 .row.clearfix
                     .col-sm-12
-                        textarea#ckeditor
+                        .input-group
+                            .form-line
+                                textarea#ckeditor(name='description' onkeyup="validateDescription(this)")
+                            label
 
                 h2.card-inside-title Product Images
                 .row.clearfix
                     .col-sm-12
-                        #frmFileUpload.dropzone(action='/' method='post' enctype='multipart/form-data')
+                        #frmFileUpload.dropzone(action='/app/img' method='post' enctype='multipart/form-data')
                             .dz-message
                                 .drag-icon-cph
                                     i.material-icons touch_app
@@ -91,7 +101,7 @@ block content
                 .row.clearfix
                     .col-sm-4
                     .col-sm-2
-                        button.btn.btn-block.btn-primary.waves-effect(type='button') SUBMIT
+                        button#btn-submit.btn.btn-block.btn-primary.waves-effect(type='button') SUBMIT
                     .col-sm-2
-                        button.btn.btn-block.btn-warning.waves-effect(type='reset') RESET
+                        button#btn-reset.btn.btn-block.btn-warning.waves-effect(type='reset') RESET
                     .col-sm-4

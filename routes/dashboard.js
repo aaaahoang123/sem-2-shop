@@ -1,11 +1,8 @@
 const express = require('express');
 const router = express.Router();
-<<<<<<< HEAD
-const controllerProduct = require('app/controllers/product');
 
-=======
 const productsController = require('../app/controllers/product');
->>>>>>> 2a5b3d31a6e696d1a722b70c4a9806fa9a58808f
+
 /* GET users listing. */
 router.get('/', function (req, res, next) {
     res.render('admin/pages/index', {path: '/'});
@@ -40,8 +37,8 @@ router.use('/products-manager', express.Router()
         res.render('admin/pages/products-manager/products-form', {path: '/products-manager/add-product'});
     })
 
-    .post('/products',controllerProduct.add)
-    .get('/products/:code', productsController.getOne)
+    // .post('/products',productsController.add)
+    // .get('/products/:code', productsController.getOne)
 
 );
 
