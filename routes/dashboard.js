@@ -31,15 +31,13 @@ router.use('/products-manager', express.Router()
         res.render('admin/pages/products-manager/brands-form', {path: '/products-manager/add-brand'});
     }).get('/products', productsController.getList, productsController.productView)
     .get('/products/:code', productsController.getOne, productsController.productView)
-    .get('/add-product', function(req, res, next){
-        res.render('admin/pages/products-manager/products-form', {path: '/products-manager/add-product'});
-    })
+    .get('/add-product', brandController.responseBrandFormView)
 
     .post('/products/:code', productsController.getOne)
     .post('/products', productsController.getList)
 
     .post('/brands/:id', brandController.validate, brandController.insertOne, brandController.getOne)
-    .post('/brands', brandController.validate, brandController.insertOne, brandController.getList)
+    .post('/add-brand', brandController.validate, brandController.insertOne, brandController.responseBrandFormView)
 );
 
 router.use('/customer-manager', express.Router()
