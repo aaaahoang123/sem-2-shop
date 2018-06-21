@@ -26,9 +26,6 @@ router.use('/products-manager', express.Router({})
         res.render('admin/pages/products-manager/categories', {path: '/products-manager/categories'});
     }).get('/add-category', function(req, res, next){
         res.render('admin/pages/products-manager/categories-form', {path: '/products-manager/add-category'});
-    }).get('/brands', brandController.getList, brandController.productView
-    ).get('/add-brand', function(req, res, next){
-        res.render('admin/pages/products-manager/brands-form', {path: '/products-manager/add-brand'});
     }).get('/products', productsController.getList, productsController.productView)
     .get('/products/:code', productsController.getOne, productsController.productView)
     .get('/add-product', brandController.responseBrandFormView)
@@ -36,6 +33,10 @@ router.use('/products-manager', express.Router({})
     .post('/products/:code', productsController.getOne)
     .post('/products', productsController.getList)
 
+    .get('/brands', brandController.getList, brandController.productView)
+    .get('/add-brand', brandController.responseBrandFormView)
+    .get('/brands/:name/edit', brandController.getOne, brandController.responseBrandFormView)
+    .put('/brands/:name', brandController.validate, brandController.editOne, brandController.responseBrandFormView)
     //.post('/brands/:id', brandController.validate, brandController.insertOne, brandController.getOne)
     .post('/brands', brandController.validate, brandController.insertOne, brandController.responseBrandFormView)
 );

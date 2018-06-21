@@ -7,6 +7,8 @@ const mongoose = require('mongoose');
 const indexRouter = require('./routes/index');
 const usersRouter = require('./routes/users');
 const adminRouter = require('./routes/manager');
+const methodOverride = require('method-override');
+
 const app = express();
 mongoose.Promise = global.Promise;
 mongoose.connect("mongodb://admin:admin1@ds159400.mlab.com:59400/sem2shop");
@@ -17,8 +19,8 @@ app.use(logger('dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
+app.use(methodOverride('_method'));
 app.use(express.static(path.join(__dirname, 'public')));
-//app.use(methodOverride('_method'));
 
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
