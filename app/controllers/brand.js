@@ -86,7 +86,7 @@ module.exports = {
 
     getOne: function (req, res, next) {
         let query = {
-            id: req.params.id
+            name: req.params.name
         };
         model.find(query, function (err, result) {
             if (err) {
@@ -96,7 +96,7 @@ module.exports = {
                 next();
                 return;
             }
-            req.brands = result[0];
+            req.brands = result;
             next();
         });
     },
@@ -165,6 +165,33 @@ module.exports = {
         });
     },
 
+    editOne: function(req, res, next) {
+        if (req.errs && Object.keys(req.errs).length !== 0) {
+            next();
+            return;
+        }
+
+        let brand = req.body;
+        brand.updated_at = Date.now();
+        model.findOneAndUpdate({name: req.params.name}, {$set: brand}, function (err, result) {
+            if (err) {
+                console.log(err);
+                if (!req.errs) req.errs = {};
+                if (err.code === 11000) req.errs.name = "This brand name has already existed";
+                req.errs.database = err.message;
+                next();
+                return;
+            }
+            req.successResponse = {
+                title: 'Success',
+                detail: 'Edit brand successfully',
+                link: '/manager/dashboard/products-manager/brands',
+                added: result
+            };
+            next();
+        });
+    },
+
     /**
      * Trả về view brand form sau khi đã chạy qua các middleware
      * Nếu không có lỗi, và không có successResponse, thì trả về brand-form trắng (chạy ghi vào brand-form lần đầu)
@@ -175,13 +202,43 @@ module.exports = {
      * @param next
      */
     responseBrandFormView: function(req, res, next) {
+        if (req.originalUrl.includes('edit') || req.query._method) {
+            if (!res.locals) res.locals = {};
+            res.locals.method = 'PUT';
+            res.locals.title = 'EDIT BRAND';
+            res.locals.path = '/products-manager/brands';
+            res.locals.action = '/manager/dashboard/products-manager/brands/' + req.params.name + '?_method=PUT';
+            if (req.brands && req.brands.length !== 0) {
+                res.render('admin/pages/products-manager/brands-form', {
+                    brand: req.brands[0]
+                });
+            }
+            else if (req.errs && Object.keys(req.errs).length !== 0) {
+                res.render('admin/pages/products-manager/brands-form', {
+                    errs: req.errs,
+                    brand: req.body,
+                });
+            }
+            else if (req.successResponse && Object.keys(req.successResponse).length !== 0) {
+                res.render('index', req.successResponse);
+            }
+            else {
+                res.render('admin/pages/products-manager/brands-form', {
+                    brand: undefined,
+                    link: '/manager/dashboard/products-manager/brands',
+                });
+            }
+            return;
+        }
+
         if ((!req.errs || Object.keys(req.errs).length === 0) && (!req.successResponse || Object.keys(req.successResponse).length === 0)) {
-            res.render('admin/pages/products-manager/brands-form', {path: '/products-manager/add-brand'});
+            res.render('admin/pages/products-manager/brands-form', {path: '/products-manager/add-brand', title: 'ADD BRAND'});
         } else if (req.errs && Object.keys(req.errs).length !== 0) {
             res.render('admin/pages/products-manager/brands-form', {
-                path: '/products-manager/add-product',
+                path: '/products-manager/add-brand',
                 errs: req.errs,
-                brand: req.body
+                brand: req.body,
+                title: 'ADD BRAND'
             });
         } else {
             res.render('index', req.successResponse);
