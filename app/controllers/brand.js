@@ -55,16 +55,16 @@ module.exports = {
                 title: 'Success',
                 detail: 'Add brand successfully',
                 link: '/manager/dashboard/products-manager/add-brand',
-                added: result
+                result: result
             };
             next();
         })
     },
 
-    productView: function (req, res, next) {
+    brandView: function (req, res, next) {
         let length = req.brands.length;
         res.locals.path = '/products-manager/brands';
-        if (length === 0) {
+        if (length === 0 || req.brands.status === -1) {
             res.render('admin/pages/products-manager/brands', {
                 type: 0,
             });
@@ -86,7 +86,7 @@ module.exports = {
 
     getOne: function (req, res, next) {
         let query = {
-            id: req.params.id
+            name: req.params.name
         };
         model.find(query, function (err, result) {
             if (err) {
@@ -113,10 +113,16 @@ module.exports = {
          * Cấu trúc result trả về, bao gồm 2 trường meta và data, meta là thông số phân trang, data là dữ liệu lấy được
          * Tham khảo: https://docs.mongodb.com/manual/reference/operator/aggregation/facet/
          */
-        let query = [{
-            '$facet': {
-                meta: [{$count: "totalItems"}],
-                data: [{$skip: skip}, {$limit: limit}] // add projection here wish you re-shape the docs
+        let query = [
+            {
+                $match: {
+                    status: 1,
+                }
+            },
+            {
+                '$facet': {
+                    meta: [{$count: "totalItems"}],
+                    data: [{$skip: skip}, {$limit: limit}] // add projection here wish you re-shape the docs
             }
         }];
 
@@ -126,14 +132,10 @@ module.exports = {
          */
         if (req.query.q) {
             let pattern = new RegExp(req.query.q, 'i');
-            query.unshift({
-                $match: {
-                    $or: [
-                        {description: pattern},
-                        {name: pattern}
-                    ]
-                }
-            });
+            query[0].$match.$or = [
+                {description: pattern},
+                {name: pattern}
+            ];
         }
 
         // Thực thi aggregate query
@@ -186,5 +188,43 @@ module.exports = {
         } else {
             res.render('index', req.successResponse);
         }
+    },
+
+    deleteOne: function (req, res, next) {
+        let query = {
+            name: req.params.name
+        }
+        model.findOneAndUpdate(query, {$set: {status: -1, updated_at: Date.now()}}, {new: true}, function (err, result) {
+            if(err){
+                console.log(err);
+                if (!req.errs) req.errs = {};
+                req.errs.database = err.message;
+                next();
+                return;
+            }
+            if(result === null) {
+                if (!req.errs) req.errs = {};
+                req.errs["404"] = 'Brand not found';
+                next();
+                return;
+            }
+            req.successResponse = {
+                title: 'Success',
+                detail: 'Add brand successfully',
+                link: '/manager/dashboard/products-manager/add-brand',
+                result: result
+            };
+            next();
+        });
+    },
+
+    responseJson: function (req, res, next) {
+        if(req.errs && Object.keys(req.errs).length !== 0) {
+            res.status(404);
+            res.json(req.errs);
+            return;
+        }
+        res.status(200);
+        res.json(req.successResponse.result);
     }
 };

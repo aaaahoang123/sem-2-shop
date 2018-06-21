@@ -3,9 +3,11 @@ extends ../../layouts/master
 block extra-css
     link(href='/admin/css/brands.css' rel='stylesheet')
     link(rel='stylesheet' href='/admin/plugins/bootstrap-select/css/bootstrap-select.min.css')
+    link(rel='stylesheet' href='/admin/plugins/sweetalert/sweetalert.min.css')
 
 block extra-js
-    script(type='text/javascript' src='/admin/js/pages/products-manager/products.js')
+    script(type='text/javascript' src='/admin/js/pages/products-manager/brand.js')
+    script(type='text/javascript' src='/admin/plugins/sweetalert/sweetalert.min.js')
 
 block content
     .card
@@ -72,10 +74,10 @@ block content
                                             td #{brands[i].description}
                                             td(align='center')
                                                 div(style='background-image: url('+brands[i].logo+');background-size: cover; height: 70px; width: 100px;')
-                                            td
+                                            td.js-sweetalert
                                                 a.btn.btn-link
                                                     i.material-icons edit
-                                                a.btn.btn-link
+                                                button.btn.btn-link.waves-effect(type='button', data-type="ajax-loader" data-b=brands[i].name)
                                                     i.material-icons delete
 
                     - if (type === 2)
