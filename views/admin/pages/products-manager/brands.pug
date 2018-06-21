@@ -74,8 +74,8 @@ block content
                                             td #{brands[i].description}
                                             td(align='center')
                                                 div(style='background-image: url('+brands[i].logo+');background-size: cover; height: 70px; width: 100px;')
-                                            td.js-sweetalert
-                                                a.btn.btn-link
+                                            td
+                                                a.btn.btn-link(href='/manager/dashboard/products-manager/brands/' + brands[i].name + '/edit')
                                                     i.material-icons edit
                                                 button.btn.btn-link.waves-effect(type='button', data-type="ajax-loader" data-b=brands[i].name)
                                                     i.material-icons delete
