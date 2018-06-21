@@ -61,29 +61,6 @@ module.exports = {
         })
     },
 
-    brandView: function (req, res, next) {
-        let length = req.brands.length;
-        res.locals.path = '/products-manager/brands';
-        if (length === 0 || req.brands.status === -1) {
-            res.render('admin/pages/products-manager/brands', {
-                type: 0,
-            });
-        }
-        else if (!req.meta) {
-            res.render('admin/pages/products-manager/brands', {
-                type: 1,
-                brands: req.brands,
-            });
-        }
-        else {
-            res.render('admin/pages/products-manager/brands', {
-                type: 2,
-                brands: req.brands,
-                meta: req.meta
-            });
-        }
-    },
-
     getOne: function (req, res, next) {
         let query = {
             name: req.params.name
@@ -194,63 +171,10 @@ module.exports = {
         });
     },
 
-    /**
-     * Trả về view brand form sau khi đã chạy qua các middleware
-     * Nếu không có lỗi, và không có successResponse, thì trả về brand-form trắng (chạy ghi vào brand-form lần đầu)
-     * Nếu có lỗi, trả về form, kèm lỗi và dữ liệu đã nhập
-     * Nếu đã success, gửi về trang success, kèm successResponse
-     * @param req
-     * @param res
-     * @param next
-     */
-    responseBrandFormView: function(req, res, next) {
-        if (req.originalUrl.includes('edit') || req.query._method) {
-            if (!res.locals) res.locals = {};
-            res.locals.method = 'PUT';
-            res.locals.title = 'EDIT BRAND';
-            res.locals.path = '/products-manager/brands';
-            res.locals.action = '/manager/dashboard/products-manager/brands/' + req.params.name + '?_method=PUT';
-            if (req.brands && req.brands.length !== 0) {
-                res.render('admin/pages/products-manager/brands-form', {
-                    brand: req.brands[0]
-                });
-            }
-            else if (req.errs && Object.keys(req.errs).length !== 0) {
-                res.render('admin/pages/products-manager/brands-form', {
-                    errs: req.errs,
-                    brand: req.body,
-                });
-            }
-            else if (req.successResponse && Object.keys(req.successResponse).length !== 0) {
-                res.render('index', req.successResponse);
-            }
-            else {
-                res.render('admin/pages/products-manager/brands-form', {
-                    brand: undefined,
-                    link: '/manager/dashboard/products-manager/brands',
-                });
-            }
-            return;
-        }
-
-        if ((!req.errs || Object.keys(req.errs).length === 0) && (!req.successResponse || Object.keys(req.successResponse).length === 0)) {
-            res.render('admin/pages/products-manager/brands-form', {path: '/products-manager/add-brand', title: 'ADD BRAND'});
-        } else if (req.errs && Object.keys(req.errs).length !== 0) {
-            res.render('admin/pages/products-manager/brands-form', {
-                path: '/products-manager/add-brand',
-                errs: req.errs,
-                brand: req.body,
-                title: 'ADD BRAND'
-            });
-        } else {
-            res.render('index', req.successResponse);
-        }
-    },
-
     deleteOne: function (req, res, next) {
         let query = {
             name: req.params.name
-        }
+        };
         model.findOneAndUpdate(query, {$set: {status: -1, updated_at: Date.now()}}, {new: true}, function (err, result) {
             if(err){
                 console.log(err);
@@ -275,6 +199,59 @@ module.exports = {
         });
     },
 
+    /**
+     * Trả về view brand form sau khi đã chạy qua các middleware
+     * Nếu không có lỗi, và không có successResponse, thì trả về brand-form trắng (chạy ghi vào brand-form lần đầu)
+     * Nếu có lỗi, trả về form, kèm lỗi và dữ liệu đã nhập
+     * Nếu đã success, gửi về trang success, kèm successResponse
+     * @param req
+     * @param res
+     * @param next
+     */
+    responseBrandFormView: function(req, res, next) {
+
+        if ((!req.errs || Object.keys(req.errs).length === 0) && (!req.successResponse || Object.keys(req.successResponse).length === 0)) {
+            res.render('admin/pages/products-manager/brands-form', {path: '/products-manager/add-brand', title: 'ADD BRAND'});
+        } else if (req.errs && Object.keys(req.errs).length !== 0) {
+            res.render('admin/pages/products-manager/brands-form', {
+                path: '/products-manager/add-brand',
+                errs: req.errs,
+                brand: req.body,
+                title: 'ADD BRAND'
+            });
+        } else {
+            res.render('index', req.successResponse);
+        }
+    },
+
+    responseBrandEditFormView: function(req, res, next) {
+        if (!res.locals) res.locals = {};
+        res.locals.method = 'PUT';
+        res.locals.title = 'EDIT BRAND';
+        res.locals.path = '/products-manager/brands';
+        res.locals.action = '/manager/dashboard/products-manager/brands/' + req.params.name + '?_method=PUT';
+        if (req.brands && req.brands.length !== 0) {
+            res.render('admin/pages/products-manager/brands-form', {
+                brand: req.brands[0]
+            });
+        }
+        else if (req.errs && Object.keys(req.errs).length !== 0) {
+            res.render('admin/pages/products-manager/brands-form', {
+                errs: req.errs,
+                brand: req.body,
+            });
+        }
+        else if (req.successResponse && Object.keys(req.successResponse).length !== 0) {
+            res.render('index', req.successResponse);
+        }
+        else {
+            res.render('admin/pages/products-manager/brands-form', {
+                brand: undefined,
+                link: '/manager/dashboard/products-manager/brands',
+            });
+        }
+    },
+
     responseJson: function (req, res, next) {
         if(req.errs && Object.keys(req.errs).length !== 0) {
             res.status(404);
@@ -283,5 +260,37 @@ module.exports = {
         }
         res.status(200);
         res.json(req.successResponse.result);
+    },
+
+    /**
+     * Trả về bảng các brands
+     * Nếu không có brand, trả về thông báo 404
+     * Nếu có brand mà không có meta, trả về bảng không có phân trang
+     * Trường hợp còn lại, trả về có meta và phân trang đầy đủ
+     * @param req
+     * @param res
+     * @param next
+     */
+    responseBrandView: function (req, res, next) {
+        let length = req.brands.length;
+        res.locals.path = '/products-manager/brands';
+        if (length === 0 || req.brands.status === -1) {
+            res.render('admin/pages/products-manager/brands', {
+                type: 0,
+            });
+        }
+        else if (!req.meta) {
+            res.render('admin/pages/products-manager/brands', {
+                type: 1,
+                brands: req.brands,
+            });
+        }
+        else {
+            res.render('admin/pages/products-manager/brands', {
+                type: 2,
+                brands: req.brands,
+                meta: req.meta
+            });
+        }
     }
 };

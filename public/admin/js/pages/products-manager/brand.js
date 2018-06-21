@@ -1,17 +1,12 @@
 $(function () {
-    $('.js-sweetalert button').on('click', function () {
-        var name = $(this).attr('data-b');
-        var type = $(this).data('type');
-        if (type === 'ajax-loader') {
-            showAjaxLoaderMessage(name);
-        }
-    });
+    $('button.btn.btn-link.waves-effect[data-type="ajax-loader"]').on('click', showAjaxLoaderMessage);
 });
 
-function showAjaxLoaderMessage(name) {
+function showAjaxLoaderMessage() {
+    var name = $(this).data('b');
     swal({
         title: "Do you want to delete brand: " + name,
-        text: "Submit to run ajax request",
+        text: "Submit to delete this brand",
         type: "info",
         showCancelButton: true,
         closeOnConfirm: false,
@@ -31,12 +26,10 @@ function showAjaxLoaderMessage(name) {
             error: function (res) {
                 console.log(res);
                 setTimeout(function () {
-                    swal("Fail to delete. Please check log");
+                    swal("Fail to delete. Please check log!");
                 }, 1000);
             }
         })
-
-
     });
 }
 
@@ -64,8 +57,4 @@ function changeSearchByInput(el, except) {
     }
     href += except + $(el).val();
     location.search = href;
-}
-
-function deleteBtn(name) {
-    alert(name);
 }
