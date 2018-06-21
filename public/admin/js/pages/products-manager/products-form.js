@@ -17,6 +17,7 @@ $(function () {
             console.log(err);
         },
         success: function (file, res) {
+            console.log(res);
             var ip = document.createElement("input");
             ip.setAttribute("type", "hidden");
             ip.setAttribute("class", "urlImg");
@@ -28,8 +29,6 @@ $(function () {
 
     //Multi-select
     $('#optgroup').multiSelect({ selectableOptgroup: true });
-
-
 });
 
 
