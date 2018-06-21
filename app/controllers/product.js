@@ -3,18 +3,27 @@
 const model = require('../models/product');
 
 module.exports = {
-    checkNull: function (req,res,next) {
-        var data = req.body;
-        console.log(req.body);
-        console.log(data.specifications);
-        if (!data.code || !data.name || !data.description || !data.categories || !data.brand || !data.price) {
-            res.status(403);
-            res.send({
-                'status': '403',
-                'message': 'Product code,  name, description, categories, brand, price can\'t be null or undefined'
-            });
-            return;
+    validate: function (req,res,next) {
+        if(!req.errs) req.errs = {};
+
+        if(!req.body.name || req.body.name === null || req.body.name === "") req.errs.name = "Product Name cant not null";
+
+        if(!req.body.code || req.body.code === null || req.body.code === "") req.errs.code = "Product Code cant not null";
+
+        if(!req.body.description || req.body.description === null || req.body.description === "") req.errs.description = "Product Description cant not null";
+
+        if(!req.body.categories || req.body.categories === null || req.body.categories === "") req.errs.categories = "Product Categories cant not null";
+
+        if(!req.body.brand || req.body.brand === null || req.body.brand === "") req.errs.brand = "Product Brand cant not null";
+
+        if(!req.body.price || req.body.price === null || req.body.price === "") req.errs.price = "Product Price cant not null";
+
+        if(!req.body.images || req.body.images === null || req.body.images === "") req.errs.images = "Product Images cant not null";
+
+        if(Object.keys(req.errs).length !== 0){
+            req.errs.status = 400;
         }
+
         next();
     },
 
@@ -37,17 +46,14 @@ module.exports = {
     },
 
     insertOne: function (req, res, next) {
+        if(req.errs && Object.keys(req.errs).length !== 0){
+            next();
+            return;
+        }
         var newProduct = new model(req.body);
         newProduct.save(function (err, result) {
             if(err){
-                res.status(400);
-                res.send({
-                    code : 400,
-                    title: 'Server Error',
-                    detail: 'Server Error'
-                });
-                console.log(err);
-                return;
+
             }
             res.status(201);
             res.send(result);
@@ -98,7 +104,7 @@ module.exports = {
         if (req.query.limit && /^\d+$/.test(req.query.limit)) limit = Math.abs(Number(req.query.limit));
         if (req.query.page && !['-1', '1'].includes(req.query.page) && /^\d+$/.test(req.query.page)) {
             page = Math.abs(Number(req.query.page));
-            skip = (page - 1) * limit - 1;
+            skip = (page - 1) * limit;
         }
         /**
          * Sử dụng mongodb aggregate, $facet
