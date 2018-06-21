@@ -33,7 +33,7 @@ router.use('/products-manager', express.Router({})
         res.render('admin/pages/products-manager/brands-form', {path: '/products-manager/add-brand'});
     }).get('/products', productsController.getList, productsController.productView)
     .get('/products/:code', productsController.getOne, productsController.productView)
-    .get('/add-product', brandController.responseBrandFormView)
+    .get('/add-product', productsController.responseProductFormView)
 
 
     .post('/products/:code', productsController.getOne)

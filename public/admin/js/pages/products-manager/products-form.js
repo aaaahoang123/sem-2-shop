@@ -162,6 +162,7 @@ $("#btn-submit").click(function () {
                 }, 500);
 
             } else {
+                console.log(this.responseText);
                 showNotification("alert-danger", "Thêm Sản phẩm không thành công", "bottom", "right", "animated bounceIn", "animated bounceOut");
                 creatAlertResponeErrorServer(this);
             }

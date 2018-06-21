@@ -21,27 +21,8 @@ module.exports = {
         if(!req.body.images || req.body.images === null || req.body.images === "") req.errs.images = "Product Images cant not null";
 
         if(Object.keys(req.errs).length !== 0){
-            req.errs.status = 400;
+            req.errStatus = 400;
         }
-
-        next();
-    },
-
-    checkUnique: function(req, res, next) {
-        if(req.products.length !== 0 ){
-            res.status(409);
-            res.send({
-                'status': '409',
-                'message': 'Product code is unique'
-            });
-            return;
-        }
-        next();
-    },
-
-    setCodeFromBody: function(req, res, next){
-        if (!req.params) req.params = {};
-        req.params.code = req.body.code;
         next();
     },
 
@@ -53,10 +34,23 @@ module.exports = {
         var newProduct = new model(req.body);
         newProduct.save(function (err, result) {
             if(err){
-
+                if(!req.errs) req.errs = {};
+                if(err.code === 11000){
+                    req.errStatus = 409;
+                    req.errs.name = "This product code has already existed";
+                }
+                req.errs.database = err.message;
+                next();
+                return;
             }
-            res.status(201);
-            res.send(result);
+            req.successResponse = {
+                title: 'Success',
+                detail: 'Add Product successfully',
+                link: '/manager/dashboard/products-manager/add-brand',
+                result: result,
+                status: 201
+            };
+            next();
         })
     },
 
@@ -158,6 +152,33 @@ module.exports = {
             };
             next();
         });
+    },
+
+    responseProductJson:  function (req, res, next) {
+        if(req.errs && Object.keys(req.errs).length !== 0){
+            res.status(req.errStatus);
+            if(req.errStatus === 400){
+                res.send({
+                    code: 400,
+                    message: "Product code, name, description, brand, images, category not null"
+                });
+            }else if(req.errStatus === 409){
+                res.send({
+                    code: 409,
+                    message: req.errs.name
+                })
+            }
+            return;
+        }
+        res.status(req.successResponse.status);
+        res.send(req.successResponse.result);
+
+    },
+
+    responseProductFormView: function (req, res, next) {
+        if((!req.errs || Object.keys(req.errs).length === 0) && (!req.successResponse || Object.keys(req.successResponse).length === 0)){
+            res.render('admin/pages/products-manager/products-form', {path: '/products-manager/add-product'});
+        }
     }
 };
 

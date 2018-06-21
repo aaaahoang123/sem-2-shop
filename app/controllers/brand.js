@@ -176,7 +176,7 @@ module.exports = {
      */
     responseBrandFormView: function(req, res, next) {
         if ((!req.errs || Object.keys(req.errs).length === 0) && (!req.successResponse || Object.keys(req.successResponse).length === 0)) {
-            res.render('admin/pages/products-manager/brands-form', {path: '/products-manager/add-product'});
+            res.render('admin/pages/products-manager/brands-form', {path: '/products-manager/add-brand'});
         } else if (req.errs && Object.keys(req.errs).length !== 0) {
             res.render('admin/pages/products-manager/brands-form', {
                 path: '/products-manager/add-product',
