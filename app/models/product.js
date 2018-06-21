@@ -27,15 +27,19 @@ let schema = new mongoose.Schema({
         type: Number,
         required: true
     },
+
     specifications: Object,
-    updated_by: {
-        type: mongoose.Schema.Types.ObjectId,
-        required: true
-    },
+
+    // updated_by: {
+    //     type: mongoose.Schema.Types.ObjectId,
+    //     required: true
+    // },
+
     images: {
         type: [String],
         required: true
     },
+
     created_at: {
         type: Date,
         default: Date.now,
@@ -48,7 +52,7 @@ let schema = new mongoose.Schema({
     },
     status: {
         type: Number,
-        required: true
+        default: 1
     },
 });
 
