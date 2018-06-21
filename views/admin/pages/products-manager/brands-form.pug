@@ -3,42 +3,62 @@ extends ../../layouts/master
 block extra-css
 
 block extra-js
-    script(type='text/javascript' src='/admin/js/pages/web-config/information.js')
+    script(type='text/javascript' src='/admin/js/pages/products-manager/brand-form.js')
 
 block content
     .card
         .header
-            h2
-                | ADD BRAND
+            h2 #{title}
+
         .body
-            form
-                .row
-                    .col-sm-4(style="text-align:center")
-                        .dz-message
-                            h4 Click to upload.
-                        img#blah(src="/admin/images/placeholder.png" alt="your image" style="width=100px; height=120px")
-                        .file-field.input-field
-                            .btn.btn-danger.m-t-20
-                                span Browse
-                                input#imgInp(type='file')
+            - if (!brand && title === 'EDIT BRAND')
+                include ./404
+            - else
+                form.container(action=method==='PUT'?action:'/manager/dashboard/products-manager/brands' method="POST")
+                    .row
+                        .col-sm-4(style="text-align:center")
+                            .dz-message
+                                h4 Click to upload.
+                            #img-mask.mask
+                                .preloader.pl-size-xl
+                                    .spinner-layer.pl-red
+                                        .circle-clipper.left
+                                            .circle
+                                        .circle-clipper.right
+                                            .circle
 
-                    .col-sm-6
-                        b Brand Name
-                        .input-group
-                            span.input-group-addon
-                                i.material-icons store
-                            .form-line
-                                input.form-control(type='text')
+                            img#blah(src=(brand && brand.logo)?brand.logo:"/admin/images/placeholder.png" alt="your image" style="width:100%")
+                            .file-field.input-field
+                                .btn.btn-danger.m-t-20
+                                    span Browse
+                                    input#imgInp(type='file')
+                                - if (errs && errs.logo)
+                                    p.text-danger.text-center.m-t-15 #{errs.logo}
 
-                        b Brand Description
-                        .input-group
-                            .form-line
-                                textarea.form-control.no-resize(rows='8')
+                        .col-sm-6
+                            b Brand Name
+                            .input-group
+                                span.input-group-addon
+                                    i.material-icons store
+                                .form-line
+                                    input.form-control(type='text' name="name" value=(brand && brand.name)?brand.name:'')
+                            - if (errs && errs.name)
+                                p.text-danger.text-center.m-t-15 #{errs.name}
 
-                .row
-                    .col-sm-4
-                    .col-sm-2
-                        button.btn.btn-block.btn-primary.waves-effect(type='button') SUBMIT
-                    .col-sm-2
-                        button.btn.btn-block.btn-warning.waves-effect(type='reset') RESET
-                    .col-sm-4
+                            b Brand Description
+                            .input-group
+                                .form-line
+                                    textarea.form-control.no-resize(rows='8' name='description')
+                                        - if (brand && brand.description)
+                                            | #{brand.description}
+                                - if (errs && errs.description)
+                                    p.text-danger.text-center.m-t-15 #{errs.description}
+                            input#inpUpload(type='hidden' name='logo' value=(brand && brand.logo)?brand.logo:'')
+
+                    .row
+                        .col-sm-4
+                        .col-sm-2
+                            input.btn.btn-block.btn-primary.waves-effect(type='submit' value='SUBMIT')
+                        .col-sm-2
+                            button.btn.btn-block.btn-warning.waves-effect(type='reset') RESET
+                        .col-sm-4

@@ -1,6 +1,9 @@
 const express = require('express');
 const router = express.Router();
+
 const productsController = require('../app/controllers/product');
+const brandController = require('../app/controllers/brand');
+
 /* GET users listing. */
 router.get('/', function (req, res, next) {
     res.render('admin/pages/index', {path: '/'});
@@ -20,24 +23,27 @@ router.use('/web-config', express.Router()
     })
 );
 
-router.use('/products-manager', express.Router()
-    .get('/categories', function (req, res, next) {
-        res.render('admin/pages/product-manager/categories', {path: '/products-manager/categories'});
-    }).get('/add-category', function(req, res, next){
-        res.render('admin/pages/product-manager/categories-form', {path: '/products-manager/add-category'});
-    }).get('/brands', function (req, res, next) {
-        res.render('admin/pages/product-manager/brands', {path:'/products-manager/brands'});
-    }).get('/add-brand', function(req, res, next){
-        res.render('admin/pages/products-manager/brands-form', {path: '/products-manager/add-brand'});
-    }).get('/products', productsController.getList, function (req, res, next) {
-        res.render('admin/pages/products-manager/products', {path: '/products-manager/products'});
-    }).get('/add-product', function(req, res, next){
-        res.render('admin/pages/products-manager/products-form', {path: '/products-manager/add-product'});
-    })
-
-    .post('/products/:code', productsController.getOne)
-    .post('/products', productsController.getList)
-);
+router.use('/products-manager', require('./products-manager'));
+// router.use('/products-manager', express.Router({})
+//     .get('/categories', function (req, res, next) {
+//         res.render('admin/pages/products-manager/categories', {path: '/products-manager/categories'});
+//     }).get('/add-category', function(req, res, next){
+//         res.render('admin/pages/products-manager/categories-form', {path: '/products-manager/add-category'});
+//     }).get('/products', productsController.getList, productsController.productView)
+//     .get('/products/:code', productsController.getOne, productsController.productView)
+//     .get('/add-product', productsController.responseProductFormView)
+//
+//
+//     .post('/products/:code', productsController.getOne)
+//     .post('/products', productsController.getList)
+//
+//     .get('/brands', brandController.getList, brandController.responseBrandView)
+//     .get('/add-brand', brandController.responseBrandFormView)
+//     .get('/brands/:name/edit', brandController.getOne, brandController.responseBrandEditFormView)
+//     .put('/brands/:name', brandController.validate, brandController.editOne, brandController.responseBrandEditFormView)
+//     .post('/brands', brandController.validate, brandController.insertOne, brandController.responseBrandFormView)
+//     .delete('/brands/:name', brandController.deleteOne, brandController.responseJson)
+// );
 
 router.use('/customer-manager', express.Router()
     .get('/customers', function (req, res, next) {

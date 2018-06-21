@@ -2,10 +2,15 @@ extends ../../layouts/master
 
 block extra-css
     link(href='/admin/css/brands.css' rel='stylesheet')
+    link(rel='stylesheet' href='/admin/plugins/bootstrap-select/css/bootstrap-select.min.css')
+    link(rel='stylesheet' href='/admin/plugins/sweetalert/sweetalert.min.css')
+
 block extra-js
+    script(type='text/javascript' src='/admin/plugins/sweetalert/sweetalert.min.js')
+    script(type='text/javascript' src='/admin/js/pages/products-manager/brand.js')
 
 block content
-    .card
+    .card.p-b-15
         .header
             h2
                 | List brands
@@ -20,101 +25,93 @@ block content
                             a(href='javascript:void(0);') Another action
                         li
                             a(href='javascript:void(0);') Something else here
-        .body.table-responsive
-            .row
-                .col-sm-8
-
-                .col-sm-3
+        .row.m-t-20
+            .col-sm-6
+                - if (meta)
+                    - let limit = meta.limit
+                    .col-xs-1.m-t-25
+                        label Show
+                    .col-lg-3.col-md-4.col-sm-5.col-xs-3.m-t-15
+                        select#select-limit.form-control.show-tick
+                            option(selected disabled) #{limit}
+                            option(value='5') 5
+                            option(value='10') 10
+                            option(value='20') 20
+                            option(value='30') 30
+                            option(value='40') 40
+                            option(value='50') 50
+                    .col-xs-2.m-t-25
+                        label entries
+            .col-sm-6
+                .col-sm-5.col-xs-5.m-t-15(style='float: right')
                     .form-group
                         .form-line
-                            input.form-control(type='text', placeholder='Search')
-                .col-sm-1
-                    button.btn.btn-danger.btn-circle.waves-effect.waves-circle.waves-float(type='button')
+                            input#search-input.form-control(type='text', placeholder='Search' value=meta && meta.q ? meta.q : '')
+                .col-lg-1.col-sm-2.col-xs-1.m-t-15(style='float: right')
+                    button#search-btn.btn.btn-danger.btn-circle.waves-effect.waves-circle.waves-float(type='button')
                         i.material-icons search
-            .row
-                table.table.text-center.table-bordered.table-hover
-                    thead
-                        tr
-                            th.text-center #
-                            th.text-center NAME
-                            th.text-center DESCRIPTION
-                            th.text-center LOGO
-                            th.text-center ACTION
-                    tbody
-                        tr
-                            th.text-center(scope='row') 1
-                            td Mark
-                            td Otto
-                            td
-                                .logo
-                            td
-                                a.btn.btn-link
-                                    i.material-icons details
-                                a.btn.btn-link
-                                    i.material-icons edit
-                                a.btn.btn-link
-                                    i.material-icons delete
-                        tr
-                            th.text-center(scope='row') 2
-                            td Jacob
-                            td Thornton
-                            td
-                                .logo
-                            td
-                                a.btn.btn-link
-                                    i.material-icons details
-                                a.btn.btn-link
-                                    i.material-icons edit
-                                a.btn.btn-link
-                                    i.material-icons delete
+        - if (type === 0)
+            include 404
+        - else
+            .body
+                .table-responsive
+                    .row
+                        .col-sm-12
+                            table.table.table-bordered.table-hover
+                                thead
+                                    tr
+                                        th #
+                                        th.text-center NAME
+                                        th.text-center DESCRIPTION
+                                        th.text-center LOGO
+                                        th.text-center ACTION
+                                tbody.text-center
+                                    - let length = brands.length;
+                                    - for (let i = 0; i < length; i ++)
+                                        tr
+                                            th(scope='row') #{i + 1}
+                                            td #{brands[i].name}
+                                            td #{brands[i].description}
+                                            td(align='center')
+                                                div(style='background-image: url('+brands[i].logo+');background-size: cover; height: 70px; width: 100px;')
+                                            td
+                                                a.btn.btn-link(href='/manager/dashboard/products-manager/brands/' + brands[i].name + '/edit')
+                                                    i.material-icons edit
+                                                button.btn.btn-link.waves-effect(type='button', data-type="ajax-loader" data-b=brands[i].name)
+                                                    i.material-icons delete
 
-                        tr
-                            th.text-center(scope='row') 3
-                            td Larry
-                            td the Bird
-                            td
-                                .logo
-                            td
-                                a.btn.btn-link
-                                    i.material-icons details
-                                a.btn.btn-link
-                                    i.material-icons edit
-                                a.btn.btn-link
-                                    i.material-icons delete
-                        tr
-                            th.text-center(scope='row') 4
-                            td Larry
-                            td Jellybean
-                            td
-                                .logo
-                            td
-                                a.btn.btn-link
-                                    i.material-icons details
-                                a.btn.btn-link
-                                    i.material-icons edit
-                                a.btn.btn-link
-                                    i.material-icons delete
-                        tr
-                            th.text-center(scope='row') 5
-                            td Larry
-                            td Kikat
-                            td
-                                .logo
-                            td
-                                a.btn.btn-link
-                                    i.material-icons details
-                                a.btn.btn-link
-                                    i.material-icons edit
-                                a.btn.btn-link
-                                    i.material-icons delete
-                ul.pagination(style='float:right')
-                    li.disabled
-                        a(href='#!')
-                            i.material-icons chevron_left
-                    li.active
-                        a(href='#!') 1
-                    li.waves-effect
-                        a(href='#!') 2
-                    li.waves-effect
-                        a(href='#!')
-                            i.material-icons chevron_right
+                    - if (type === 2)
+                        - let limit = ''
+                        - let q = ''
+                        - if (meta.limit !== 10)
+                            - limit += '&limit=' + meta.limit
+                        -if (meta.q)
+                            - q = '&q=' + meta.q
+                        .row.text-right
+                            ul.pagination(style='margin-right: 1%')
+                                - if (meta.page === 1)
+                                    li.paginate_button.disabled
+                                        a First
+                                - else
+                                    li.paginate_button
+                                        a(href='/manager/dashboard/products-manager/brands?' + limit.substring(1) + q) First
+                                - let i = meta.page > 5 ? meta.page - 4 : 1
+                                - if (i !== 1)
+                                    li.paginate_button.disabled
+                                        a ...
+                                - for (; i <= meta.page + 4 && i <= meta.total; i ++)
+                                    - if (i === meta.page)
+                                        li.paginate_button.active
+                                            a= i
+                                    - else
+                                        li.paginate_button
+                                            a(href='/manager/dashboard/products-manager/brands?page=' + i + limit + q)= i
+                                    - if (i === meta.page + 4 && i < meta.total)
+                                        li.paginate_button.disabled
+                                            a ...
+                                - if (meta.page === meta.total)
+                                    li.paginate_button.disabled
+                                        a Last
+                                - else
+                                    li.paginate_button
+                                        a(href='/manager/dashboard/products-manager/brands?page=' + meta.total + limit + q) Last
