@@ -1,7 +1,9 @@
 const express = require('express');
 const router = express.Router();
+
 const productsController = require('../app/controllers/product');
 const brandController = require('../app/controllers/brand');
+
 /* GET users listing. */
 router.get('/', function (req, res, next) {
     res.render('admin/pages/index', {path: '/'});
@@ -28,7 +30,8 @@ router.use('/products-manager', express.Router({})
         res.render('admin/pages/products-manager/categories-form', {path: '/products-manager/add-category'});
     }).get('/products', productsController.getList, productsController.productView)
     .get('/products/:code', productsController.getOne, productsController.productView)
-    .get('/add-product', brandController.responseBrandFormView)
+    .get('/add-product', productsController.responseProductFormView)
+
 
     .post('/products/:code', productsController.getOne)
     .post('/products', productsController.getList)

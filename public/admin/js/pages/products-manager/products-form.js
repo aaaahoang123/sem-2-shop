@@ -1,11 +1,29 @@
+
+const UPLOAD_IMG_URL = "https://api.cloudinary.com/v1_1/fpt-aptech/image/upload";
+
 $(function () {
     CKEDITOR.replace('ckeditor');
     CKEDITOR.config.height = 300;
 
     //Dropzone
     Dropzone.options.frmFileUpload = {
+        url: UPLOAD_IMG_URL,
         paramName: "file",
-        maxFilesize: 2
+        params: {
+            upload_preset: 'gwq6ik7v'
+        },
+        maxFilesize: 2,
+        error: function (file, err) {
+            console.log(err);
+        },
+        success: function (file, res) {
+            var ip = document.createElement("input");
+            ip.setAttribute("type", "hidden");
+            ip.setAttribute("class", "urlImg");
+            ip.value = res.secure_url;
+            var urlImages = document.getElementById("url-images");
+            urlImages.appendChild(ip);
+        }
     };
 
     //Multi-select
@@ -13,6 +31,7 @@ $(function () {
 
 
 });
+
 
 $("#add-spec-btn").click(function () {
     var inputF = createInput("settings", "Feature");
@@ -50,10 +69,15 @@ $("#add-spec-btn").click(function () {
     $.AdminBSB.input.activate();
 });
 
+
 var createInput = function(icon, placeholder) {
 
     var ip = document.createElement("input");
-    ip.className = "form-control date";
+    if(placeholder === "Feature"){
+        ip.className = "form-control date spec-name";
+    }else {
+        ip.className = "form-control date spec-value";
+    }
     ip.setAttribute("type", "text");
     ip.setAttribute("placeholder", placeholder);
 
@@ -81,3 +105,267 @@ var createInput = function(icon, placeholder) {
 
     return col;
 };
+
+
+$("#btn-submit").click(function () {
+
+    var btn = this;
+
+    var specName, specValue, inputUrlImg, images = [], speccification = {};
+
+    if($('#spec').innerHTML !== "" || $('#spec').innerHTML !== null){
+       specName = document.getElementsByClassName("spec-name");
+       specValue = document.getElementsByClassName("spec-value");
+       for(var i=0; i< specName.length; i++){
+           speccification[specName[i].value] = specValue[i].value;
+       }
+    }
+
+    if($('#url-images').innerHTML !== "" || $('#url-images').innerHTML !== null){
+        inputUrlImg = document.getElementsByClassName("urlImg");
+        for (var i = 0; i < inputUrlImg.length; i++){
+            images.push(inputUrlImg[i].value);
+        }
+    }
+
+    var forms = document.forms['product-form'];
+    var n = validateProductName(forms['name']);
+    var p = validateProductPrice(forms['price']);
+    var pc = validateProductCode(forms['code']);
+    var d = validateDescription(forms['description']);
+    var c = validateCategory(forms['category']);
+    var b = validateBrand(forms['brand']);
+
+    if (n && p && pc && d && c && b) {
+        createButtonLoader(btn);
+        var productData = {
+            "code": forms['code'].value,
+            "name": forms['name'].value,
+            "description": CKEDITOR.instances.ckeditor.getData(),
+            "categories": $('#category select').val(),
+            "brand": forms['brand'].value,
+            "price": parseInt(forms['price'].value),
+            "specifications": speccification,
+            "images": images
+        };
+
+        var req = new XMLHttpRequest();
+        req.open("POST", "http://localhost:3000/api/products");
+        req.setRequestHeader("Content-Type", "application/json");
+        req.onload = function () {
+            console.log(this.responseText);
+            console.log(req.status);
+            if (req.status === 200 || req.status === 201) {
+                showNotification("alert-success", "Thêm Sản phẩm thành công", "bottom", "right", "animated bounceIn", "animated bounceOut");
+                setTimeout(function () {
+                    location.reload();
+                }, 500);
+
+            } else {
+                console.log(this.responseText);
+                showNotification("alert-danger", "Thêm Sản phẩm không thành công", "bottom", "right", "animated bounceIn", "animated bounceOut");
+                creatAlertResponeErrorServer(this);
+            }
+        };
+        req.onerror = function () {
+            console.log(req.status);
+        };
+        req.onloadend = function () {
+            btn.removeAttribute("disabled");
+            btn.innerHTML = "SUBMIT";
+        };
+        req.send(JSON.stringify(productData));
+    }
+});
+
+$('#btn-reset').click(function () {
+    $("#category select").val('default');
+    $("#category select").selectpicker('refresh');
+
+    $("#brand select").val('default');
+    $("#brand select").selectpicker('refresh');
+
+    CKEDITOR.instances.ckeditor.setData('');
+
+   $('#spec').html("");
+
+    var labels = document.querySelectorAll("div.input-group > label");
+    for(var i = 0; i < labels.length; i++){
+        labels[i].innerHTML = "";
+        labels[i].removeAttribute('class');
+        if(labels[i].parentElement.querySelector("div.form-line") === null || labels[i].parentElement.querySelector("div.form-line") === undefined){
+            continue;
+        }
+        if(labels[i].parentElement.querySelector("div.form-line").className.includes("success")){
+            labels[i].parentElement.querySelector("div.form-line").className = labels[i].parentElement.querySelector("div.form-line").className.replace(" success","");
+            labels[i].parentElement.querySelector("div.form-line").className = labels[i].parentElement.querySelector("div.form-line").className.replace(" focused","");
+        }
+        if(labels[i].parentElement.querySelector("div.form-line").className.includes("error")){
+            labels[i].parentElement.querySelector("div.form-line").className = labels[i].parentElement.querySelector("div.form-line").className.replace(" error","");
+            labels[i].parentElement.querySelector("div.form-line").className = labels[i].parentElement.querySelector("div.form-line").className.replace(" focused","");
+        }
+    }
+
+    if(document.getElementById("alert-error").className !== ""){
+        document.getElementById("alert-error").className = "";
+        document.getElementById("alert-error").innerHTML = "";
+    }
+});
+
+function createButtonLoader(e) {
+    e.setAttribute("disabled", "");
+    e.innerHTML = "<div class=\"preloader pl-size-xs\">" + "<div class=\"spinner-layer pl-grey\">"
+        + "<div class=\"circle-clipper left\">" + "<div class=\"circle\"></div>" + "</div>"
+        + "<div class=\"circle-clipper right\">" + "<div class=\"circle\"></div>"
+        + "</div>" + "</div>" + " </div>";
+}
+
+function showNotification(colorName, text, placementFrom, placementAlign, animateEnter, animateExit) {
+    if (colorName === null || colorName === '') { colorName = 'bg-black'; }
+    if (text === null || text === '') { text = 'Turning standard Bootstrap alerts'; }
+    if (animateEnter === null || animateEnter === '') { animateEnter = 'animated fadeInDown'; }
+    if (animateExit === null || animateExit === '') { animateExit = 'animated fadeOutUp'; }
+    var allowDismiss = true;
+
+    $.notify({
+            message: text
+        },
+        {
+            type: colorName,
+            allow_dismiss: allowDismiss,
+            newest_on_top: true,
+            timer: 1000,
+            placement: {
+                from: placementFrom,
+                align: placementAlign
+            },
+            animate: {
+                enter: animateEnter,
+                exit: animateExit
+            },
+            template: '<div data-notify="container" class="bootstrap-notify-container alert alert-dismissible {0} ' + (allowDismiss ? "p-r-35" : "") + '" role="alert">' +
+            '<button type="button" aria-hidden="true" class="close" data-notify="dismiss">×</button>' +
+            '<span data-notify="icon"></span> ' +
+            '<span data-notify="title">{1}</span> ' +
+            '<span data-notify="message">{2}</span>' +
+            '<div class="progress" data-notify="progressbar">' +
+            '<div class="progress-bar progress-bar-{0}" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width: 0%;"></div>' +
+            '</div>' +
+            '<a href="{3}" target="{4}" data-notify="url"></a>' +
+            '</div>'
+        });
+}
+
+var validateProductName = function (elm) {
+    var alert = elm.parentElement.parentElement.querySelector("label");
+    if(checkNull(elm.value)){
+        createAlert(alert,elm,"Please enter Product Name.");
+        return false;
+    }else {
+        removeAlert(alert,elm);
+        return true;
+    }
+};
+
+var validateProductPrice = function (elm) {
+    var alert = elm.parentElement.parentElement.querySelector("label");
+    if(checkNull(elm.value)){
+        createAlert(alert,elm,"Please enter Product Price.");
+        return false;
+    }else {
+        removeAlert(alert,elm);
+        return true;
+    }
+};
+
+var validateProductCode = function (elm) {
+    var alert = elm.parentElement.parentElement.querySelector("label");
+    if(checkNull(elm.value)){
+        createAlert(alert,elm,"Please enter Product Code.");
+        return false;
+    }else {
+        removeAlert(alert,elm);
+        return true;
+    }
+};
+
+var validateCategory = function (elm) {
+
+    var alert = elm.parentElement.parentElement.parentElement.querySelector("label");
+    if(checkNull($('#category select').val())){
+        createAlert(alert,elm.parentElement,"Please choice Category.");
+        return false;
+    }else {
+        removeAlert(alert,elm.parentElement);
+        return true;
+    }
+};
+
+var validateBrand = function (elm) {
+
+    var alert = elm.parentElement.parentElement.parentElement.querySelector("label");
+    if(checkNull(elm.value)){
+        createAlert(alert,elm.parentElement,"Please choice Brand.");
+        return false;
+    }else {
+        removeAlert(alert,elm.parentElement);
+        return true;
+    }
+};
+
+var validateDescription = function (elm) {
+    var alert = elm.parentElement.parentElement.querySelector("label");
+    if(checkNull(CKEDITOR.instances.ckeditor.getData())){
+        createAlert(alert,elm,"Please enter Product Description.");
+        return false;
+    }else {
+        removeAlert(alert,elm);
+        return true;
+    }
+};
+
+function checkNull(value) {
+    var regex = XRegExp('^\\s+$');
+    if(value == null || regex.test(value) || value === ""){
+        return true;
+    }
+    return false;
+}
+
+function createAlert(alert, elm, str) {
+    alert.innerHTML = str;
+    alert.className = "error";
+    if(elm.parentElement.className.includes('form-line')){
+        if(elm.parentElement.className.includes("success")){
+            elm.parentElement.className = elm.parentElement.className.replace(" success", "");
+        }
+        if(!elm.parentElement.className.includes("error")){
+            elm.parentElement.className += " error";
+        }
+    }
+}
+
+function removeAlert(alert, elm) {
+    alert.removeAttribute('class');
+    alert.innerHTML = "";
+    if(elm.parentElement.className.includes('form-line')){
+        if(elm.parentElement.className.includes("error")){
+            elm.parentElement.className = elm.parentElement.className.replace(" error", "");
+        }
+        if(!elm.parentElement.className.includes("success")){
+            elm.parentElement.className += " success";
+        }
+    }
+}
+
+function creatAlertResponeErrorServer(e) {
+    var alertError = document.getElementById("alert-error");
+    if(!alertError.className.includes("alert bg-red")){
+        alertError.className = "alert bg-red";
+    }
+    alertError.innerHTML = JSON.parse(e.responseText).message;
+
+    if(document.getElementById('code').className.includes("success")){
+        document.getElementById('code').className = document.getElementById('code').className.replace("success", "error");
+    }
+}
