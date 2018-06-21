@@ -35,6 +35,7 @@ router.use('/products-manager', express.Router({})
     .get('/products/:code', productsController.getOne, productsController.productView)
     .get('/add-product', brandController.responseBrandFormView)
 
+
     .post('/products/:code', productsController.getOne)
     .post('/products', productsController.getList)
 
