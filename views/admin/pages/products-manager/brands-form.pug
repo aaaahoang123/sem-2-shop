@@ -14,7 +14,7 @@ block content
             - if (!brand && title === 'EDIT BRAND')
                 include ./404
             - else
-                form(action=method==='PUT'?action:'/manager/dashboard/products-manager/brands' method="POST")
+                form.container(action=method==='PUT'?action:'/manager/dashboard/products-manager/brands' method="POST")
                     .row
                         .col-sm-4(style="text-align:center")
                             .dz-message

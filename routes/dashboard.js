@@ -36,12 +36,12 @@ router.use('/products-manager', express.Router({})
     .post('/products/:code', productsController.getOne)
     .post('/products', productsController.getList)
 
-    .get('/brands', brandController.getList, brandController.productView)
+    .get('/brands', brandController.getList, brandController.responseBrandView)
     .get('/add-brand', brandController.responseBrandFormView)
-    .get('/brands/:name/edit', brandController.getOne, brandController.responseBrandFormView)
-    .put('/brands/:name', brandController.validate, brandController.editOne, brandController.responseBrandFormView)
-    //.post('/brands/:id', brandController.validate, brandController.insertOne, brandController.getOne)
+    .get('/brands/:name/edit', brandController.getOne, brandController.responseBrandEditFormView)
+    .put('/brands/:name', brandController.validate, brandController.editOne, brandController.responseBrandEditFormView)
     .post('/brands', brandController.validate, brandController.insertOne, brandController.responseBrandFormView)
+    .delete('/brands/:name', brandController.deleteOne, brandController.responseJson)
 );
 
 router.use('/customer-manager', express.Router()
