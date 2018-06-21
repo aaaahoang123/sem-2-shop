@@ -3,7 +3,14 @@ const UPLOAD_IMG_URL = "https://api.cloudinary.com/v1_1/fpt-aptech/image/upload"
 
 $(function () {
     CKEDITOR.replace('ckeditor');
+    CKEDITOR.instances.ckeditor.on('contentDom', function () {
+        CKEDITOR.instances.ckeditor.document.on('keyup', function () {
+            console.log(CKEDITOR.instances.ckeditor.getData());
+            validateDescription(document.getElementById('ckeditor'));
+        });
+    });
     CKEDITOR.config.height = 300;
+
 
     //Dropzone
     Dropzone.options.frmFileUpload = {
@@ -13,6 +20,7 @@ $(function () {
             upload_preset: 'gwq6ik7v'
         },
         maxFilesize: 2,
+        addRemoveLinks: true,
         error: function (file, err) {
             console.log(err);
         },
@@ -20,9 +28,37 @@ $(function () {
             var ip = document.createElement("input");
             ip.setAttribute("type", "hidden");
             ip.setAttribute("class", "urlImg");
+            ip.setAttribute("name", file.name);
             ip.value = res.secure_url;
             var urlImages = document.getElementById("url-images");
             urlImages.appendChild(ip);
+        },
+
+        init: function () {
+            /**
+             * r dùng để phân biệt khi xóa images bằng tay và clear dropzone bằng button reset.
+             *
+             * Nếu xóa bằng tay(r=0), mỗi lần xóa sẽ gọi hàm validateImages trong callback của event removedfile, nếu xóa hết thì
+             * sẽ thông báo 'Please choice images' dưới dropzone.
+             *
+             * Nếu clear dropzone bằng button reset , add event click đến button reset , gán r = 1, gọi hàm removeAllFiles()
+             * khi đó event removedfile sẽ đc trigger nhưng r =1 (ko gọi validateImages).
+             * @type {number}
+             */
+            var r = 0;
+            this.on("success", function () {
+                validateImages(document.getElementById("frm-file-upload"), getValueImages());
+            });
+            this.on("removedfile", function (file) {
+                $("#url-images > input[name='"+ file.name +"']").remove();
+                if(r === 0) validateImages(document.getElementById("frm-file-upload"), getValueImages());
+            });
+
+            var _this = this;
+            document.getElementById("btn-reset").addEventListener("click", function() {
+                r = 1;
+                _this.removeAllFiles();
+            });
         }
     };
 
@@ -111,22 +147,8 @@ $("#btn-submit").click(function () {
 
     var btn = this;
 
-    var specName, specValue, inputUrlImg, images = [], speccification = {};
-
-    if($('#spec').innerHTML !== "" || $('#spec').innerHTML !== null){
-       specName = document.getElementsByClassName("spec-name");
-       specValue = document.getElementsByClassName("spec-value");
-       for(var i=0; i< specName.length; i++){
-           speccification[specName[i].value] = specValue[i].value;
-       }
-    }
-
-    if($('#url-images').innerHTML !== "" || $('#url-images').innerHTML !== null){
-        inputUrlImg = document.getElementsByClassName("urlImg");
-        for (var i = 0; i < inputUrlImg.length; i++){
-            images.push(inputUrlImg[i].value);
-        }
-    }
+    var specification = getValueSpeci();
+    var images = getValueImages();
 
     var forms = document.forms['product-form'];
     var n = validateProductName(forms['name']);
@@ -135,8 +157,9 @@ $("#btn-submit").click(function () {
     var d = validateDescription(forms['description']);
     var c = validateCategory(forms['category']);
     var b = validateBrand(forms['brand']);
+    var i = validateImages(document.getElementById("frm-file-upload"), images);
 
-    if (n && p && pc && d && c && b) {
+    if (n && p && pc && d && c && b && i) {
         createButtonLoader(btn);
         var productData = {
             "code": forms['code'].value,
@@ -145,7 +168,7 @@ $("#btn-submit").click(function () {
             "categories": $('#category select').val(),
             "brand": forms['brand'].value,
             "price": parseInt(forms['price'].value),
-            "specifications": speccification,
+            "specifications": specification,
             "images": images
         };
 
@@ -156,14 +179,14 @@ $("#btn-submit").click(function () {
             console.log(this.responseText);
             console.log(req.status);
             if (req.status === 200 || req.status === 201) {
-                showNotification("alert-success", "Thêm Sản phẩm thành công", "bottom", "right", "animated bounceIn", "animated bounceOut");
+                showNotification("alert-success", "Add Product Successfully", "bottom", "right", "animated bounceIn", "animated bounceOut");
                 setTimeout(function () {
                     location.reload();
                 }, 500);
 
             } else {
                 console.log(this.responseText);
-                showNotification("alert-danger", "Thêm Sản phẩm không thành công", "bottom", "right", "animated bounceIn", "animated bounceOut");
+                showNotification("alert-danger", "Add Product Fail", "bottom", "right", "animated bounceIn", "animated bounceOut");
                 creatAlertResponeErrorServer(this);
             }
         };
@@ -187,9 +210,9 @@ $('#btn-reset').click(function () {
 
     CKEDITOR.instances.ckeditor.setData('');
 
-   $('#spec').html("");
+    $('#spec').html("");
 
-    var labels = document.querySelectorAll("div.input-group > label");
+    var labels = document.querySelectorAll("div > label");
     for(var i = 0; i < labels.length; i++){
         labels[i].innerHTML = "";
         labels[i].removeAttribute('class');
@@ -322,6 +345,41 @@ var validateDescription = function (elm) {
         removeAlert(alert,elm);
         return true;
     }
+};
+
+var validateImages = function (elm, images) {
+    var alert = elm.parentElement.querySelector("label");
+    if(images.length === 0){
+        createAlert(alert,elm,"Please choice Images.");
+        return false;
+    }else {
+        removeAlert(alert,elm);
+        return true;
+    }
+};
+
+var getValueImages = function () {
+    var inputUrlImg,  images = [];
+    if($('#url-images').html() !== "" || $('#url-images').html() !== null){
+        inputUrlImg = document.getElementsByClassName("urlImg");
+        for (var i = 0; i < inputUrlImg.length; i++){
+            images.push(inputUrlImg[i].value);
+        }
+    }
+    return images;
+};
+
+var getValueSpeci = function () {
+    var specName, specValue, speccification = {};
+
+    if($('#spec').html() !== "" || $('#spec').html() !== null){
+        specName = document.getElementsByClassName("spec-name");
+        specValue = document.getElementsByClassName("spec-value");
+        for(var i=0; i< specName.length; i++){
+            speccification[specName[i].value] = specValue[i].value;
+        }
+    }
+    return speccification;
 };
 
 function checkNull(value) {

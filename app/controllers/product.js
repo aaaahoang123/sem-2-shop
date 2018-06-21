@@ -4,6 +4,7 @@ const model = require('../models/product');
 
 module.exports = {
     validate: function (req,res,next) {
+        console.log(req.body);
         if(!req.errs) req.errs = {};
 
         if(!req.body.name || req.body.name === null || req.body.name === "") req.errs.name = "Product Name cant not null";
