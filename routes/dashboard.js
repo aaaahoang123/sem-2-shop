@@ -1,6 +1,8 @@
 const express = require('express');
 const router = express.Router();
 const productsController = require('../app/controllers/product');
+
+
 /* GET users listing. */
 router.get('/', function (req, res, next) {
     res.render('admin/pages/index', {path: '/'});
