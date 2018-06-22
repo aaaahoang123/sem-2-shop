@@ -4,6 +4,7 @@ const model = require('../models/product');
 
 module.exports = {
     validate: function (req,res,next) {
+        console.log(req.body);
         if(!req.errs) req.errs = {};
 
         if(!req.body.name || req.body.name === null || req.body.name === "") req.errs.name = "Product Name cant not null";
@@ -61,11 +62,12 @@ module.exports = {
         model.find(query, function (err, result) {
             if (err) {
                 console.log(err);
-                res.send(err);
+                if(!req.errs) req.errs = {};
+                req.errs.database = err.message;
+                next();
                 return;
             }
             req.products = result;
-            console.log( req.products);
             next();
         });
     },
@@ -133,6 +135,10 @@ module.exports = {
         model.aggregate(query, function (err, result) {
             if (err) {
                 console.log(err);
+                if(!req.errs) req.errs = {};
+                req.errs.database = err.message;
+                next();
+                return;
             }
             // Kết quả trả về có dạng [{meta: [{}], data: [{}]}]. Trong trường hợp không tìm thấy thì đặt req.products = [] và next()
             if (result.length === 0 || result[0].meta.length === 0) {

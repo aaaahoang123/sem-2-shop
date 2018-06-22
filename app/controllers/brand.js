@@ -54,7 +54,7 @@ module.exports = {
             req.successResponse = {
                 title: 'Success',
                 detail: 'Add brand successfully',
-                link: '/manager/dashboard/products-manager/add-brand',
+                link: '/manager/dashboard/products-manager/brands/create',
                 result: result
             };
             next();
@@ -192,7 +192,7 @@ module.exports = {
             req.successResponse = {
                 title: 'Success',
                 detail: 'Add brand successfully',
-                link: '/manager/dashboard/products-manager/add-brand',
+                link: '/manager/dashboard/products-manager/brands',
                 result: result
             };
             next();
@@ -209,7 +209,6 @@ module.exports = {
      * @param next
      */
     responseBrandFormView: function(req, res, next) {
-
         if ((!req.errs || Object.keys(req.errs).length === 0) && (!req.successResponse || Object.keys(req.successResponse).length === 0)) {
             res.render('admin/pages/products-manager/brands-form', {path: '/products-manager/add-brand', title: 'ADD BRAND'});
         } else if (req.errs && Object.keys(req.errs).length !== 0) {
