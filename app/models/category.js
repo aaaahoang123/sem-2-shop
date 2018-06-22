@@ -15,7 +15,8 @@ let schema = mongoose.Schema({
         required: true,
     },
     children: {
-        type: [Object]
+        type: [mongoose.Schema.Types.ObjectId],
+        ref: 'categories'
     },
     created_at: {
         type: Date,
