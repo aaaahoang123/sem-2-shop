@@ -191,7 +191,7 @@ module.exports = {
             }
             req.successResponse = {
                 title: 'Success',
-                detail: 'Add brand successfully',
+                detail: 'Delate brand successfully',
                 link: '/manager/dashboard/products-manager/brands',
                 result: result
             };
