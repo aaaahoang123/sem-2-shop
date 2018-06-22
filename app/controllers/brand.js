@@ -274,7 +274,7 @@ module.exports = {
     responseBrandView: function (req, res, next) {
         let length = req.brands.length;
         res.locals.path = '/products-manager/brands';
-        if (length === 0 || req.brands.status === -1) {
+        if (length === 0) {
             res.render('admin/pages/products-manager/brands', {
                 type: 0,
             });
