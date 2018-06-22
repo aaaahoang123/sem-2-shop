@@ -81,24 +81,26 @@ block content
                     .col-sm-12
                         .input-group
                             .form-line
-                                textarea#ckeditor(name='description' onkeyup="validateDescription(this)")
+                                textarea#ckeditor(name='description')
                             label
 
                 h2.card-inside-title Product Images
                 .row.clearfix
                     .col-sm-12
-                        #frm-file-upload.dropzone.custom-dropzone(action='https://api.cloudinary.com/v1_1/fpt-aptech/image/upload' enctype='multipart/form-data')
-                            .dz-message
-                                .drag-icon-cph
-                                    i.material-icons touch_app
-                                h3 Drop image here or click to upload.
-                                em
-                                    | (This is just a demo dropzone. Selected files are
-                                    strong not
-                                    |  actually uploaded.)
-                            .fallback
-                                input(name='myImg' type='file' multiple='')
-                                input(type='hidden' name = 'upload_preset' value='gwq6ik7v')
+                        .input-group
+                            #frm-file-upload.dropzone.custom-dropzone(action='https://api.cloudinary.com/v1_1/fpt-aptech/image/upload' enctype='multipart/form-data')
+                                .dz-message
+                                    .drag-icon-cph
+                                        i.material-icons touch_app
+                                    h3 Drop image here or click to upload.
+                                    em
+                                        | (This is just a demo dropzone. Selected files are
+                                        strong not
+                                        |  actually uploaded.)
+                                .fallback
+                                    input(name='myImg' type='file' multiple='')
+                                    input(type='hidden' name = 'upload_preset' value='gwq6ik7v')
+                            label
 
                 h2.card-inside-title Specification
                 #spec
