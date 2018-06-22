@@ -17,7 +17,7 @@ $(function () {
         $(tableRows[0]).find('td').last().text(products.code);
         $(tableRows[1]).find('td').last().find('div').css('background-image', 'url(' + products.images + ')');
         $(tableRows[2]).find('td').last().text(products.name);
-        $(tableRows[3]).find('td').last().text(products.description);
+        $(tableRows[3]).find('td').last().html(products.description);
         $(tableRows[4]).find('td').last().text(products.categories);
         $(tableRows[5]).find('td').last().text(products.brand);
         $(tableRows[6]).find('td').last().text(products.price + "$");
