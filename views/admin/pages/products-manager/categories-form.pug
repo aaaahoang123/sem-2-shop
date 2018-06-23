@@ -1,83 +1,53 @@
 extends ../../layouts/master
 
 block extra-css
-
+    link(rel='stylesheet' href='/admin/plugins/bootstrap-select/css/bootstrap-select.min.css')
 block extra-js
-
+    script(type='text/javascript' src='/admin/js/pages/products-manager/category-form.js')
 block content
     .container-fluid
-        .row.clearfix
-            .col-lg-12.col-md-12.col-sm-12.col-xs-12
-                .card
-                    .header
-                        h2
-                            | PARENT CATEGORIES
-                        ul.header-dropdown.m-r--5
-                            li.dropdown
-                                a.dropdown-toggle(href='javascript:void(0);' data-toggle='dropdown' role='button' aria-haspopup='true' aria-expanded='false')
-                                    i.material-icons more_vert
-                                ul.dropdown-menu.pull-right
-                                    li
-                                        a(href='javascript:void(0);') Action
-                                    li
-                                        a(href='javascript:void(0);') Another action
-                                    li
-                                        a(href='javascript:void(0);') Something else here
-                    .body.table-responsive
-                        table.table
-                            thead
-                                tr
-                                    th #
-                                    th.text-center NAME
-                                    th.text-center DESCRIPTION
-                                    th.text-center CHILDREN
-                                    th.text-center UPDATED AT
-                                    th.text-center ACTION
-                            tbody.text-center
-                                tr
-                                    th(scope='row') 1
-                                    td Markg
-                                    td Ottog
-                                    td @mdogd
-                                    td
-                                    td
-                                        a.btn.btn-link
-                                            i.material-icons edit
-                                        a.btn.btn-link
-                                            i.material-icons delete
-                                tr
-                                    th(scope='row') 2
-                                    td Jacob
-                                    td Thornton
-                                    td @fat
-                                    td
-                                    td
-                                        a.btn.btn-link
-                                            i.material-icons edit
-                                        a.btn.btn-link
-                                            i.material-icons delete
-                                tr
-                                    th(scope='row') 3
-                                    td Larry
-                                    td the Bird
-                                    td @twitter
-                                    td
-                                    td
-                                        a.btn.btn-link
-                                            i.material-icons edit
-                                        a.btn.btn-link
-                                            i.material-icons delete
-                                tr
-                                    th(scope='row') 4
-                                    td Larry
-                                    td Jellybean
-                                    td @lajelly
-                                    td
-                                    td
-                                        a.btn.btn-link
-                                            i.material-icons edit
-                                        a.btn.btn-link
-                                            i.material-icons delete
+        - if (listParent  && listParent.length !== 0)
+            #parent-table.row.clearfix.hidden
+                .col-lg-12.col-md-12.col-sm-12.col-xs-12
+                    .card
+                        .header
+                            h2
+                                | PARENT CATEGORIES
+                            ul.header-dropdown.m-r--5
+                                li.dropdown
+                                    a.dropdown-toggle(href='javascript:void(0);' data-toggle='dropdown' role='button' aria-haspopup='true' aria-expanded='false')
+                                        i.material-icons more_vert
+                                    ul.dropdown-menu.pull-right
+                                        li
+                                            a(href='javascript:void(0);') Action
+                                        li
+                                            a(href='javascript:void(0);') Another action
+                                        li
+                                            a(href='javascript:void(0);') Something else here
+                        .body.table-responsive
+                            table.table
+                                thead
+                                    tr
+                                        th #
+                                        th.text-center NAME
+                                        th.text-center DESCRIPTION
+                                        th.text-center CHILDREN
+                                        th.text-center ACTION
+                                tbody.text-center
+                                    tr
+                                        th(scope='row') 1
+                                        td.parent-name
+                                        td.parent-description
+                                        td
+                                            div#childrenOfParent
+                                                p abc
+                                                p xyz
+                                                p 123
+                                        td
+                                            a.btn.btn-link
+                                                i.material-icons edit
+                                            a.btn.btn-link
+                                                i.material-icons delete
 
         .row.clearfix
             .col-lg-12.col-md-12.col-sm-12.col-xs-12
@@ -97,16 +67,36 @@ block content
                                     li
                                         a(href='javascript:void(0);') Something else here
                     .body
-                        form(method='POST')
+                        form(action='/manager/dashboard/products-manager/categories' method='POST')
                             .row.clearfix
-                                .col-sm-12
+                                .col-sm-6
                                     .form-group.form-float
                                         .form-line
-                                            input.form-control(type='text')
+                                            input.form-control(type='text' name='name' value=(category && category.name)?category.name:'')
                                             label.form-label Name
+                                    - if (errs && errs.name)
+                                        p.text-danger.text-center.m-t-15 #{errs.name}
+                                .col-sm-3.col-md-2
+                                    select#level-selector.form-control.show-tick(name='level')
+                                        option(value=1 selected=Number(level)===1) 1
+                                        option(value=2 selected=Number(level)===2) 2
+                                        option(value=3 selected=Number(level)===3) 3
+                                    - if (errs && errs.level)
+                                        p.text-danger.text-center.m-t-15 #{errs.level}
+                                .col-sm-3.col-md-4
+                                    select#parent-selector.form-control.show-tick(name='parent' disabled=Number(level)===1)
+                                        option(value='') -- Select parent --
+                                        -if (listParent && listParent.length !== 0)
+                                            - for(var i = 0; i < listParent.length; i ++)
+                                                option(value=listParent[i]._id data-category=listParent[i]) #{listParent[i].name}
+                                    - if (errs && errs.parent)
+                                        p.text-danger.text-center.m-t-15 #{errs.parent}
                                 .col-sm-12
-                                    .form-group.form-float
+                                    .form-group
                                         .form-line
-                                            input.form-control(type='text')
-                                            label.form-label Description
+                                            textarea.form-control.no-resize(rows='6' name='description')
+                                                - if (category && category.description)
+                                                    | #{category.description}
+                                    - if (errs && errs.description)
+                                        p.text-danger.text-center.m-t-15 #{errs.description}
                             button.btn.btn-primary.waves-effect(type='submit') Submit

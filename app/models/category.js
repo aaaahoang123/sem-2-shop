@@ -30,7 +30,8 @@ let schema = mongoose.Schema({
     },
     status: {
         type: Number,
-        required: true
+        required: true,
+        default: 1
     }
 });
 
