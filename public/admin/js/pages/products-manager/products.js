@@ -1,12 +1,7 @@
 $(function () {
 
     // sweetalert
-    $('.js-sweetalert button').on('click', function () {
-        var type = $(this).data('type');
-        if (type === 'ajax-loader') {
-            showAjaxLoaderMessage();
-        }
-    });
+    $('.js-sweetalert button[data-type="ajax-loader"]').on('click', showAjaxLoaderMessage);
 
     // modal
     $('.js-modal-buttons .btn.btn-detail').on('click', function () {
@@ -39,22 +34,43 @@ $(function () {
         else {
             $('#specifications').hide();
         }
+
+        var btnEdit = document.getElementById("btn-edit");
+        btnEdit.href = '/manager/dashboard/products-manager/products/'+products.code+'/edit';
+        var btnDelete = document.getElementById("btn-delete");
+        btnDelete.setAttribute('data-p',$(this).attr('data-p'));
         $('#largeModal').modal();
     });
 });
 
 function showAjaxLoaderMessage() {
+    var products = $(this).data('p');
     swal({
-        title: "Ajax request example",
-        text: "Submit to run ajax request",
+        title: "Do you want to delete product: " +products.name,
+        text: "Submit to delete this product",
         type: "info",
         showCancelButton: true,
         closeOnConfirm: false,
         showLoaderOnConfirm: true,
     }, function () {
-        setTimeout(function () {
-            swal("Ajax request finished!");
-        }, 2000);
+        $.ajax({
+            url: "http://localhost:3000/api/products/"+ products.code,
+            type: 'DELETE',
+            success: function (res) {
+                console.log(res);
+                setTimeout(function () {
+                    swal({title: "Delete successfully!"}, function () {
+                        location.reload();
+                    });
+                }, 1000);
+            },
+            error: function (res) {
+                console.log(res);
+                setTimeout(function () {
+                    swal("Fail to delete. Error: " + res.message);
+                }, 1000);
+            }
+        })
     });
 }
 

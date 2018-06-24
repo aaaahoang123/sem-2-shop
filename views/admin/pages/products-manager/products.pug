@@ -78,9 +78,9 @@ block content
                                             td.text-center.js-sweetalert.js-modal-buttons
                                                 button.btn.btn-link.waves-effect.btn-detail(data-p=products[i])
                                                     i.material-icons details
-                                                a.btn.btn-link.waves-effect(href='/manager/dashboard/products-manager/products/create')
+                                                a.btn.btn-link.waves-effect(href='/manager/dashboard/products-manager/products/'+products[i].code+'/edit')
                                                     i.material-icons mode_edit
-                                                button.btn.btn-link.waves-effect(type='button', data-type="ajax-loader")
+                                                button.btn.btn-link.waves-effect(type='button', data-type="ajax-loader" data-p=products[i])
                                                     i.material-icons delete
                     - if (type === 2)
                         - let limit = ''
@@ -182,9 +182,9 @@ block content
                     .row.js-sweetalert
                         .col-sm-4
                         .col-sm-2
-                            a.btn.btn-block.btn-danger.waves-effect(type='button', href='/manager/dashboard/products-manager/products/create') EDIT
+                            a#btn-edit.btn.btn-block.btn-danger.waves-effect(type='button') EDIT
                         .col-sm-2
-                            button.btn.btn-block.btn-danger.waves-effect(type='button', data-type="ajax-loader") DELETE
+                            button#btn-delete.btn.btn-block.btn-danger.waves-effect(type='button', data-type="ajax-loader") DELETE
                         .col-sm-3
                             button.btn.btn-link.waves-effect(type='button' data-dismiss='modal') CLOSE
                         .col-sm-1

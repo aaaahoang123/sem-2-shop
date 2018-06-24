@@ -20,7 +20,8 @@ let schema = new mongoose.Schema({
         required: true
     },
     brand: {
-        type: String,
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'brands',
         required: true
     },
     price: {
