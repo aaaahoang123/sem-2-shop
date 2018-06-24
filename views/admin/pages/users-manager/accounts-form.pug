@@ -1,0 +1,13 @@
+extends ./components/user-account-layout
+
+block append extra-js
+    script(type='text/javascript' src='/admin/js/pages/users-manager/users.js')
+
+block content
+    .container-fluid
+        .row.clearfix
+            - if (!user)
+                include ../products-manager/404
+            - else
+                include ./components/user-table
+                include ./components/account-form

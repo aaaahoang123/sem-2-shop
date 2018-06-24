@@ -25,6 +25,10 @@ const schema = new mongoose.Schema({
         type: String,
         required: true
     },
+    gender: {
+        type: Number,
+        required: true
+    },
     birthday: {
         type: Date,
         required: true

@@ -1,0 +1,24 @@
+extends ./components/user-account-layout
+
+block append extra-css
+    - if (user_mid)
+        link(rel='stylesheet' href='/admin/plugins/sweetalert/sweetalert.min.css')
+
+block append extra-js
+    - if (user_mid)
+        script(type='text/javascript' src='/admin/plugins/sweetalert/sweetalert.min.js')
+        script(type='text/javascript')
+            | $(document).ready(function() {swal({
+            |         title: "Add user success",
+            |         text: "What do you want to do next? You can create an account to this user. Or continue create more users!",
+            |         type: "success",
+            |         showCancelButton: true,
+            |         confirmButtonText: "Yes! Create an account!",
+            |     }, function () {
+            |         location.href = '/manager/dashboard/users-manager/users/#{user_mid}/account'
+            |     });})
+
+block content
+    .container-fluid
+        .row.clearfix
+            include ./components/user-form

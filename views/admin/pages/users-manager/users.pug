@@ -1,8 +1,10 @@
 extends ../../layouts/master
 
 block extra-css
+    link(rel='stylesheet' href='/admin/plugins/bootstrap-select/css/bootstrap-select.min.css')
 
 block extra-js
+    script(type='text/javascript' src='/admin/js/pages/users-manager/users.js')
 
 block content
     .container-fluid
@@ -25,62 +27,118 @@ block content
                                         a(href='javascript:void(0);') Something else here
                     .body.table-responsive
                         .row
-                            .col-sm-8
-
-                            .col-sm-3
-                                .form-group
+                            .col-sm-3.col-md-2
+                                - if (meta)
+                                    - let limit = meta.limit
+                                    .input-group
+                                        span.input-group-addon
+                                            | Limit
+                                        .form-line
+                                            select#select-limit.form-control.show-tick
+                                                option(selected disabled) #{limit}
+                                                option(value='5') 5
+                                                option(value='10') 10
+                                                option(value='20') 20
+                                                option(value='30') 30
+                                                option(value='40') 40
+                                                option(value='50') 50
+                            .col-sm-3.col-md-2
+                                .input-group
+                                    span.input-group-addon
+                                        | Type
                                     .form-line
-                                        input.form-control(type='text', placeholder='Search')
-                            .col-sm-1
-                                button.btn.btn-danger.btn-circle.waves-effect.waves-circle.waves-float(type='button')
-                                    i.material-icons search
+                                        select#select-type.form-control.show-tick
+                                            option(selected disabled) -- Type --
+                                            option(value='1' selected=meta&&meta.type&&meta.type===1) Customer
+                                            option(value='2' selected=meta&&meta.type&&meta.type===2) Employee
+                            .col-sm-3.col-md-2
+                                .input-group
+                                    span.input-group-addon
+                                        a#search-btn(type='button' href='javascript:void(0)')
+                                            i.material-icons(style='font-weight: bold') search
+                                    .form-line
+                                        input#input-search.form-control(type='text', placeholder='Search' value=meta&&meta.q?meta.q:'')
+                            .col-sm-2.col-md-2.col-xs-3
+                                .input-group
+                                    span.input-group-addon
+                                        input#check-all(type='checkbox')
+                                        label(for='check-all') Check All
+                                    .form-group
+                            .col-sm-3.col-md-2.col-xs-9
+                                .input-group
+                                    span.input-group-addon
+                                        a#delete-all-btn(href='javascript:void(0)')
+                                            i.material-icons delete
+                                    label.m-t-5(for='delete-all-btn') Delete All
+                        - if (!users || users.length === 0)
+                                include ../products-manager/404
+                        - else
                             table.table.table-bordered.table-hover
                                 thead
                                     tr
+                                        th.text-center CHOOSE
+                                        th.text-center CODE
+                                        th.text-center NAME
+                                        th.text-center ADDRESS
                                         th.text-center EMAIL
                                         th.text-center PHONE
-                                        th.text-center AVATAR
-                                        th.text-center TYPE
                                         th.text-center BIRTHDAY
-                                        th.text-center CREATED AT
-                                        th.text-center UPDATED AT
-                                        th.text-center STATUS
+                                        th.text-center ACCOUNT
                                         th.text-center ACTION
                                 tbody.text-center
-                                    tr
-                                        td @mdo
-                                        td 09231290
-                                        td Nani
-                                        td Hentai
-                                        td Tsuna Kimura
-                                        td Hasagi
-                                        td 06-09-2017
-                                        td 1
-                                        td
-                                            a.btn.btn-link
-                                                i.material-icons edit
-                                            a.btn.btn-link
-                                                i.material-icons delete
+                                    - for (let u of users)
+                                        tr
+                                            td
+                                                input.item-checkbox(type='checkbox' id='uc-' + u.mid)
+                                                label(for='uc-' + u.mid)
+                                            td #{u.mid}
+                                            td #{u.full_name}
+                                            td #{u.address}
+                                            td #{u.email}
+                                            td #{u.phone}
+                                            td #{u.birthday.toLocaleDateString()}
+                                            td
+                                                - for (let a of u.account)
+                                                    | #{a.username}
+                                            td
+                                                a.btn.btn-link(href='/manager/dashboard/users-manager/users/' + u.mid)
+                                                    i.material-icons edit
+                                                a.btn.btn-link
+                                                    i.material-icons delete
+                        - if (meta)
+                            - let limit = '', q='', type = ''
+                            - if (meta.limit !== 10)
+                                - limit += '&limit=' + meta.limit
+                            - if (meta.q)
+                                - q = '&q=' + meta.q
+                            - if (meta.type)
+                                - type = '&type=' + meta.type
+                            .row.text-right
+                                ul.pagination(style='margin-right: 1%')
+                                    - if (meta.page === 1)
+                                        li.paginate_button.disabled
+                                            a First
+                                    - else
+                                        li.paginate_button
+                                            a(href='/manager/dashboard/users-manager/users?' + limit.substring(1) + q + type) First
+                                    - let i=meta.page>5?meta.page-4:1
+                                    - if (i !== 1)
+                                        li.paginate_button.disabled
+                                            a ...
+                                    - for (; i<=meta.page+4&&i<=meta.total; i++)
+                                        - if (i===meta.page)
+                                            li.paginate_button.active
+                                                a #{i}
+                                        - else
+                                            li.paginate_button
+                                                a(href='/manager/dashboard/users-manager/users?page=' + i + limit + q)= i
+                                        - if (i === meta.page + 4 && i < meta.total)
+                                            li.paginate_button.disabled
+                                                a ...
 
-                        .row
-                            .col-md-7
-                            .col-md-5
-                                #DataTables_Table_0_paginate.dataTables_paginate.paging_simple_numbers(style='text-align: right')
-                                    ul.pagination
-                                        li#DataTables_Table_0_previous.paginate_button.previous.disabled
-                                            a(href='#' aria-controls='DataTables_Table_0' data-dt-idx='0' tabindex='0') Previous
-                                        li.paginate_button.active
-                                            a(href='#' aria-controls='DataTables_Table_0' data-dt-idx='1' tabindex='0') 1
+                                    - if (meta.page === meta.total)
+                                        li.paginate_button.disabled
+                                            a Last
+                                    - else
                                         li.paginate_button
-                                            a(href='#' aria-controls='DataTables_Table_0' data-dt-idx='2' tabindex='0') 2
-                                        li.paginate_button
-                                            a(href='#' aria-controls='DataTables_Table_0' data-dt-idx='3' tabindex='0') 3
-                                        li.paginate_button
-                                            a(href='#' aria-controls='DataTables_Table_0' data-dt-idx='4' tabindex='0') 4
-                                        li.paginate_button
-                                            a(href='#' aria-controls='DataTables_Table_0' data-dt-idx='5' tabindex='0') 5
-                                        li.paginate_button
-                                            a(href='#' aria-controls='DataTables_Table_0' data-dt-idx='6' tabindex='0') 6
-                                        li#DataTables_Table_0_next.paginate_button.next
-                                            a(href='#' aria-controls='DataTables_Table_0' data-dt-idx='7' tabindex='0') Next
-
+                                            a(href='/manager/dashboard/users-manager/users?page=' + meta.total + limit + q + type) Last
