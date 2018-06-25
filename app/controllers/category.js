@@ -171,5 +171,38 @@ module.exports = {
                 meta: req.meta
             });
         }
+    },
+
+    findAllCategories: function (req, res, next) {
+        let query = [
+            {
+                $match: {
+                    status: 1
+                }
+            }
+        ];
+        model.aggregate(query, function (err, result) {
+            if (err) {
+                console.log(err);
+                if (!req.errs) req.errs = {};
+                req.errs.database = err.message;
+                next();
+                return;
+            }
+            if (result.length === 0) {
+                req.categories = [];
+                next();
+                return;
+            }
+            req.categories = result;
+            let length = req.categories.length;
+            console.log(length);
+            if (length === 0){
+                next();
+                return;
+            }
+            res.render('client/pages/index', {categories: req.categories});
+            next();
+        })
     }
 };

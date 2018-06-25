@@ -113,76 +113,82 @@ nav.main_nav
                                 span
                             .cat_menu_text categories
                         ul.cat_menu
-                            li
-                                a(href='#')
-                                    | Computers &amp; Laptops
-                                    i.fas.fa-chevron-right.ml-auto
-                            li
-                                a(href='#')
-                                    | Cameras &amp; Photos
-                                    i.fas.fa-chevron-right
-                            li.hassubs
-                                a(href='#')
-                                    | Hardware
-                                    i.fas.fa-chevron-right
-                                ul
-                                    li.hassubs
-                                        a(href='#')
-                                            | Menu Item
-                                            i.fas.fa-chevron-right
-                                        ul
-                                            li
-                                                a(href='#')
-                                                    | Menu Item
-                                                    i.fas.fa-chevron-right
-                                            li
-                                                a(href='#')
-                                                    | Menu Item
-                                                    i.fas.fa-chevron-right
-                                            li
-                                                a(href='#')
-                                                    | Menu Item
-                                                    i.fas.fa-chevron-right
-                                            li
-                                                a(href='#')
-                                                    | Menu Item
-                                                    i.fas.fa-chevron-right
+                            - let length = categories.length;
+                            - for (let i = 0; i < length; i ++)
+                                - if (categories[i].level === 1)
                                     li
-                                        a(href='#')
-                                            | Menu Item
-                                            i.fas.fa-chevron-right
-                                    li
-                                        a(href='#')
-                                            | Menu Item
-                                            i.fas.fa-chevron-right
-                                    li
-                                        a(href='#')
-                                            | Menu Item
-                                            i.fas.fa-chevron-right
-                            li
-                                a(href='#')
-                                    | Smartphones &amp; Tablets
-                                    i.fas.fa-chevron-right
-                            li
-                                a(href='#')
-                                    | TV &amp; Audio
-                                    i.fas.fa-chevron-right
-                            li
-                                a(href='#')
-                                    | Gadgets
-                                    i.fas.fa-chevron-right
-                            li
-                                a(href='#')
-                                    | Car Electronics
-                                    i.fas.fa-chevron-right
-                            li
-                                a(href='#')
-                                    | Video Games &amp; Consoles
-                                    i.fas.fa-chevron-right
-                            li
-                                a(href='#')
-                                    | Accessories
-                                    i.fas.fa-chevron-right
+                                        a(href='#') #{categories[i].name}
+                                        - if ()
+                        //    li
+                        //        a(href='#')
+                        //            | Computers &amp; Laptops
+                        //            i.fas.fa-chevron-right.ml-auto
+                        //    li
+                        //        a(href='#')
+                        //            | Cameras &amp; Photos
+                        //            i.fas.fa-chevron-right
+                        //    li.hassubs
+                        //        a(href='#')
+                        //            | Hardware
+                        //            i.fas.fa-chevron-right
+                        //        ul
+                        //            li.hassubs
+                        //                a(href='#')
+                        //                    | Menu Item
+                        //                    i.fas.fa-chevron-right
+                        //                ul
+                        //                    li
+                        //                        a(href='#')
+                        //                            | Menu Item
+                        //                            i.fas.fa-chevron-right
+                        //                    li
+                        //                        a(href='#')
+                        //                            | Menu Item
+                        //                            i.fas.fa-chevron-right
+                        //                    li
+                        //                        a(href='#')
+                        //                            | Menu Item
+                        //                            i.fas.fa-chevron-right
+                        //                    li
+                        //                        a(href='#')
+                        //                            | Menu Item
+                        //                            i.fas.fa-chevron-right
+                        //            li
+                        //                a(href='#')
+                        //                    | Menu Item
+                        //                    i.fas.fa-chevron-right
+                        //            li
+                        //                a(href='#')
+                        //                    | Menu Item
+                        //                    i.fas.fa-chevron-right
+                        //            li
+                        //                a(href='#')
+                        //                    | Menu Item
+                        //                    i.fas.fa-chevron-right
+                        //    li
+                        //        a(href='#')
+                        //            | Smartphones &amp; Tablets
+                        //            i.fas.fa-chevron-right
+                        //    li
+                        //        a(href='#')
+                        //            | TV &amp; Audio
+                        //            i.fas.fa-chevron-right
+                        //    li
+                        //        a(href='#')
+                        //            | Gadgets
+                        //            i.fas.fa-chevron-right
+                        //    li
+                        //        a(href='#')
+                        //            | Car Electronics
+                        //            i.fas.fa-chevron-right
+                        //    li
+                        //        a(href='#')
+                        //            | Video Games &amp; Consoles
+                        //            i.fas.fa-chevron-right
+                        //    li
+                        //        a(href='#')
+                        //            | Accessories
+                        //            i.fas.fa-chevron-right
                     // Main Nav Menu
                     .main_nav_menu.ml-auto
                         ul.standard_dropdown.main_nav_dropdown

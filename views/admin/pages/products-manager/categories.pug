@@ -89,12 +89,12 @@ block content
                                                     th(scope='row') #{i + 1}
                                                     td #{categories[i].name}
                                                     td #{categories[i].description}
-                                                    - if (meta.level === 1)
+                                                    - if (level === 1)
                                                          td
                                                              -let lengthC = categories[i].children.length
                                                              -for (k = 0; k < lengthC; k ++)
                                                                 p #{categories[i].children[k].name}
-                                                    - if (meta.level === 2)
+                                                    - if (level === 2)
                                                          td
                                                              -let lengthP = categories[i].parent.length
                                                              -for (m = 0; m < lengthP; m ++)
@@ -103,7 +103,7 @@ block content
                                                              -let lengthC = categories[i].children.length
                                                              -for (k = 0; k < lengthC; k ++)
                                                                  p #{categories[i].children[k].name}
-                                                    - if (meta.level === 3)
+                                                    - if (level === 3)
                                                          td
                                                              -let lengthP = categories[i].parent.length
                                                              -for (m = 0; m < lengthP; m ++)
