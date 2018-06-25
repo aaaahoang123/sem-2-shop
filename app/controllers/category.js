@@ -56,7 +56,7 @@ module.exports = {
                 next();
                 return;
             }
-            console.log(result);
+            req.level = level;
             // Kết quả trả về có dạng [{meta: [{}], data: [{}]}]. Trong trường hợp không tìm thấy thì đặt req.products = [] và next()
             if (result.length === 0 || result[0].meta.length === 0) {
                 req.categories = [];
@@ -65,11 +65,11 @@ module.exports = {
             }
             req.categories = result[0].data;
             let totalItems = result[0].meta[0].totalItems;
+
             req.meta = {
                 totalItems: totalItems,
                 total: Math.ceil(totalItems / limit),
                 limit: limit,
-                level: level,
                 offset: skip,
                 page: page,
                 q: req.query.q
@@ -120,22 +120,27 @@ module.exports = {
         // res.render('admin/pages/products-manager/categories', {path: '/products-manager/categories'});
         let length = req.categories.length;
         res.locals.path = '/products-manager/categories';
+        console.log(req.level);
         if (length === 0) {
             res.render('admin/pages/products-manager/categories', {
                 type: 0,
-                link: '/manager/dashboard'
+                link: '/manager/dashboard',
+                level: req.level,
+                meta: {q: req.query.q}
             });
         }
         else if (!req.meta) {
             res.render('admin/pages/products-manager/categories', {
                 type: 1,
                 categories: req.categories,
+                level: req.level
             });
         }
         else {
             res.render('admin/pages/products-manager/categories', {
                 type: 2,
                 categories: req.categories,
+                level: req.level,
                 meta: req.meta
             });
         }
