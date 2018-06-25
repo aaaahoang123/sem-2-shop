@@ -35,17 +35,21 @@ module.exports = {
                 }
             },
             {
-                '$facet': {
+                $facet: {
                     meta: [{$count: "totalItems"}],
-                    data: [{$skip: skip}, {$limit: limit}] // add projection here wish you re-shape the docs
+                    data: [{$skip: skip}, {$limit: limit}]
+                }
             }
-        }];
+        ];
         if (req.query.q) {
             let pattern = new RegExp(req.query.q, 'i');
             query[0].$match.$or = [
                 {description: pattern},
                 {name: pattern}
             ];
+        }
+        if (req.query.limit === "0") {
+            query[query.length].$facet.data = [{$skip: skip}];
         }
         // Thực thi aggregate query
         model.aggregate(query, function (err, result) {
@@ -145,4 +149,4 @@ module.exports = {
             });
         }
     }
-}
+};
