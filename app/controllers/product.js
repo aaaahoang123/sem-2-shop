@@ -254,6 +254,7 @@ module.exports = {
             path: '/products-manager/products',
             products: (req.products && req.products.length !== 0)?req.products[0]:undefined,
             brands: (req.brands && req.brands.length !== 0)?req.brands:[],
+            categories: (req.categories && req.categories.length !== 0)?req.categories:[],
             title: 'EDIT PRODUCTS',
             link: '/manager/dashboard/products-manager/products',
             extraJs: '/admin/js/pages/products-manager/edit-product.js',
@@ -266,7 +267,8 @@ module.exports = {
             res.render('admin/pages/products-manager/products-form', {
                 path: '/products-manager/add-product',
                 title: 'ADD PRODUCT',
-                brands: req.brands
+                brands: (req.brands && req.brands.length !== 0)?req.brands:[],
+                categories: (req.categories && req.categories.length !== 0)?req.categories:[]
             });
         }
     }

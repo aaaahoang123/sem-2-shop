@@ -60,10 +60,16 @@ block content
                                 span.input-group-addon
                                     i.material-icons collections
                                 #category
-                                    select.form-control.show-tick(name='category' multiple='' onchange="validateCategory(this)")
-                                        option Phone
-                                        option Laptop
-                                        option Audio and Video
+                                    select.selectpicker.form-control.show-tick(name='category' multiple='' onchange="validateCategory(this)")
+                                        -let pdCategories = [];
+                                        -if(products && products.categories.length !== 0)
+                                            -pdCategories = JSON.parse(JSON.stringify(products.categories))
+                                        -if(categories && categories.length !== 0)
+                                            -for(let value of categories)
+                                                optgroup(label=value._id)
+                                                    -for(let c of value.categories_group)
+                                                        option(value=c._id selected=(pdCategories.length !== 0 && pdCategories.includes(c._id.toString()))) #{c.name}
+
                                 label
 
                         .col-sm-4
