@@ -1,0 +1,12 @@
+extends ./components/user-account-layout
+
+block content
+    .container-fluid
+        .row.clearfix
+            - if (!user)
+                include ../products-manager/404
+            - else if (user.account && user.account.length > 0)
+                script location.href = '/manager/dashboard/users-manager/users'
+            - else
+                include ./components/user-table
+                include ./components/account-form
