@@ -12,111 +12,146 @@ block extra-js
     script(type="text/javascript" src="/admin/plugins/multi-select/js/jquery.multi-select.min.js")
     script(type="text/javascript" src="/admin/plugins/dropzone/dropzone.min.js")
     script(type='text/javascript' src='/admin/js/pages/products-manager/products-form.js')
+    -if(extraJs && extraJs !== null)
+        script(type='text/javascript' src=extraJs)
 
 block content
+
     .card
         .header
-            h2
-                | ADD PRODUCT
+            h2 #{title}
         .body
-            #alert-error
-            form(name="product-form")
-                .row.clearfix
-                    .col-sm-6
-                        b Product Name
-                        .input-group
-                            span.input-group-addon
-                                i.material-icons games
-                            .form-line
-                                input.form-control.date(name='name' type='text' placeholder='Product Name' onkeyup="validateProductName(this)")
-                            label
-                    .col-sm-6
-                        b Product Price
-                        .input-group
-                            span.input-group-addon
-                                i.material-icons attach_money
-                            .form-line
-                                input.form-control.date(name='price' type='text' placeholder='Price' onkeyup="validateProductPrice(this)")
-                            label
+            -if(!products && title === 'EDIT PRODUCTS')
+                include 404
+            -else
+                #alert-error
+                form(name="product-form")
+                    .row.clearfix
+                        .col-sm-6
+                            b Product Name
+                            .input-group
+                                span.input-group-addon
+                                    i.material-icons games
+                                .form-line
+                                    input.form-control.date(name='name' type='text' placeholder='Product Name' onkeyup="validateProductName(this)" value=(products && products.name)? products.name:'')
+                                label
+                        .col-sm-6
+                            b Product Price
+                            .input-group
+                                span.input-group-addon
+                                    i.material-icons attach_money
+                                .form-line
+                                    input.form-control.date(name='price' type='text' placeholder='Price' onkeyup="validateProductPrice(this)" value=(products && products.price)?products.price:'')
+                                label
 
-                .row.clearfix
-                    .col-sm-4
-                        b Product Code
-                        .input-group
-                            span.input-group-addon
-                                i.material-icons code
-                            #code.form-line
-                                input.form-control.date(name='code' type='text' placeholder='Code' onkeyup="validateProductCode(this)")
-                            label
+                    .row.clearfix
+                        .col-sm-4
+                            b Product Code
+                            .input-group
+                                span.input-group-addon
+                                    i.material-icons code
+                                #code.form-line
+                                    input.form-control.date(name='code' type='text' placeholder='Code' onkeyup="validateProductCode(this)" value=(products && products.code)?products.code:'')
+                                label
 
-                    .col-sm-4
-                        b Categories
-                        .input-group
-                            span.input-group-addon
-                                i.material-icons collections
-                            #category
-                                select.form-control.show-tick(name='category' multiple='' onchange="validateCategory(this)")
-                                    option Phone
-                                    option Laptop
-                                    option Audio and Video
-                            label
+                        .col-sm-4
+                            b Categories
+                            .input-group
+                                span.input-group-addon
+                                    i.material-icons collections
+                                #category
+                                    select.selectpicker.form-control.show-tick(name='category' multiple='' onchange="validateCategory(this)")
+                                        -let pdCategories = [];
+                                        -if(products && products.categories.length !== 0)
+                                            -pdCategories = JSON.parse(JSON.stringify(products.categories))
+                                        -if(categories && categories.length !== 0)
+                                            -for(let value of categories)
+                                                optgroup(label=value._id)
+                                                    -for(let c of value.categories_group)
+                                                        option(value=c._id selected=(pdCategories.length !== 0 && pdCategories.includes(c._id.toString()))) #{c.name}
 
-                    .col-sm-4
-                        b Brands
-                        .input-group
-                            span.input-group-addon
-                                i.material-icons local_offer
-                            #brand
-                                select.form-control.show-tick(name='brand' onchange="validateBrand(this)")
-                                    option(value='') -- Please select --
-                                    option(value='10') Ipone
-                                    option(value='20') SamSung
-                                    option(value='30') Nokia
-                                    option(value='40') LG
-                                    option(value='50') Lenovo
-                            label
+                                label
 
-                h2.card-inside-title Product Description
-                .row.clearfix
-                    .col-sm-12
-                        .input-group
-                            .form-line
-                                textarea#ckeditor(name='description')
-                            label
+                        .col-sm-4
+                            b Brands
+                            .input-group
+                                span.input-group-addon
+                                    i.material-icons local_offer
+                                #brand
+                                    select.form-control.show-tick(name='brand' onchange="validateBrand(this)")
+                                        option(value='') -- Please select --
+                                        - if(brands && brands.length !== 0)
+                                            - for(var i=0; i < brands.length; i++)
+                                                option(value=brands[i]._id selected=(products && products.brand.toString()===brands[i]._id.toString())) #{brands[i].name}
 
-                h2.card-inside-title Product Images
-                .row.clearfix
-                    .col-sm-12
-                        .input-group
-                            #frm-file-upload.dropzone.custom-dropzone(action='https://api.cloudinary.com/v1_1/fpt-aptech/image/upload' enctype='multipart/form-data')
-                                .dz-message
-                                    .drag-icon-cph
-                                        i.material-icons touch_app
-                                    h3 Drop image here or click to upload.
-                                    em
-                                        | (This is just a demo dropzone. Selected files are
-                                        strong not
-                                        |  actually uploaded.)
-                                .fallback
-                                    input(name='myImg' type='file' multiple='')
-                                    input(type='hidden' name = 'upload_preset' value='gwq6ik7v')
-                            label
+                                label
 
-                h2.card-inside-title Specification
-                #spec
+                    h2.card-inside-title Product Description
+                    .row.clearfix
+                        .col-sm-12
+                            .input-group
+                                .form-line
+                                    textarea#ckeditor(name='description')
+                                        | #{(products && products.description)?products.description:""}
 
-                .row
-                    .col-sm-3
-                        button#add-spec-btn.btn.btn-danger.waves-effect.waves-float(type='button')
-                            i.material-icons add
-                            span ADD PROPERTIES
+                                label
 
-                #url-images(style="display: none;")
+                    h2.card-inside-title Product Images
+                    .row.clearfix
+                        .col-sm-12
+                            .input-group
+                                #frm-file-upload.dropzone.custom-dropzone(action='https://api.cloudinary.com/v1_1/fpt-aptech/image/upload' enctype='multipart/form-data')
+                                    .dz-message
+                                        .drag-icon-cph
+                                            i.material-icons touch_app
+                                        h3 Drop image here or click to upload.
+                                        em
+                                            | (This is just a demo dropzone. Selected files are
+                                            strong not
+                                            |  actually uploaded.)
+                                    .fallback
+                                        input(name='myImg' type='file' multiple='')
+                                        input(type='hidden' name = 'upload_preset' value='gwq6ik7v')
+                                label
 
-                .row.clearfix
-                    .col-sm-4
-                    .col-sm-2
-                        button#btn-submit.btn.btn-block.btn-primary.waves-effect(type='button') SUBMIT
-                    .col-sm-2
-                        button#btn-reset.btn.btn-block.btn-warning.waves-effect(type='reset') RESET
-                    .col-sm-4
+                    h2.card-inside-title Specification
+                    #spec
+                        -if(products && products.specifications)
+                            -for(let key in products.specifications)
+                                .row.clearfix
+                                    .col-sm-5
+                                        .input-group
+                                            span.input-group-addon
+                                                i.material-icons settings
+                                            .form-line
+                                                input.form-control.date.spec-name(type='text', placeholder='Feature' value=key)
+                                    .col-sm-5
+                                        .input-group
+                                            span.input-group-addon
+                                                i.material-icons details
+                                            .form-line
+                                                input.form-control.date.spec-value(type='text', placeholder='Details' value=products.specifications[key])
+                                    .col-sm-1
+                                    .col-sm-1
+                                        button.btn.btn-danger.btn-circle.waves-effect.waves-circle.waves-float(type='button' onclick='removeSpecRow(this)')
+                                            i.material-icons remove
+
+
+                    .row
+                        .col-sm-3
+                            button#add-spec-btn.btn.btn-danger.waves-effect.waves-float(type='button')
+                                i.material-icons add
+                                span ADD PROPERTIES
+
+                    #url-images(style="display: none;")
+                        -if(products && products.images.length !== 0)
+                            -for(var i=0; i< products.images.length; i++)
+                                input.urlImg.edit-img(type='hidden' name='lol-'+i value=products.images[i])
+
+                    .row.clearfix
+                        .col-sm-4
+                        .col-sm-2
+                            button.btn.btn-block.btn-primary.waves-effect(id=(editBtnSubmit && editBtnSubmit !== null)?editBtnSubmit:'btn-submit' type='button' onclick='dosubmit') SUBMIT
+                        .col-sm-2
+                            button#btn-reset.btn.btn-block.btn-warning.waves-effect(type='button') RESET
+                        .col-sm-4

@@ -1,7 +1,7 @@
 $(function () {
     autosize($('textarea.auto-growth'));
     $('.datepicker').bootstrapMaterialDatePicker({
-        format: 'dddd DD MMMM YYYY',
+        format: 'YYYY/MM/DD',
         clearButton: true,
         weekStart: 1,
         time: false
@@ -19,7 +19,3 @@ function readURL(input) {
         reader.readAsDataURL(input.files[0]);
     }
 }
-
-$("#imgInp").change(function() {
-    readURL(this);
-});
