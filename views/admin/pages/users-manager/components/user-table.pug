@@ -1,0 +1,35 @@
+.card
+    .header
+        h2
+            | USER INFO
+        ul.header-dropdown.m-r--5
+            li.dropdown
+                a.dropdown-toggle(href='javascript:void(0);' data-toggle='dropdown' role='button' aria-haspopup='true' aria-expanded='false')
+                    i.material-icons more_vert
+                ul.dropdown-menu.pull-right
+                    li
+                        a(href='javascript:void(0);') Action
+                    li
+                        a(href='javascript:void(0);') Another action
+                    li
+                        a(href='javascript:void(0);') Something else here
+    .body
+        table.table.table-bordered.table-hover
+            thead
+                tr
+                    th.text-center CODE
+                    th.text-center NAME
+                    th.text-center GENDER
+                    th.text-center ADDRESS
+                    th.text-center EMAIL
+                    th.text-center PHONE
+                    th.text-center BIRTHDAY
+            tbody.text-center
+                tr
+                    td #{user.mid}
+                    td #{user.full_name}
+                    td #{user.gender===1?'Male':'Female'}
+                    td #{user.address}
+                    td #{user.email}
+                    td #{user.phone}
+                    td #{user.birthday.toLocaleDateString()}

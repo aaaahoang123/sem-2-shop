@@ -80,3 +80,13 @@
     text-align: center;
     width: 100%;
 }
+.year-picker-item:hover{
+    color: #009688;}
+.dtp-actual-year{cursor: pointer}
+.dtp-actual-year:hover{
+    color: #ffde45 !important;
+}
+.dtp table.dtp-picker-days tr > td > a:not(.selected):hover {
+    background-color: #757575;
+    color: white;
+}

@@ -3,40 +3,40 @@
 const model = require('../models/product');
 
 module.exports = {
-    validate: function (req,res,next) {
+    validate: function (req, res, next) {
         console.log(req.body);
-        if(!req.errs) req.errs = {};
+        if (!req.errs) req.errs = {};
 
-        if(!req.body.name || req.body.name === null || req.body.name === "") req.errs.name = "Product Name cant not null";
+        if (!req.body.name || req.body.name === null || req.body.name === "") req.errs.name = "Product Name cant not null";
 
-        if(!req.body.code || req.body.code === null || req.body.code === "") req.errs.code = "Product Code cant not null";
+        if (!req.body.code || req.body.code === null || req.body.code === "") req.errs.code = "Product Code cant not null";
 
-        if(!req.body.description || req.body.description === null || req.body.description === "") req.errs.description = "Product Description cant not null";
+        if (!req.body.description || req.body.description === null || req.body.description === "") req.errs.description = "Product Description cant not null";
 
-        if(!req.body.categories || req.body.categories === null || req.body.categories === "") req.errs.categories = "Product Categories cant not null";
+        if (!req.body.categories || req.body.categories === null || req.body.categories === "") req.errs.categories = "Product Categories cant not null";
 
-        if(!req.body.brand || req.body.brand === null || req.body.brand === "") req.errs.brand = "Product Brand cant not null";
+        if (!req.body.brand || req.body.brand === null || req.body.brand === "") req.errs.brand = "Product Brand cant not null";
 
-        if(!req.body.price || req.body.price === null || req.body.price === "") req.errs.price = "Product Price cant not null";
+        if (!req.body.price || req.body.price === null || req.body.price === "") req.errs.price = "Product Price cant not null";
 
-        if(!req.body.images || req.body.images === null || req.body.images === "") req.errs.images = "Product Images cant not null";
+        if (!req.body.images || req.body.images === null || req.body.images === "") req.errs.images = "Product Images cant not null";
 
-        if(Object.keys(req.errs).length !== 0){
+        if (Object.keys(req.errs).length !== 0) {
             req.errStatus = 400;
         }
         next();
     },
 
     insertOne: function (req, res, next) {
-        if(req.errs && Object.keys(req.errs).length !== 0){
+        if (req.errs && Object.keys(req.errs).length !== 0) {
             next();
             return;
         }
-        var newProduct = new model(req.body);
+        let newProduct = new model(req.body);
         newProduct.save(function (err, result) {
-            if(err){
-                if(!req.errs) req.errs = {};
-                if(err.code === 11000){
+            if (err) {
+                if (!req.errs) req.errs = {};
+                if (err.code === 11000) {
                     req.errStatus = 409;
                     req.errs.name = "This product code has already existed";
                 }
@@ -62,7 +62,7 @@ module.exports = {
         model.find(query, function (err, result) {
             if (err) {
                 console.log(err);
-                if(!req.errs) req.errs = {};
+                if (!req.errs) req.errs = {};
                 req.errs.database = err.message;
                 next();
                 return;
@@ -154,7 +154,7 @@ module.exports = {
         model.aggregate(query, function (err, result) {
             if (err) {
                 console.log(err);
-                if(!req.errs) req.errs = {};
+                if (!req.errs) req.errs = {};
                 req.errs.database = err.message;
                 next();
                 return;
@@ -243,12 +243,12 @@ module.exports = {
     responseProductJson:  function (req, res, next) {
         if(req.errs && Object.keys(req.errs).length !== 0){
             res.status(req.errStatus);
-            if(req.errStatus === 400){
+            if (req.errStatus === 400) {
                 res.send({
                     code: 400,
                     message: "Product code, name, description, brand, images, category not null"
                 });
-            }else if(req.errStatus === 409){
+            } else if (req.errStatus === 409) {
                 res.send({
                     code: 409,
                     message: req.errs.name
