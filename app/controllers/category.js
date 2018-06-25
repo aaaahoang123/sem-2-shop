@@ -138,6 +138,34 @@ module.exports = {
         });
     },
 
+    getListGroup: function(req,res,next){
+        let query = [
+            {
+                $match: {
+                    status: 1
+                }
+            },
+            {
+                $group : {
+                    _id : "$level",
+                    categories_group: { $push: "$$ROOT" }
+                }
+            }
+        ];
+
+        model.aggregate(query, function (err, result) {
+            if(err){
+                console.log(err);
+                if (!req.errs) req.errs = {};
+                req.errs.database = err.message;
+                next();
+                return;
+            }
+            req.categories = result;
+            next();
+        });
+    },
+
     updateParent: function(req, res, next) {
         if (req.errs && Object.keys(req.errs).length !== 0) {
             next();
