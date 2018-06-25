@@ -4,7 +4,6 @@ const model = require('../models/category');
 module.exports = {
 
     validate: function (req, res, next) {
-        console.log(req.body);
         if (!req.errs) req.errs = {};
         if (!req.body.name || req.body.name === null || req.body.name === "") req.errs.name = "Category Name can not null";
         if (!req.body.description || req.body.description === null || req.body.description === "") req.errs.description = "Category Description can not null";
@@ -133,12 +132,75 @@ module.exports = {
                 result: result,
                 status: 201
             };
-            console.log(result);
             next();
         });
     },
 
-    getListGroup: function(req,res,next){
+    getOne: function (req, res, next) {
+        let query = [
+            {
+                $match: {
+                    status: 1,
+                    name: req.params.name
+                }
+            },
+            {
+                "$lookup": {
+                    "from": "categories",
+                    "localField": "_id",
+                    "foreignField": "children",
+                    "as": "parent"
+                }
+            },
+            {
+                "$lookup": {
+                    "from": "categories",
+                    "localField": "children",
+                    "foreignField": "_id",
+                    "as": "children"
+                }
+            }];
+        model.aggregate(query, function (err, result) {
+            if (err) {
+                console.log(err);
+                if (!req.errs) req.errs = {};
+                req.errs.database = err.message;
+                next();
+                return;
+            }
+            req.category = result[0];
+            next();
+        });
+    },
+
+    editOne: function(req, res, next) {
+        if (req.errs && Object.keys(req.errs).length !== 0) {
+            next();
+            return;
+        }
+
+        let category = req.body;
+        category.updated_at = Date.now();
+        model.findOneAndUpdate({name: req.params.name}, {$set: category}, {new: true}, function (err, result) {
+
+            if (err) {
+                if (!req.errs) req.errs = {};
+                if (err.code === 11000) req.errs.name = "This category name has already existed";
+                req.errs.database = err.message;
+                next();
+                return;
+            }
+            req.successResponse = {
+                title: 'Success',
+                detail: 'Edit category successfully',
+                link: '/manager/dashboard/products-manager/categories',
+                added: result
+            };
+            next();
+        });
+    },
+
+    getListGroup: function (req, res, next) {
         let query = [
             {
                 $match: {
@@ -146,15 +208,15 @@ module.exports = {
                 }
             },
             {
-                $group : {
-                    _id : "$level",
-                    categories_group: { $push: "$$ROOT" }
+                $group: {
+                    _id: "$level",
+                    categories_group: {$push: "$$ROOT"}
                 }
             }
         ];
 
         model.aggregate(query, function (err, result) {
-            if(err){
+            if (err) {
                 console.log(err);
                 if (!req.errs) req.errs = {};
                 req.errs.database = err.message;
@@ -166,7 +228,7 @@ module.exports = {
         });
     },
 
-    updateParent: function(req, res, next) {
+    updateParent: function (req, res, next) {
         if (req.errs && Object.keys(req.errs).length !== 0) {
             next();
             return;
@@ -175,7 +237,10 @@ module.exports = {
             let query = {
                 _id: req.body.parent
             };
-            model.findOneAndUpdate(query, {$push: {children:req.successResponse.result._id}, $set: {updated_at: Date.now()}}, {new: true}, function (err, result) {
+            model.findOneAndUpdate(query, {
+                $push: {children: req.successResponse.result._id},
+                $set: {updated_at: Date.now()}
+            }, {new: true}, function (err, result) {
                 if (err) {
                     console.log(err);
                     if (!req.errs) req.errs = {};
@@ -183,7 +248,6 @@ module.exports = {
                     next();
                     return;
                 }
-                console.log(result);
                 next();
             });
         }
@@ -232,8 +296,38 @@ module.exports = {
         res.json(req.successResponse.result);
     },
 
+    responseCategoryEditFormView: function (req, res, next) {
+        if (!res.locals) res.locals = {};
+        res.locals.method = 'PUT';
+        res.locals.title = 'EDIT CATEGORY';
+        res.locals.path = '/products-manager/categories';
+        res.locals.action = '/manager/dashboard/products-manager/categories/' + req.params.name + '?_method=PUT';
+        if (req.category && req.category.length !== 0) {
+            res.render('admin/pages/products-manager/categories-form', {
+                category: req.category,
+                level: req.category.level
+            });
+        }
+        else if (req.errs && Object.keys(req.errs).length !== 0) {
+            res.render('admin/pages/products-manager/categories-form', {
+                errs: req.errs,
+                category: req.body,
+            });
+        }
+        else if (req.successResponse && Object.keys(req.successResponse).length !== 0) {
+            res.render('index', req.successResponse);
+        }
+        else {
+            res.render('admin/pages/products-manager/categories-form', {
+                category: undefined,
+                link: '/manager/dashboard/products-manager/categories',
+            });
+        }
+    },
+
     responseFormView: function (req, res, next) {
         let lv = 0;
+        let title = 'ADD CATEGORY';
         if (req.successResponse) {
             res.render('index', req.successResponse);
             return;
@@ -245,7 +339,8 @@ module.exports = {
                 path: '/products-manager/categories/create',
                 listParent: req.categories,
                 level: lv,
-                category: req.body
+                category: req.body,
+                title: title
             });
         } else if (req.errs && Object.keys(req.errs).length !== 0) {
             res.render('admin/pages/products-manager/categories-form', {
@@ -253,13 +348,15 @@ module.exports = {
                 level: req.body.level - 1,
                 errs: req.errs,
                 category: req.body,
+                title: title
             });
             console.log(req.body);
         }
         else {
             res.render('admin/pages/products-manager/categories-form', {
                 path: '/products-manager/categories/create',
-                level: lv
+                level: lv,
+                title: title
             });
         }
     },
