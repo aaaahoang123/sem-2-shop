@@ -29,7 +29,7 @@ block content
                                         a(href='javascript:void(0);') Something else here
                     .row.m-t-20
                         .col-sm-4
-                            - if (meta)
+                            - if (meta && type == 2)
                                 - let limit = meta.limit
                                 .col-xs-3.m-t-25
                                     label Show
@@ -50,7 +50,7 @@ block content
                             .col-lg-7.col-md-4.col-sm-5.col-xs-3.m-t-15
                                 select.select-level.form-control.show-tick(name='categories')
                                     //option(value='') -- Select level --
-                                    option(selected disabled) Level #{meta.level}
+                                    option(selected disabled) Level #{level}
                                     option(value='1') Level 1
                                     option(value='2') Level 2
                                     option(value='3') Level 3
@@ -74,12 +74,12 @@ block content
                                                 th #
                                                 th.text-center NAME
                                                 th.text-center DESCRIPTION
-                                                - if (meta.level === 1)
+                                                - if (level === 1)
                                                     th.text-center CHILDREN
-                                                - if (meta.level === 2)
+                                                - if (level === 2)
                                                     th.text-center PARENT
                                                     th.text-center CHILDREN
-                                                - if (meta.level === 3)
+                                                - if (level === 3)
                                                     th.text-center PARENT
                                                 th.text-center ACTION
                                         tbody.text-center
@@ -89,12 +89,12 @@ block content
                                                     th(scope='row') #{i + 1}
                                                     td #{categories[i].name}
                                                     td #{categories[i].description}
-                                                    - if (meta.level === 1)
+                                                    - if (level === 1)
                                                          td
                                                              -let lengthC = categories[i].children.length
                                                              -for (k = 0; k < lengthC; k ++)
                                                                 p #{categories[i].children[k].name}
-                                                    - if (meta.level === 2)
+                                                    - if (level === 2)
                                                          td
                                                              -let lengthP = categories[i].parent.length
                                                              -for (m = 0; m < lengthP; m ++)
@@ -103,7 +103,7 @@ block content
                                                              -let lengthC = categories[i].children.length
                                                              -for (k = 0; k < lengthC; k ++)
                                                                  p #{categories[i].children[k].name}
-                                                    - if (meta.level === 3)
+                                                    - if (level === 3)
                                                          td
                                                              -let lengthP = categories[i].parent.length
                                                              -for (m = 0; m < lengthP; m ++)
@@ -121,6 +121,8 @@ block content
                                     - limit += '&limit=' + meta.limit
                                 -if (meta.q)
                                     - q = '&q=' + meta.q
+                                -if (level)
+                                    - level = '&level=' + level
                                 .row.text-right
                                     ul.pagination(style='margin-right: 1%')
                                         - if (meta.page === 1)
@@ -128,7 +130,7 @@ block content
                                                 a First
                                         - else
                                             li.paginate_button
-                                                a(href='/manager/dashboard/products-manager/categories?' + limit.substring(1) + q) First
+                                                a(href='/manager/dashboard/products-manager/categories?' + limit.substring(1) + q + level) First
                                         - let i = meta.page > 5 ? meta.page - 4 : 1
                                         - if (i !== 1)
                                             li.paginate_button.disabled
@@ -139,7 +141,7 @@ block content
                                                     a= i
                                             - else
                                                 li.paginate_button
-                                                    a(href='/manager/dashboard/products-manager/categories?page=' + i + limit + q)= i
+                                                    a(href='/manager/dashboard/products-manager/categories?page=' + i + limit + q + level)= i
                                             - if (i === meta.page + 4 && i < meta.total)
                                                 li.paginate_button.disabled
                                                     a ...
@@ -148,4 +150,4 @@ block content
                                                 a Last
                                         - else
                                             li.paginate_button
-                                                a(href='/manager/dashboard/products-manager/categories?page=' + meta.total + limit + q) Last
+                                                a(href='/manager/dashboard/products-manager/categories?page=' + meta.total + limit + q + level) Last

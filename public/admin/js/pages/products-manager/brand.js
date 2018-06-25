@@ -52,7 +52,7 @@ function changeSearchByInput(el, except) {
     var href = '?';
         // ?q=b limit=5
     for (var i = 0; i < searchArray.length; i++) {
-        if (!searchArray[i].includes('page=') && !searchArray[i].includes(except)) {
+        if (!searchArray[i].includes('page=') && !searchArray[i].includes(except) && searchArray[i] !== "") {
             href += searchArray[i].replace("?", "") + '&';
         }
     }
