@@ -7,9 +7,19 @@ const mongoose = require('mongoose');
 const indexRouter = require('./routes/index');
 const usersRouter = require('./routes/users');
 const adminRouter = require('./routes/manager');
+const apiRouter = require('./routes/api');
+const methodOverride = require('method-override');
+
 const app = express();
 mongoose.Promise = global.Promise;
-mongoose.connect("mongodb://admin:admin1@ds159400.mlab.com:59400/sem2shop");
+mongoose.connect("mongodb://admin:admin1@ds159400.mlab.com:59400/sem2shop")
+    .then(() => {
+        console.log("Success to connect database!")
+    })
+    .catch(err => {
+        console.error("Can not connect with database!");
+        console.error(err.stack);
+    });
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'pug');
@@ -17,12 +27,13 @@ app.use(logger('dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
+app.use(methodOverride('_method'));
 app.use(express.static(path.join(__dirname, 'public')));
-//app.use(methodOverride('_method'));
 
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
 app.use('/manager', adminRouter);
+app.use('/api', apiRouter);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
