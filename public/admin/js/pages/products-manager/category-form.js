@@ -30,7 +30,7 @@ $('#category-form').on('submit', function (e) {
     }
     var parentValue;
     try {
-        parentValue = $('#parent-selector').val()
+        parentValue = $('#parent-selector').val();
     }
     catch (e) {
         parentValue = null;

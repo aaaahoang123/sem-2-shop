@@ -54,45 +54,43 @@ block content
                 .card
                     .header
                         h2
-                            | ADD CATEGORIES
-                        ul.header-dropdown.m-r--5
-                            li.dropdown
-                                a.dropdown-toggle(href='javascript:void(0);' data-toggle='dropdown' role='button' aria-haspopup='true' aria-expanded='false')
-                                    i.material-icons more_vert
-                                ul.dropdown-menu.pull-right
-                                    li
-                                        a(href='javascript:void(0);') Action
-                                    li
-                                        a(href='javascript:void(0);') Another action
-                                    li
-                                        a(href='javascript:void(0);') Something else here
+                            | #{title}
                     .body
-                        form#category-form(action='/manager/dashboard/products-manager/categories' method='POST')
-                            .row.clearfix
-                                .col-sm-3.col-md-2
-                                    select#level-selector.form-control.show-tick(name='level')
-                                        option(value=1 selected=Number(level) === 0) 1
-                                        option(value=2 selected=Number(level) === 1) 2
-                                        option(value=3 selected=Number(level) === 2) 3
-                                    p.level-err.text-danger.text-center.m-t-15 #{errs&&errs.level?errs.level:''}
-                                .col-sm-3.col-md-4
-                                    select#parent-selector.form-control.show-tick(name='parent' disabled=Number(level) === 0)
-                                        option(value='') -- Select parent --
-                                        -if (listParent && listParent.length !== 0)
-                                            - for(var i = 0; i < listParent.length; i ++)
-                                                option(value=listParent[i]._id data-category=listParent[i]) #{listParent[i].name}
-                                    p.parent-err.text-danger.text-center.m-t-15 #{errs&&errs.parent?errs.parent:''}
-                                .col-sm-6
-                                    .form-group.form-float
-                                        .form-line
-                                            input#inp-name.form-control(type='text' name='name' value=(category && category.name)?category.name:'')
-                                            label.form-label Name
-                                    p.name-err.text-danger.text-center.m-t-15 #{errs&&errs.name?errs.name:''}
-                                .col-sm-12
-                                    .form-group
-                                        .form-line
-                                            textarea#inp-description.form-control.no-resize(rows='6' name='description')
-                                                - if (category && category.description)
-                                                    | #{category.description}
-                                    p.description-err.text-danger.text-center.m-t-15 #{errs&&errs.description?errs.description:''}
-                            button#btn-submit.btn.btn-primary.waves-effect(type='submit') Submit
+                        - if (!category && title === 'EDIT CATEGORY')
+                            include ./404
+                        - else
+                            form#category-form(action=method==='PUT'?action:'/manager/dashboard/products-manager/categories' method='POST')
+                                .row.clearfix
+                                    .col-sm-3.col-md-2
+                                        select#level-selector.form-control.show-tick(name='level')
+                                            - if (category && title === 'ADD CATEGORY')
+                                                option(value=1 selected=Number(level) === 0) 1
+                                                option(value=2 selected=Number(level) === 1) 2
+                                                option(value=3 selected=Number(level) === 2) 3
+                                            - else
+                                                option(value=category.level selected) #{category.level}
+                                        p.level-err.text-danger.text-center.m-t-15 #{errs&&errs.level?errs.level:''}
+                                    .col-sm-3.col-md-4
+                                        select#parent-selector.form-control.show-tick(name='parent' disabled=Number(level) === 0)
+                                            - if (title === 'ADD CATEGORY')
+                                                option(value='') -- Select parent --
+                                                -if (listParent && listParent.length !== 0)
+                                                    - for(var i = 0; i < listParent.length; i ++)
+                                                        option(value=listParent[i]._id data-category=listParent[i]) #{listParent[i].name}
+                                            - else if (category.parent.length !== 0)
+                                                option(value=category.parent[0]._id selected) #{category.parent[0].name}
+                                        p.parent-err.text-danger.text-center.m-t-15 #{errs&&errs.parent?errs.parent:''}
+                                    .col-sm-6
+                                        .form-group.form-float
+                                            .form-line
+                                                input#inp-name.form-control(type='text' name='name' value=(category && category.name)?category.name:'')
+                                                label.form-label Name
+                                        p.name-err.text-danger.text-center.m-t-15 #{errs&&errs.name?errs.name:''}
+                                    .col-sm-12
+                                        .form-group
+                                            .form-line
+                                                textarea#inp-description.form-control.no-resize(rows='6' name='description')
+                                                    - if (category && category.description)
+                                                        | #{category.description}
+                                        p.description-err.text-danger.text-center.m-t-15 #{errs&&errs.description?errs.description:''}
+                                button#btn-submit.btn.btn-primary.waves-effect(type='submit') Submit
