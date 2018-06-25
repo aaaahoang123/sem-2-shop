@@ -83,14 +83,13 @@ module.exports = {
             });
             console.log(req.body);
         } else if(req.errs && Object.keys(req.errs).length !== 0) {
-            lv = req.query.lv;
             res.render('admin/pages/products-manager/categories-form', {
                 path: '/products-manager/categories/create',
                 level: req.body.level,
                 errs: req.errs,
                 category: req.body,
             });
-            console.log(req.body);
+            console.log(req.body.level);
         }
         else {
             res.render('admin/pages/products-manager/categories-form', {

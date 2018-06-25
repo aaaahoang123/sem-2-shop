@@ -67,36 +67,32 @@ block content
                                     li
                                         a(href='javascript:void(0);') Something else here
                     .body
-                        form(action='/manager/dashboard/products-manager/categories' method='POST')
+                        form#category-form(action='/manager/dashboard/products-manager/categories' method='POST')
                             .row.clearfix
-                                .col-sm-6
-                                    .form-group.form-float
-                                        .form-line
-                                            input.form-control(type='text' name='name' value=(category && category.name)?category.name:'')
-                                            label.form-label Name
-                                    - if (errs && errs.name)
-                                        p.text-danger.text-center.m-t-15 #{errs.name}
                                 .col-sm-3.col-md-2
                                     select#level-selector.form-control.show-tick(name='level')
-                                        option(value=1 selected=Number(level)===1) 1
-                                        option(value=2 selected=Number(level)===2) 2
-                                        option(value=3 selected=Number(level)===3) 3
-                                    - if (errs && errs.level)
-                                        p.text-danger.text-center.m-t-15 #{errs.level}
+                                        option(value=1 selected=Number(level) === 0) 1
+                                        option(value=2 selected=Number(level) === 1) 2
+                                        option(value=3 selected=Number(level) === 2) 3
+                                    p.level-err.text-danger.text-center.m-t-15 #{errs&&errs.level?errs.level:''}
                                 .col-sm-3.col-md-4
-                                    select#parent-selector.form-control.show-tick(name='parent' disabled=Number(level)===1)
+                                    select#parent-selector.form-control.show-tick(name='parent' disabled=Number(level) === 0)
                                         option(value='') -- Select parent --
                                         -if (listParent && listParent.length !== 0)
                                             - for(var i = 0; i < listParent.length; i ++)
                                                 option(value=listParent[i]._id data-category=listParent[i]) #{listParent[i].name}
-                                    - if (errs && errs.parent)
-                                        p.text-danger.text-center.m-t-15 #{errs.parent}
+                                    p.parent-err.text-danger.text-center.m-t-15 #{errs&&errs.parent?errs.parent:''}
+                                .col-sm-6
+                                    .form-group.form-float
+                                        .form-line
+                                            input#inp-name.form-control(type='text' name='name' value=(category && category.name)?category.name:'')
+                                            label.form-label Name
+                                    p.name-err.text-danger.text-center.m-t-15 #{errs&&errs.name?errs.name:''}
                                 .col-sm-12
                                     .form-group
                                         .form-line
-                                            textarea.form-control.no-resize(rows='6' name='description')
+                                            textarea#inp-description.form-control.no-resize(rows='6' name='description')
                                                 - if (category && category.description)
                                                     | #{category.description}
-                                    - if (errs && errs.description)
-                                        p.text-danger.text-center.m-t-15 #{errs.description}
-                            button.btn.btn-primary.waves-effect(type='submit') Submit
+                                    p.description-err.text-danger.text-center.m-t-15 #{errs&&errs.description?errs.description:''}
+                            button#btn-submit.btn.btn-primary.waves-effect(type='submit') Submit

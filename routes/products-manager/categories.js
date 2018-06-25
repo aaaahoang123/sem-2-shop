@@ -1,10 +1,16 @@
 'use strict';
 
 const router = require('express').Router({});
-const controller = require('../../app/controllers/categories');
+const categoryController = require('../../app/controllers/category');
 
 router
-    .get('/create',controller.findByLevel, controller.responseFormView)
-    .post('/', controller.validate, controller.insertOne, controller.responseFormView)
+    .get('/', categoryController.getList, categoryController.responseCategoryView)
+    .get('/create', categoryController.setLimitO, categoryController.setParentLevel, categoryController.getList, categoryController.responseFormView)
+    .post('/', categoryController.validate, categoryController.insertOne,categoryController.updateParent, categoryController.responseFormView)
+    // .get('/create', categoryController.responseCategoryFormView)
+    // .get('/:name/edit', categoryController.getOne, categoryController.responseCategoryEditFormView)
+    // .put('/:name', categoryController.validate, categoryController.editOne, categoryController.responseCategoryEditFormView)
+    // .post('/', categoryController.validate, categoryController.insertOne, categoryController.responseCategoryFormView)
+    .delete('/:name', categoryController.deleteOne, categoryController.responseJson);
 
 module.exports = router;

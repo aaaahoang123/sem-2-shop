@@ -73,15 +73,15 @@ section
                             a(href='/manager/dashboard/products-manager/products') Products
                         li(class={'active': path === '/products-manager/add-product'})
                             a(href='/manager/dashboard/products-manager/products/create') Add Product
-                li(class={'active': path.includes('/customer-manager')})
+                li(class={'active': path.includes('/users-manager')})
                     a.menu-toggle(href='javascript:void(0);')
                         i.material-icons account_circle
                         span Customer Manager
                     ul.ml-menu
-                        li(class={'active': path === '/customer-manager/customers'})
-                            a(href='/manager/dashboard/customer-manager/customers') Customers
-                        li(class={'active': path === '/customer-manager/add-customer'})
-                            a(href='/manager/dashboard/customer-manager/add-customer') Add Customer
+                        li(class={'active': path === '/users-manager/users'})
+                            a(href='/manager/dashboard/users-manager/users') Users
+                        li(class={'active': path === '/users-manager/users/create'})
+                            a(href='/manager/dashboard/users-manager/users/create') Add User
                 li(class={'active': path.includes('/warehouse-manager')})
                     a.menu-toggle(href='javascript:void(0);')
                         i.material-icons store
