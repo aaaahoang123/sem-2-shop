@@ -10,7 +10,7 @@ block extra-css
 block extra-js
     script(type='text/javascript' src='/admin/plugins/autosize/autosize.js')
     script(type='text/javascript' src='/admin/plugins/momentjs/moment.min.js')
-    script(type='text/javascript' src='/admin/plugins/bootstrap-material-datetimepicker/js/bootstrap-material-datetimepicker.min.js')
+    script(type='text/javascript' src='/admin/plugins/bootstrap-material-datetimepicker/js/bootstrap-material-datetimepicker.js')
     script(type='text/javascript' src='/admin/js/pages/users-manager/users-form.js')
     - if (user_mid)
         script(type='text/javascript' src='/admin/plugins/sweetalert/sweetalert.min.js')
@@ -22,89 +22,209 @@ block extra-js
             |         showCancelButton: true,
             |         confirmButtonText: "Yes! Create an account!",
             |     }, function () {
-            |         location.href = 'manager/dashboard/users-manager/#{user_mid}/account'
+            |         location.href = '/manager/dashboard/users-manager/users/#{user_mid}/account'
             |     });})
 
-
 block content
+    // pageType === 1 => Add user
+    // pageType === 2 => Add account
+    // pageType === 3 => User manager
     .container-fluid
         .row.clearfix
-            .col-lg-12.col-md-12.col-sm-12.col-xs-12
-                .card
-                    .header
-                        h2
-                            | ADD USER
-                        ul.header-dropdown.m-r--5
-                            li.dropdown
-                                a.dropdown-toggle(href='javascript:void(0);' data-toggle='dropdown' role='button' aria-haspopup='true' aria-expanded='false')
-                                    i.material-icons more_vert
-                                ul.dropdown-menu.pull-right
-                                    li
-                                        a(href='javascript:void(0);') Action
-                                    li
-                                        a(href='javascript:void(0);') Another action
-                                    li
-                                        a(href='javascript:void(0);') Something else here
-                    .body
-                        form(method='POST' action='/manager/dashboard/users-manager/users')
-                            .row.clearfix
-                                .col-lg-1
-                                .col-md-6.col-lg-4
-                                    h4.m-b-20 Person info
-                                    .input-group
-                                        span.input-group-addon
-                                            i.material-icons person
-                                        .form-line
-                                            input.form-control(type='text' name='full_name' placeholder="Full name" value=user&&user.full_name?user.full_name:'')
-                                        - if (errs && errs.full_name)
-                                            p.text-danger #{errs.full_name}
+            - if (page_type !== 1 && !user)
+                include ../products-manager/404
+            - else
+                // User form card
+                - if (page_type !== 2)
+                    - if (user && !account && user.account && user.account.length !== 0)
+                        - account = user.account[0]
+                    .card
+                        .header
+                            h2
+                                | #{user_title}
+                            ul.header-dropdown.m-r--5
+                                li.dropdown
+                                    a.dropdown-toggle(href='javascript:void(0);' data-toggle='dropdown' role='button' aria-haspopup='true' aria-expanded='false')
+                                        i.material-icons more_vert
+                                    ul.dropdown-menu.pull-right
+                                        li
+                                            a(href='javascript:void(0);') Action
+                                        li
+                                            a(href='javascript:void(0);') Another action
+                                        li
+                                            a(href='javascript:void(0);') Something else here
+                        .body
+                            - user_action = '/manager/dashboard/users-manager/users';
+                            - user_action += page_type!==1?'/'+user.mid+'?_method=PUT':'';
+                            - if (user)
+                                form(method='POST' action=user_action)
+                                    .row.clearfix
+                                        .col-lg-1
+                                        .col-md-6.col-lg-4
+                                            h4.m-b-20 Person info
+                                            .input-group
+                                                span.input-group-addon
+                                                    i.material-icons person
+                                                .form-line
+                                                    input.form-control(type='text' name='full_name' placeholder="Full name" value=user&&user.full_name?user.full_name:'')
+                                                p#err-fullname.text-danger #{(errs&&errs.full_name)?errs.full_name:''}
 
-                                    .input-group
-                                        span.input-group-addon
-                                            i.material-icons date_range
-                                        .form-line
-                                            input.datepicker.form-control(type='text' name='birthday' placeholder='Birthday' value=user&&user.birthday?user.birthday:'')
-                                        - if (errs && errs.birthday)
-                                            p.text-danger #{errs.birthday}
+                                            .input-group
+                                                span.input-group-addon
+                                                    i.material-icons date_range
+                                                .form-line
+                                                    input.datepicker.form-control(type='text' name='birthday' placeholder='Birthday' value=user&&user.birthday?user.birthday:'')
+                                                p#err-birthday.text-danger #{(errs && errs.birthday)?errs.birthday:''}
 
-                                    .input-group
-                                        span.input-group-addon
-                                            i.material-icons wc
-                                        .form-line
-                                            select.form-control.show-tick(name='gender')
-                                                option(value='') -- Select Gender --
-                                                option(value=1 selected=user&&user.gender==='1') Male
-                                                option(value=0 selected=user&&user.gender==='0') Female
-                                        - if (errs && errs.gender)
-                                            p.text-danger #{errs.gender}
-                                .col-lg-2
-                                .col-lg-4.col-md-6
-                                    h4.m-b-20 Contact info
-                                    .input-group
-                                        span.input-group-addon
-                                            i.material-icons home
-                                        .form-line
-                                            input.form-control(type='text' name='address' placeholder='Address' value=user&&user.address?user.address:'')
-                                        - if (errs && errs.address)
-                                            p.text-danger #{errs.address}
+                                            .input-group
+                                                span.input-group-addon
+                                                    i.material-icons wc
+                                                .form-line
+                                                    select.form-control.show-tick(name='gender')
+                                                        option(value='') -- Select Gender --
+                                                        option(value=1 selected=user&&(user.gender===1||user.gender==='1')) Male
+                                                        option(value=0 selected=user&&(user.gender===0||user.gender==='0')) Female
+                                                p#err-gender.text-danger #{(errs && errs.gender)?errs.gender:''}
+                                        .col-lg-2
+                                        .col-lg-4.col-md-6
+                                            h4.m-b-20 Contact info
+                                            .input-group
+                                                span.input-group-addon
+                                                    i.material-icons home
+                                                .form-line
+                                                    input.form-control(type='text' name='address' placeholder='Address' value=user&&user.address?user.address:'')
+                                                p#err-address.text-danger #{(errs&&errs.address)?errs.address:''}
 
-                                    .input-group
-                                        span.input-group-addon
-                                            i.material-icons email
-                                        .form-line
-                                            input.form-control(type='text' name='email' placeholder='Email' value=user&&user.email?user.email:'')
-                                        - if (errs && errs.email)
-                                            p.text-danger #{errs.email}
+                                            .input-group
+                                                span.input-group-addon
+                                                    i.material-icons email
+                                                .form-line
+                                                    input.form-control(type='text' name='email' placeholder='Email' value=user&&user.email?user.email:'')
+                                                p#err-email.text-danger #{(errs&&errs.email)?errs.email:''}
 
-                                    .input-group
-                                        span.input-group-addon
-                                            i.material-icons phone
-                                        .form-line
-                                            input.form-control(type='text' name='phone' placeholder='Phone' value=user&&user.phone?user.phone:'')
-                                        - if (errs && errs.phone)
-                                            p.text-danger #{errs.phone}
-                                .col-lg-1
+                                            .input-group
+                                                span.input-group-addon
+                                                    i.material-icons phone
+                                                .form-line
+                                                    input.form-control(type='text' name='phone' placeholder='Phone' value=user&&user.phone?user.phone:'')
+                                                p#err-phone.text-danger #{(errs && errs.phone)?errs.phone:''}
+                                        .col-lg-1
 
-                            .row.text-center
-                                button.btn-lg.btn.btn-primary.waves-effect.m-r-5(type='submit') SUBMIT
-                                input.btn-lg.btn.btn-warning.waves-effect.m-l-5(type='reset' value="RESET")
+                                    .row.text-center
+                                        button.btn-lg.btn.btn-primary.waves-effect.m-r-5(type='submit') SUBMIT
+                                        input.btn-lg.btn.btn-warning.waves-effect.m-l-5(type='reset' value="RESET")
+
+                // User table Card
+                - if (page_type === 2)
+                    - if (user && user.account)
+                        - account = user.account
+                    .card
+                        .header
+                            h2
+                                | #{user_t_title}
+                            ul.header-dropdown.m-r--5
+                                li.dropdown
+                                    a.dropdown-toggle(href='javascript:void(0);' data-toggle='dropdown' role='button' aria-haspopup='true' aria-expanded='false')
+                                        i.material-icons more_vert
+                                    ul.dropdown-menu.pull-right
+                                        li
+                                            a(href='javascript:void(0);') Action
+                                        li
+                                            a(href='javascript:void(0);') Another action
+                                        li
+                                            a(href='javascript:void(0);') Something else here
+                        .body
+                            table.table.table-bordered.table-hover
+                                thead
+                                    tr
+                                        th.text-center CODE
+                                        th.text-center NAME
+                                        th.text-center GENDER
+                                        th.text-center ADDRESS
+                                        th.text-center EMAIL
+                                        th.text-center PHONE
+                                        th.text-center BIRTHDAY
+                                tbody.text-center
+                                    tr
+                                        td #{user.mid}
+                                        td #{user.full_name}
+                                        td #{user.gender===1?'Male':'Female'}
+                                        td #{user.address}
+                                        td #{user.email}
+                                        td #{user.phone}
+                                        td #{user.birthday.toLocaleDateString()}
+
+                // Account form card
+                - if (page_type !== 1)
+                    .card
+                        .header
+                            h2
+                                | #{account_title}
+                            ul.header-dropdown.m-r--5
+                                li.dropdown
+                                    a.dropdown-toggle(href='javascript:void(0);' data-toggle='dropdown' role='button' aria-haspopup='true' aria-expanded='false')
+                                        i.material-icons more_vert
+                                    ul.dropdown-menu.pull-right
+                                        li
+                                            a(href='javascript:void(0);') Action
+                                        li
+                                            a(href='javascript:void(0);') Another action
+                                        li
+                                            a(href='javascript:void(0);') Something else here
+                        .body
+                            - link = '/manager/dashboard/users-manager/users/' + user.mid + '/account'
+                            - if (page_type === 3 && !account)
+                                include components/404-account
+                            - else if ((page_type === 3 && account) || (page_type === 2 && !account))
+                                - link += page_type===3?'?_method=PUT':''
+                                form(method='POST' action=link)
+                                    .row.clearfix
+                                        .col-lg-1
+                                        .col-md-6.col-lg-4
+                                            h4.m-b-20 Account
+                                            input(type='hidden' name='user_id' value=user?user._id:account?account.user_id:'')
+                                            .input-group
+                                                span.input-group-addon
+                                                    i.material-icons person
+                                                .form-line
+                                                    input.form-control(type='text' name='username' placeholder="Username" value=account&&account.username?account.username:'')
+                                                - if (errs && errs.username)
+                                                    p.text-danger #{errs.username}
+
+                                            .input-group
+                                                span.input-group-addon
+                                                    i.material-icons visibility
+                                                .form-line
+                                                    select.form-control.show-tick(name='type')
+                                                        option(value='') -- Account Type --
+                                                        option(value=1 selected=account&&account.type===1) Customer
+                                                        option(value=0 selected=account&&account.type===2) Employee
+                                                - if (errs && errs.type)
+                                                    p.text-danger #{errs.type}
+                                        .col-lg-2
+                                        .col-lg-4.col-md-6
+                                            h4.m-b-20 Password
+                                            .input-group
+                                                span.input-group-addon
+                                                    i.material-icons lock
+                                                .form-line
+                                                    input.form-control(type='password' name='password' placeholder='Password' value=account&&account.password?account.password:'')
+                                                - if (errs && errs.password)
+                                                    p.text-danger #{errs.password}
+
+                                            .input-group
+                                                span.input-group-addon
+                                                    i.material-icons lock
+                                                .form-line
+                                                    input.form-control(type='password' placeholder='Compare password' value=account&&account.password?account.password:'')
+                                                p#alert-compare-password.text-danger
+
+                                        .col-lg-1
+
+                                    .row.text-center
+                                        button.btn-lg.btn.btn-primary.waves-effect.m-r-5(type='submit') SUBMIT
+                                        input.btn-lg.btn.btn-warning.waves-effect.m-l-5(type='reset' value="RESET")
+
+                            - else
+                                script(type='text/javascript')
+                                    | location.href = '/manager/dashboard/users-manager/users/'

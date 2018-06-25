@@ -4,6 +4,7 @@ const mongoose = require('mongoose');
 let schema = mongoose.Schema({
     name: {
         type: String,
+        unique: true,
         required: true
     },
     description: {
@@ -30,7 +31,8 @@ let schema = mongoose.Schema({
     },
     status: {
         type: Number,
-        required: true
+        required: true,
+        default: 1
     }
 });
 
