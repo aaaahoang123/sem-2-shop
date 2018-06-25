@@ -120,6 +120,32 @@ module.exports = {
         });
     },
 
+    deleteOne: (req, res, next) => {
+        if (!req.successResponse) {
+            next();
+            return;
+        }
+        let query = {user_id: req.successResponse.result._id};
+        model.findOneAndUpdate(query, {$set: {status: -1}}, {new: true}, (err, result) => {
+            if (err) {
+                console.log(err);
+                if (!req.errs) req.errs = {};
+                req.errs.database = err.message;
+                req.rollBack = true;
+                next();
+                return;
+            }
+            req.accountSuccessResponse = {
+                title: 'Success',
+                detail: 'Delete User and Account successfully',
+                link: '/manager/dashboard/users-manager/users',
+                result: result
+            };
+            req.rollBack = false;
+            next();
+        })
+    },
+
     comparePassword: (req, res, next) => {
         if (!req.account) {
             next();
@@ -128,5 +154,13 @@ module.exports = {
 
         req.isComparedPassword = bcrypt.compareSync(req.body.pasword, req.account.pasword);
         next();
+    },
+
+    responseDeleteJson: (req, res) => {
+        if (req.errs) {
+            res.json(req.errs);
+            return;
+        }
+        res.json([req.successResponse.result, req.accountSuccessResponse.result])
     }
 };

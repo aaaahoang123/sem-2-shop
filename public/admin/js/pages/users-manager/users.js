@@ -25,8 +25,42 @@ $(document).ready(function () {
         if (e.keyCode === 13 || e.which === 13) {
             changeSearchByInput(this, 'q=')
         }
-    })
+    });
+
+    $('.delete-btn').click(showAjaxLoaderMessage)
 });
+
+function showAjaxLoaderMessage() {
+    console.log(this);
+    var mid = $(this).data('delete');
+    swal({
+        title: "Do you want to delete user: " + mid,
+        text: "Submit to delete this user",
+        type: "warning",
+        showCancelButton: true,
+        closeOnConfirm: false,
+        showLoaderOnConfirm: true,
+    }, function () {
+        $.ajax({
+            url: '/manager/dashboard/users-manager/users/' + mid,
+            type: 'DELETE',
+            success: function (res) {
+                console.log(res);
+                setTimeout(function () {
+                    swal({title: "Delete successfully!"}, function () {
+                        location.reload();
+                    });
+                }, 1000);
+            },
+            error: function (res) {
+                console.log(res);
+                setTimeout(function () {
+                    swal("Fail to delete. Please check log!");
+                }, 1000);
+            }
+        })
+    });
+}
 
 function changeSearchByInput(el, except) {
     var searchArray = location.search.split('&');

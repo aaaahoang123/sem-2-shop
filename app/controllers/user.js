@@ -216,6 +216,39 @@ module.exports = {
         });
     },
 
+    deleteOne: (req, res, next) => {
+        let query = {mid: req.params.mid};
+        if (req.rollBack === false) {
+            next();
+            return;
+        }
+        else {
+            var status = req.rollBack?1:-1;
+        }
+        model.findOneAndUpdate(query, {$set: {status: status}}, {new: true}, (err, result) => {
+            if (err) {
+                console.log(err);
+                if (!req.errs) req.errs = {};
+                req.errs.database = err.message;
+                next();
+                return;
+            }
+            if(result === null) {
+                if (!req.errs) req.errs = {};
+                req.errs["404"] = 'User not found';
+                next();
+                return;
+            }
+            req.successResponse = {
+                title: 'Success',
+                detail: 'Delete user successfully',
+                link: '/manager/dashboard/users-manager/users',
+                result: result
+            };
+            next();
+        })
+    },
+
     responseUsersView: (req, res, next) => {
         res.render('admin/pages/users-manager/users', {
             path: '/users-manager/users',

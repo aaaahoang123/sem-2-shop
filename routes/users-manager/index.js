@@ -16,7 +16,6 @@ router
     .post('/users/:mid/account', accountController.validate, accountController.insertOne, controller.getOne, accountController.responseAccountFormView)
     .post('/users/create', controller.validate, controller.insertOne, controller.responseUsersFormView)
 
-
-
+    .delete('/users/:mid', controller.deleteOne, accountController.deleteOne, controller.deleteOne, accountController.responseDeleteJson)
 
 module.exports = router;
