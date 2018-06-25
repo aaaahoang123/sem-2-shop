@@ -16,11 +16,12 @@ let schema = new mongoose.Schema({
         required: true
     },
     categories: {
-        type: [String],
+        type: [mongoose.Schema.Types.ObjectId],
         required: true
     },
     brand: {
-        type: String,
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'brands',
         required: true
     },
     price: {
