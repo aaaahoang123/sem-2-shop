@@ -6,6 +6,7 @@ $(function () {
     // modal
     $('.js-modal-buttons .btn.btn-detail').on('click', function () {
         let products = JSON.parse($(this).attr('data-p'));
+        console.log(products);
         // console.log($('#specificationsbody').html() === "");
         console.log(products.hasOwnProperty('specifications'));
         var tableRows = $('#detail-modal > tr');
@@ -13,8 +14,13 @@ $(function () {
         $(tableRows[1]).find('td').last().find('div').css('background-image', 'url(' + products.images + ')');
         $(tableRows[2]).find('td').last().text(products.name);
         $(tableRows[3]).find('td').last().html(products.description);
-        $(tableRows[4]).find('td').last().text(products.categories);
-        $(tableRows[5]).find('td').last().text(products.brand);
+        products.categories.forEach(function (data, index) {
+            $(tableRows[4]).find('td').last().append(data.name);
+            if(index !== products.categories.length-1){
+                $(tableRows[4]).find('td').last().append(", ");
+            }
+        });
+        $(tableRows[5]).find('td').last().text(products.brand[0].name);
         $(tableRows[6]).find('td').last().text(products.price + "$");
 
         if (products.hasOwnProperty('specifications') === true) {

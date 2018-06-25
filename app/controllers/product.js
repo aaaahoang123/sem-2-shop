@@ -114,11 +114,28 @@ module.exports = {
                 }
             },
             {
+                "$lookup" : {
+                    "from" : "categories",
+                    "localField" : "categories",
+                    "foreignField" : "_id",
+                    "as" : "categories"
+                }
+            },
+            {
+                "$lookup" : {
+                    "from" : "brands",
+                    "localField" : "brand",
+                    "foreignField" : "_id",
+                    "as" : "brand"
+                }
+            },
+            {
                 '$facet': {
                     meta: [{$count: "totalItems"}],
                     data: [{$skip: skip}, {$limit: limit}] // add projection here wish you re-shape the docs
                 }
-            }];
+            }
+            ];
 
         /**
          * Nếu có tìm kiếm, tạo match và đẩy vào đầu array query
