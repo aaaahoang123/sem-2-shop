@@ -10,12 +10,13 @@ router
     .get('/users/:mid/account', controller.getOne, accountController.responseAccountFormView)
     .get('/users/:mid', controller.getOne, controller.responseUserWithAccountView)
 
-    //.put('/users/:mid', controller.validate, controller.updateOne, controller.responseUserUpdateView)
-    //.put('/users/:mid/account', accountController.validate, controller.getOne, accountController.responseAccountUpdateView)
+    .put('/users/:mid', controller.validate, controller.updateOne, controller.responseUserUpdateView)
+    .put('/users/account/:username', accountController.validate, accountController.getOne, accountController.updateOne, accountController.responseAccountUpdateView)
 
     .post('/users/:mid/account', accountController.validate, accountController.insertOne, controller.getOne, accountController.responseAccountFormView)
     .post('/users/create', controller.validate, controller.insertOne, controller.responseUsersFormView)
 
+    .delete('/users', controller.deleteMulti, accountController.deleteMulti, controller.deleteMulti, accountController.responseDeleteJson)
     .delete('/users/:mid', controller.deleteOne, accountController.deleteOne, controller.deleteOne, accountController.responseDeleteJson)
 
 module.exports = router;

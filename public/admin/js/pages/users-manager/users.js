@@ -27,11 +27,46 @@ $(document).ready(function () {
         }
     });
 
-    $('.delete-btn').click(showAjaxLoaderMessage)
+    $('.delete-btn').click(showAjaxLoaderMessage);
+
+    $('#delete-all-btn').click(function () {
+        var chosen = [];
+        $('.item-checkbox').each(function () {
+            if ($(this).prop('checked')) chosen.push($(this).val())
+        });
+        swal({
+            title: "Do you want to delete the chosen users",
+            text: "Submit to delete the users",
+            type: "warning",
+            showCancelButton: true,
+            closeOnConfirm: false,
+            showLoaderOnConfirm: true,
+        }, function () {
+            console.log(chosen);
+            $.ajax({
+                url: '/manager/dashboard/users-manager/users/',
+                type: 'DELETE',
+                data: {chosen: chosen},
+                success: function (res) {
+                    console.log(res);
+                    setTimeout(function () {
+                        swal({title: "Delete successfully!"}, function () {
+                            location.reload();
+                        });
+                    }, 1000);
+                },
+                error: function (res) {
+                    console.log(res);
+                    setTimeout(function () {
+                        swal("Fail to delete. Please check log!");
+                    }, 1000);
+                }
+            })
+        });
+    })
 });
 
 function showAjaxLoaderMessage() {
-    console.log(this);
     var mid = $(this).data('delete');
     swal({
         title: "Do you want to delete user: " + mid,
@@ -73,3 +108,4 @@ function changeSearchByInput(el, except) {
     href += except + $(el).val();
     location.search = href;
 }
+

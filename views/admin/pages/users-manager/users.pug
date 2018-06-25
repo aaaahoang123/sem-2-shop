@@ -8,7 +8,6 @@ block extra-js
     script(type='text/javascript' src='/admin/plugins/sweetalert/sweetalert.min.js')
     script(type='text/javascript' src='/admin/js/pages/users-manager/users.js')
 
-
 block content
     .container-fluid
         .row.clearfix
@@ -72,7 +71,7 @@ block content
                                     span.input-group-addon
                                         a#delete-all-btn(href='javascript:void(0)')
                                             i.material-icons delete
-                                    label.m-t-5(for='delete-all-btn') Delete All
+                                    label.m-t-5(for='delete-all-btn') Delete Checked
                         - if (!users || users.length === 0)
                                 include ../products-manager/404
                         - else
@@ -92,7 +91,7 @@ block content
                                     - for (let u of users)
                                         tr
                                             td
-                                                input.item-checkbox(type='checkbox' id='uc-' + u.mid)
+                                                input.item-checkbox(type='checkbox' id='uc-' + u.mid value=u._id)
                                                 label(for='uc-' + u.mid)
                                             td #{u.mid}
                                             td #{u.full_name}
@@ -101,7 +100,7 @@ block content
                                             td #{u.phone}
                                             td #{u.birthday.toLocaleDateString()}
                                             td
-                                                - for (let a of u.account)
+                                                - for (a of u.account)
                                                     | #{a.username}
                                             td
                                                 a.btn.btn-link(href='/manager/dashboard/users-manager/users/' + u.mid)

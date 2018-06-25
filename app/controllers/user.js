@@ -249,6 +249,47 @@ module.exports = {
         })
     },
 
+    deleteMulti: (req, res, next) => {
+        if (req.rollBack === false) {
+            next();
+            return;
+        }
+        else {
+            var status = req.rollBack?1:-1;
+        }
+        if (!req.body["chosen[]"] || req.body["chosen[]"].length === 0) {
+            res.status(404);
+            res.json({
+                status: 404,
+                detail: "Please choose some user to delete"
+            });
+            return;
+        }
+        let query = {
+            _id: {
+                $in: req.body["chosen[]"]
+            }
+        };
+        model.update(query, {$set: {status: status}}, {multi: true}, (err, affected) => {
+            if (err) {
+                console.log(err);
+                if (!req.errs) req.errs = {};
+                req.errs.database = err.message;
+                next();
+                return;
+            }
+            req.successResponse = {
+                title: 'Success',
+                detail: 'Delete users successfully',
+                link: '/manager/dashboard/users-manager/users',
+                result: affected
+            };
+            next();
+            //res.json(affected);
+        })
+
+    },
+
     responseUsersView: (req, res, next) => {
         res.render('admin/pages/users-manager/users', {
             path: '/users-manager/users',
@@ -298,13 +339,18 @@ module.exports = {
     },
 
     responseUserWithAccountView: (req, res, next) => {
-        if (!res.locals) res.locals = {};
-        res.locals.page_type = 3;
-        res.locals.user_title = 'USER INFO';
-        res.locals.account_title = 'ACCOUNT INFO';
-        res.locals.path = '/users-manager/users';
-        res.render('admin/pages/users-manager/users-form', {
-            user: req.user
+        res.render('admin/pages/users-manager/index', {
+            user: req.user,
+            path: '/users-manager/users'
         })
+    },
+
+    responseUserUpdateView: (req, res, next) => {
+        if (req.errs && Object.keys(req.errs).length > 0) {
+            res.status(409);
+            res.json(req.errs);
+            return;
+        }
+        res.render('index', req.successResponse);
     }
 };

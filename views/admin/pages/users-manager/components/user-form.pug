@@ -14,7 +14,7 @@
                     li
                         a(href='javascript:void(0);') Something else here
     .body
-        form(method='POST' action='/manager/dashboard/users-manager/users/create')
+        form(method='POST' action='/manager/dashboard/users-manager/users/create' name='user-form' data-mid=user&&user.mid?user.mid:'')
             .row.clearfix
                 .col-lg-1
                 .col-md-6.col-lg-4

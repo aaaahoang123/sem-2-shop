@@ -5,6 +5,7 @@ block append extra-css
         link(rel='stylesheet' href='/admin/plugins/sweetalert/sweetalert.min.css')
 
 block append extra-js
+    script(type='text/javascript' src='/admin/js/pages/users-manager/users-form.js')
     - if (user_mid)
         script(type='text/javascript' src='/admin/plugins/sweetalert/sweetalert.min.js')
         script(type='text/javascript')

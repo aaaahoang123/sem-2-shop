@@ -56,7 +56,8 @@ module.exports = {
             next();
             return;
         }
-        if (!bcrypt.compareSync(req.body.password, req.account.password)) {
+        const op = req.body.password;
+        if (!bcrypt.compareSync(op, req.account.password)) {
             req.body.password = bcrypt.hashSync(op, Math.floor((Math.random() * 10) + 1));
         }
         model.findOneAndUpdate({username: req.account.username}, {$set: req.body}, {new: true}, (err, result) => {
@@ -64,13 +65,14 @@ module.exports = {
                 console.log(err);
                 if (!req.errs) req.errs = {};
                 req.errs.database = err.message;
+                req.body.password = op;
                 next();
                 return;
             }
-            req.successResponse = req.successResponse = {
+            req.accountSuccessResponse = {
                 title: 'Success',
                 detail: 'Update account successfully',
-                link: '/manager/dashboard/users-manager/users/' + req.params.mid,
+                link: '/manager/dashboard/users-manager/users/',
                 result: result
             };
             next();
@@ -117,6 +119,7 @@ module.exports = {
                 return;
             }
             req.account = result[0];
+            next();
         });
     },
 
@@ -146,6 +149,36 @@ module.exports = {
         })
     },
 
+    deleteMulti: (req, res, next) => {
+        if (req.errs && Object.keys(req.errs).length > 0) {
+            next();
+            return;
+        }
+        let query = {
+            user_id: {
+                $in: req.body["chosen[]"]
+            }
+        };
+        model.update(query, {$set: {status: -1}}, {multi: true}, (err, result) => {
+            if (err) {
+                console.log(err);
+                if (!req.errs) req.errs = {};
+                req.errs.database = err.message;
+                req.rollBack = true;
+                next();
+                return;
+            }
+            req.accountSuccessResponse = {
+                title: 'Success',
+                detail: 'Delete Users and Accounts successfully',
+                link: '/manager/dashboard/users-manager/users',
+                result: result
+            };
+            req.rollBack = false;
+            next();
+        });
+    },
+
     comparePassword: (req, res, next) => {
         if (!req.account) {
             next();
@@ -158,9 +191,21 @@ module.exports = {
 
     responseDeleteJson: (req, res) => {
         if (req.errs) {
+            res.status(409);
             res.json(req.errs);
             return;
         }
-        res.json([req.successResponse.result, req.accountSuccessResponse.result])
+        res.status(200);
+        res.json([req.successResponse.result, req.accountSuccessResponse.result]);
+    },
+
+    responseAccountUpdateView: (req, res) => {
+        if (req.errs && Object.keys(req.errs).length !== 0) {
+            res.status(409);
+            res.json(req.errs);
+            return;
+        }
+        console.log(req.accountSuccessResponse);
+        res.render('index', req.accountSuccessResponse);
     }
 };
