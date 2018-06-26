@@ -293,11 +293,44 @@ module.exports = {
         }
     },
 
-    findAllCategories: function (req, res, next) {
+    findAll: function (req, res, next) {
         let query = [
             {
-                $match: {
-                    status: 1
+                "$match" : {"level" : 1, "status": 1}
+            },
+            {
+                "$lookup" : {
+                    "from" : "categories",
+                    "localField" : "children",
+                    "foreignField" : "_id",
+                    "as" : "childrenObj"
+                }
+            },
+            {
+                "$unwind" : {
+                    "path" : "$childrenObj",
+                    "preserveNullAndEmptyArrays" : true
+                }
+            },
+            {
+                "$lookup" : {
+                    "from" : "categories",
+                    "localField" : "childrenObj.children",
+                    "foreignField" : "_id",
+                    "as" : "childrenObj.childrenObj"
+                }
+            },
+            {
+                "$group" : {
+                    "_id" : "$_id",
+                    "level" : {"$first" : "$level"},
+                    "name" : {"$first" : "$name"},
+                    "description" : {"$first" : "$description"},
+                    "created_at" : {"$first" : "$created_at"},
+                    "updated_at" : {"$first" : "$updated_at"},
+                    "status" : {"$first" : "$status"},
+                    "children" : {"$first" : "$children"},
+                    "childrenObj" : {"$push" : "$childrenObj"}
                 }
             }
         ];
@@ -315,13 +348,6 @@ module.exports = {
                 return;
             }
             req.categories = result;
-            let length = req.categories.length;
-            console.log(length);
-            if (length === 0){
-                next();
-                return;
-            }
-            res.render('client/pages/index', {categories: req.categories});
             next();
         })
     }

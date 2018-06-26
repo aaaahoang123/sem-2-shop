@@ -3,74 +3,77 @@ extends ../layout/master
 block title
     title Product
 
+block append script
+    script(src='/client/js/product_custom.js')
+
 block append link
-    link(rel='stylesheet' type='text/css' href='client/styles/product_styles.css')
-    link(rel='stylesheet' type='text/css' href='client/styles/product_responsive.css')
+    link(rel='stylesheet' type='text/css' href='/client/styles/product_styles.css')
+    link(rel='stylesheet' type='text/css' href='/client/styles/product_responsive.css')
 
 block content
-    // Single Product
-    .single_product
-        .container
-            .row
-                // Images
-                .col-lg-2.order-lg-1.order-2
-                    ul.image_list
-                        li(data-image='client/images/single_4.jpg')
-                            img(src='client/images/single_4.jpg' alt='')
-                        li(data-image='client/images/single_2.jpg')
-                            img(src='client/images/single_2.jpg' alt='')
-                        li(data-image='client/images/single_3.jpg')
-                            img(src='client/images/single_3.jpg' alt='')
-                // Selected Image
-                .col-lg-5.order-lg-2.order-1
-                    .image_selected
-                        img(src='client/images/single_4.jpg' alt='')
-                // Description
-                .col-lg-5.order-3
-                    .product_description
-                        .product_category Laptops
-                        .product_name MacBook Air 13
-                        .rating_r.rating_r_4.product_rating
-                            i
-                            i
-                            i
-                            i
-                            i
-                        .product_text
-                            p
-                                | Lorem ipsum dolor sit amet, consectetur adipiscing elit. Maecenas fermentum. laoreet turpis, nec sollicitudin dolor cursus at. Maecenas aliquet, dolor a faucibus efficitur, nisi tellus cursus urna, eget dictum lacus turpis.
-                        .order_info.d-flex.flex-row
-                            form(action='#')
-                                .clearfix(style='z-index: 1000;')
-                                    // Product Quantity
-                                    .product_quantity.clearfix
-                                        span Quantity:
-                                        input#quantity_input(type='text' pattern='[0-9]*' value='1')
-                                        .quantity_buttons
-                                            #quantity_inc_button.quantity_inc.quantity_control
-                                                i.fas.fa-chevron-up
-                                            #quantity_dec_button.quantity_dec.quantity_control
-                                                i.fas.fa-chevron-down
-                                    // Product Color
-                                    ul.product_color
-                                        li
-                                            span Color:
-                                            .color_mark_container
-                                                #selected_color.color_mark
-                                            .color_dropdown_button
-                                                i.fas.fa-chevron-down
-                                            ul.color_list
-                                                li
-                                                    .color_mark(style='background: #999999;')
-                                                li
-                                                    .color_mark(style='background: #b19c83;')
-                                                li
-                                                    .color_mark(style='background: #000000;')
-                                .product_price $2000
-                                .button_container
-                                    button.button.cart_button(type='button') Add to Cart
-                                    .product_fav
-                                        i.fas.fa-heart
+    - if (!products || products.length === 0)
+        | deo co sp
+    - else
+        - product = products[0]
+        .single_product
+            .container
+                .row
+                    // Images
+                    .col-lg-2.order-lg-1.order-2
+                        ul.image_list
+                            - for (let i=0; i<product.images.length && i<3; i++)
+                                li(data-image=product.images[i])
+                                    img(src=product.images[i] alt=product.name)
+                    // Selected Image
+                    .col-lg-5.order-lg-2.order-1
+                        .image_selected
+                            img(src=product.images[0] alt=product.name)
+                    // Description
+                    .col-lg-5.order-3
+                        .product_description
+                            .product_category Laptops
+                            .product_name MacBook Air 13
+                            .rating_r.rating_r_4.product_rating
+                                i
+                                i
+                                i
+                                i
+                                i
+                            .product_text
+                                p
+                                    | Lorem ipsum dolor sit amet, consectetur adipiscing elit. Maecenas fermentum. laoreet turpis, nec sollicitudin dolor cursus at. Maecenas aliquet, dolor a faucibus efficitur, nisi tellus cursus urna, eget dictum lacus turpis.
+                            .order_info.d-flex.flex-row
+                                form(action='#')
+                                    .clearfix(style='z-index: 1000;')
+                                        // Product Quantity
+                                        .product_quantity.clearfix
+                                            span Quantity:
+                                            input#quantity_input(type='text' pattern='[0-9]*' value='1')
+                                            .quantity_buttons
+                                                #quantity_inc_button.quantity_inc.quantity_control
+                                                    i.fas.fa-chevron-up
+                                                #quantity_dec_button.quantity_dec.quantity_control
+                                                    i.fas.fa-chevron-down
+                                        // Product Color
+                                        ul.product_color
+                                            li
+                                                span Color:
+                                                .color_mark_container
+                                                    #selected_color.color_mark
+                                                .color_dropdown_button
+                                                    i.fas.fa-chevron-down
+                                                ul.color_list
+                                                    li
+                                                        .color_mark(style='background: #999999;')
+                                                    li
+                                                        .color_mark(style='background: #b19c83;')
+                                                    li
+                                                        .color_mark(style='background: #000000;')
+                                    .product_price $2000
+                                    .button_container
+                                        button.button.cart_button(type='button') Add to Cart
+                                        .product_fav
+                                            i.fas.fa-heart
     // Recently Viewed
     .viewed
         .container
@@ -90,7 +93,7 @@ block content
                             .owl-item
                                 .viewed_item.discount.d-flex.flex-column.align-items-center.justify-content-center.text-center
                                     .viewed_image
-                                        img(src='client/images/view_1.jpg' alt='')
+                                        img(src='/client/images/view_1.jpg' alt='')
                                     .viewed_content.text-center
                                         .viewed_price
                                             | $225
@@ -104,7 +107,7 @@ block content
                             .owl-item
                                 .viewed_item.d-flex.flex-column.align-items-center.justify-content-center.text-center
                                     .viewed_image
-                                        img(src='client/images/view_2.jpg' alt='')
+                                        img(src='/client/images/view_2.jpg' alt='')
                                     .viewed_content.text-center
                                         .viewed_price $379
                                         .viewed_name
@@ -116,7 +119,7 @@ block content
                             .owl-item
                                 .viewed_item.d-flex.flex-column.align-items-center.justify-content-center.text-center
                                     .viewed_image
-                                        img(src='client/images/view_3.jpg' alt='')
+                                        img(src='/client/images/view_3.jpg' alt='')
                                     .viewed_content.text-center
                                         .viewed_price $225
                                         .viewed_name
@@ -128,7 +131,7 @@ block content
                             .owl-item
                                 .viewed_item.is_new.d-flex.flex-column.align-items-center.justify-content-center.text-center
                                     .viewed_image
-                                        img(src='client/images/view_4.jpg' alt='')
+                                        img(src='/client/images/view_4.jpg' alt='')
                                     .viewed_content.text-center
                                         .viewed_price $379
                                         .viewed_name
@@ -172,33 +175,30 @@ block content
                         .owl-carousel.owl-theme.brands_slider
                             .owl-item
                                 .brands_item.d-flex.flex-column.justify-content-center
-                                    img(src='client/images/brands_1.jpg' alt='')
+                                    img(src='/client/images/brands_1.jpg' alt='')
                             .owl-item
                                 .brands_item.d-flex.flex-column.justify-content-center
-                                    img(src='client/images/brands_2.jpg' alt='')
+                                    img(src='/client/images/brands_2.jpg' alt='')
                             .owl-item
                                 .brands_item.d-flex.flex-column.justify-content-center
-                                    img(src='client/images/brands_3.jpg' alt='')
+                                    img(src='/client/images/brands_3.jpg' alt='')
                             .owl-item
                                 .brands_item.d-flex.flex-column.justify-content-center
-                                    img(src='client/images/brands_4.jpg' alt='')
+                                    img(src='/client/images/brands_4.jpg' alt='')
                             .owl-item
                                 .brands_item.d-flex.flex-column.justify-content-center
-                                    img(src='client/images/brands_5.jpg' alt='')
+                                    img(src='/client/images/brands_5.jpg' alt='')
                             .owl-item
                                 .brands_item.d-flex.flex-column.justify-content-center
-                                    img(src='client/images/brands_6.jpg' alt='')
+                                    img(src='/client/images/brands_6.jpg' alt='')
                             .owl-item
                                 .brands_item.d-flex.flex-column.justify-content-center
-                                    img(src='client/images/brands_7.jpg' alt='')
+                                    img(src='/client/images/brands_7.jpg' alt='')
                             .owl-item
                                 .brands_item.d-flex.flex-column.justify-content-center
-                                    img(src='client/images/brands_8.jpg' alt='')
+                                    img(src='/client/images/brands_8.jpg' alt='')
                         // Brands Slider Navigation
                         .brands_nav.brands_prev
                             i.fas.fa-chevron-left
                         .brands_nav.brands_next
                             i.fas.fa-chevron-right
-
-block append script
-    script(src='client/js/product_custom.js')

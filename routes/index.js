@@ -1,37 +1,44 @@
+'use strict';
+
 const express = require('express');
 const router = express.Router({});
 
+const categoryController = require('../app/controllers/category');
+const productController = require('../app/controllers/product');
+const renderer = require('../app/controllers/client');
+
 /* GET home page. */
-router.get('/', function(req, res, next) {
-  res.render('client/pages/index');
+router.get('/', categoryController.findAll, renderer.renderHomePage);
+
+router.get('/blog', categoryController.findAll, function(req, res, next) {
+    res.render('client/pages/blog', {categories: req.categories});
 });
 
-router.get('/blog', function(req, res, next) {
-    res.render('client/pages/blog');
+router.get('/blog_single',categoryController.findAll, function(req, res, next) {
+    res.render('client/pages/blog_single', {categories: req.categories});
 });
 
-router.get('/blog_single', function(req, res, next) {
-    res.render('client/pages/blog_single');
+router.get('/cart', categoryController.findAll, function(req, res, next) {
+    res.render('client/pages/cart', {categories: req.categories});
 });
 
-router.get('/cart', function(req, res, next) {
-    res.render('client/pages/cart');
+router.get('/contact', categoryController.findAll, function(req, res, next) {
+    res.render('client/pages/contact', {categories: req.categories});
 });
 
-router.get('/contact', function(req, res, next) {
-    res.render('client/pages/contact');
+router.get('/product/:code',categoryController.findAll, productController.getOne, function(req, res, next) {
+    res.render('client/pages/product', {
+        categories: req.categories,
+        products: req.products
+    });
 });
 
-router.get('/product', function(req, res, next) {
-    res.render('client/pages/product');
+router.get('/regular', categoryController.findAll,function(req, res, next) {
+    res.render('client/pages/regular', {categories: req.categories});
 });
 
-router.get('/regular', function(req, res, next) {
-    res.render('client/pages/regular');
-});
-
-router.get('/shop', function(req, res, next) {
-    res.render('client/pages/shop');
+router.get('/shop', categoryController.findAll, function(req, res, next) {
+    res.render('client/pages/shop', {categories: req.categories});
 });
 
 // router.put('/', function (req, res, next) {
