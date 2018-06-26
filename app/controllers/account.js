@@ -94,6 +94,12 @@ module.exports = {
         }
     },
 
+    /**
+     * get One account by username
+     * @param req
+     * @param res
+     * @param next
+     */
     getOne: (req, res, next) => {
         let username;
         if (req.params.username) username = req.params.username;
@@ -104,7 +110,7 @@ module.exports = {
             return;
         }
 
-        model.find({username: username}, function (err, result) {
+        model.find({username: username, status: 1}, function (err, result) {
             if (err) {
                 console.log(err);
                 if (!req.errs) req.errs = {};
@@ -185,7 +191,11 @@ module.exports = {
             return;
         }
 
-        req.isComparedPassword = bcrypt.compareSync(req.body.pasword, req.account.pasword);
+        req.isComparePassword = bcrypt.compareSync(req.body.password, req.account.password);
+        if (!req.isComparePassword) {
+            if (!req.errs) req.errs = {};
+            req.errs.password = 'Password not match';
+        }
         next();
     },
 
@@ -205,7 +215,6 @@ module.exports = {
             res.json(req.errs);
             return;
         }
-        console.log(req.accountSuccessResponse);
         res.render('index', req.accountSuccessResponse);
     }
 };

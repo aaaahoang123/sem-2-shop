@@ -7,17 +7,17 @@ $(function () {
     $('.js-modal-buttons .btn.btn-detail').on('click', function () {
         let products = JSON.parse($(this).attr('data-p'));
         console.log(products);
-        // console.log($('#specificationsbody').html() === "");
-        console.log(products.hasOwnProperty('specifications'));
         var tableRows = $('#detail-modal > tr');
         $(tableRows[0]).find('td').last().text(products.code);
-        $(tableRows[1]).find('td').last().find('div').css('background-image', 'url(' + products.images + ')');
+        $(tableRows[1]).find('td').last().find('div').css('background-image', 'url(' + products.images[0] + ')');
         $(tableRows[2]).find('td').last().text(products.name);
         $(tableRows[3]).find('td').last().html(products.description);
+        var categoriesCol = $(tableRows[4]).find('td').last();
+        categoriesCol.html('');
         products.categories.forEach(function (data, index) {
-            $(tableRows[4]).find('td').last().append(data.name);
+            categoriesCol.append(data.name);
             if(index !== products.categories.length-1){
-                $(tableRows[4]).find('td').last().append(", ");
+                categoriesCol.append(", ");
             }
         });
         $(tableRows[5]).find('td').last().text(products.brand[0].name);
