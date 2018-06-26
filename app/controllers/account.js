@@ -190,7 +190,6 @@ module.exports = {
             next();
             return;
         }
-
         req.isComparePassword = bcrypt.compareSync(req.body.password, req.account.password);
         if (!req.isComparePassword) {
             if (!req.errs) req.errs = {};
