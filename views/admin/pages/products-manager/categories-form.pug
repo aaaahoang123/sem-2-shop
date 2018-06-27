@@ -6,7 +6,7 @@ block extra-js
     script(type='text/javascript' src='/admin/js/pages/products-manager/category-form.js')
 block content
     .container-fluid
-        - if (listParent  && listParent.length !== 0)
+        - if (categories  && categories.length !== 0)
             #parent-table.row.clearfix.hidden
                 .col-lg-12.col-md-12.col-sm-12.col-xs-12
                     .card
@@ -56,27 +56,28 @@ block content
                         h2
                             | #{title}
                     .body
-                        - if (!category && title === 'EDIT CATEGORY')
+                        - if (!category&&title==='EDIT CATEGORY')
+                            - link = '/manager/dashboard/products-manager/categories'
                             include ./404
                         - else
                             form#category-form(action=method==='PUT'?action:'/manager/dashboard/products-manager/categories' method='POST')
                                 .row.clearfix
                                     .col-sm-3.col-md-2
                                         select#level-selector.form-control.show-tick(name='level')
-                                            - if (category && title === 'ADD CATEGORY')
-                                                option(value=1 selected=Number(level) === 0) 1
-                                                option(value=2 selected=Number(level) === 1) 2
-                                                option(value=3 selected=Number(level) === 2) 3
-                                            - else
+                                            - if (title==='ADD CATEGORY')
+                                                option(value=1 selected=Number(level)===1) 1
+                                                option(value=2 selected=Number(level)===2) 2
+                                                option(value=3 selected=Number(level)===3) 3
+                                            - else if(category)
                                                 option(value=category.level selected) #{category.level}
                                         p.level-err.text-danger.text-center.m-t-15 #{errs&&errs.level?errs.level:''}
                                     .col-sm-3.col-md-4
-                                        select#parent-selector.form-control.show-tick(name='parent' disabled=Number(level) === 0)
+                                        select#parent-selector.form-control.show-tick(name='parent' disabled=Number(level)===0)
                                             - if (title === 'ADD CATEGORY')
                                                 option(value='') -- Select parent --
-                                                -if (listParent && listParent.length !== 0)
-                                                    - for(var i = 0; i < listParent.length; i ++)
-                                                        option(value=listParent[i]._id data-category=listParent[i]) #{listParent[i].name}
+                                                - if (categories&&categories.length!==0)
+                                                    - for(let i = 0; i < categories.length; i ++)
+                                                        option(value=categories[i]._id data-category=categories[i]) #{categories[i].name}
                                             - else if (category.parent.length !== 0)
                                                 option(value=category.parent[0]._id selected) #{category.parent[0].name}
                                         p.parent-err.text-danger.text-center.m-t-15 #{errs&&errs.parent?errs.parent:''}
