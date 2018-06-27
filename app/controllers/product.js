@@ -1,10 +1,10 @@
 'use strict';
 
 const model = require('../models/product');
+//const Set = require('collections/set');
 
 module.exports = {
     validate: function (req, res, next) {
-        console.log(req.body);
         if (!req.errs) req.errs = {};
 
         if (!req.body.name || req.body.name === null || req.body.name === "") req.errs.name = "Product Name cant not null";
@@ -13,7 +13,7 @@ module.exports = {
 
         if (!req.body.description || req.body.description === null || req.body.description === "") req.errs.description = "Product Description cant not null";
 
-        if (!req.body.categories || req.body.categories === null || req.body.categories === "") req.errs.categories = "Product Categories cant not null";
+        if (!req.body.categories || req.body.categories === null || req.body.categories === "" || req.body.categories.length === 0) req.errs.categories = "Product Categories cant not null";
 
         if (!req.body.brand || req.body.brand === null || req.body.brand === "") req.errs.brand = "Product Brand cant not null";
 
@@ -24,6 +24,22 @@ module.exports = {
         if (Object.keys(req.errs).length !== 0) {
             req.errStatus = 400;
         }
+        next();
+    },
+
+    filterCategoriesSet: (req, res, next) => {
+        let set = new Set();
+        res.locals.categories.forEach(cate => {
+            set.add(String(cate._id));
+            cate.parent.forEach(p => {
+                set.add(String(p._id));
+                p.parent.forEach(gp => {
+                    set.add(String(gp._id))
+                })
+            })
+        });
+        set.delete('undefined');
+        req.body.categories = [...set];
         next();
     },
 
@@ -270,7 +286,6 @@ module.exports = {
         res.render('admin/pages/products-manager/products-form', {
             path: '/products-manager/products',
             products: (req.products && req.products.length !== 0)?req.products[0]:undefined,
-            brands: (req.brands && req.brands.length !== 0)?req.brands:[],
             categories: (req.categories && req.categories.length !== 0)?req.categories:[],
             title: 'EDIT PRODUCTS',
             link: '/manager/dashboard/products-manager/products',
@@ -284,7 +299,6 @@ module.exports = {
             res.render('admin/pages/products-manager/products-form', {
                 path: '/products-manager/add-product',
                 title: 'ADD PRODUCT',
-                brands: (req.brands && req.brands.length !== 0)?req.brands:[],
                 categories: (req.categories && req.categories.length !== 0)?req.categories:[]
             });
         }

@@ -1,6 +1,8 @@
 'use strict';
 
 const model = require('../models/category');
+const mongoose = require('mongoose');
+
 module.exports = {
 
     validate: function (req, res, next) {
@@ -103,6 +105,59 @@ module.exports = {
             };
             next();
         });
+    },
+
+    getMultiCategories: (req, res, next) => {
+        let arr = [];
+        req.body.categories.forEach(c => {
+            arr.push(mongoose.Types.ObjectId(c));
+        });
+        let pipeline = [
+            {
+                $match: {
+                    _id: {$in: arr}
+                }
+            },
+            {
+                $lookup: {
+                    from: "categories",
+                    localField: "_id",
+                    foreignField: "children",
+                    as: "parent"
+                }
+            },
+            {
+                $unwind: {
+                    path: "$parent",
+                    preserveNullAndEmptyArrays: true
+                }
+            },
+            {
+                $lookup: {
+                    from: "categories",
+                    localField: "parent._id",
+                    foreignField: "children",
+                    as: "parent.parent"
+                }
+            },
+            {
+                $group: {
+                    _id: '$_id',
+                    parent: {'$push': '$parent'}
+                }
+            }
+        ];
+
+        model.aggregate(pipeline, (err, result) => {
+            if (err) {
+                console.log(err);
+                if (!res.locals.errs) res.locals.errs = {};
+                res.locals.errs.database = res.locals.message;
+                return next();
+            }
+            res.locals.categories = result;
+            next();
+        })
     },
 
     insertOne: function (req, res, next) {

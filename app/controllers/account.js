@@ -154,15 +154,15 @@ module.exports = {
      * @param next
      */
     comparePassword: (req, res, next) => {
-        if (!req.account) {
+        if (!res.locals.account) {
             next();
             return;
         }
 
-        req.isComparePassword = bcrypt.compareSync(req.body.password, req.account.password);
+        req.isComparePassword = bcrypt.compareSync(req.body.password, res.locals.account.password);
         if (!req.isComparePassword) {
-            if (!req.errs) req.errs = {};
-            req.errs.password = 'Password not match';
+            if (!res.locals.errs) res.locals.errs = {};
+            res.locals.errs.password = 'Password not match';
         }
         next();
     },

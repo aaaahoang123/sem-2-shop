@@ -5,11 +5,11 @@ const bcrypt = require('bcrypt');
 
 module.exports = {
     insertOne: (req, res, next) => {
-        if (req.account && req.isComparePassword) {
+        if (res.locals.account && req.isComparePassword) {
             let cre = {
-                account_id: req.account._id,
-                token: bcrypt.hashSync(req.account.username, Math.floor((Math.random() * 10) + 1)),
-                type: req.account.type
+                account_id: res.locals.account._id,
+                token: bcrypt.hashSync(res.locals.account.username, Math.floor((Math.random() * 10) + 1)),
+                type: res.locals.account.type
             };
             cre = new model(cre);
             cre.save((err, result) => {
@@ -19,13 +19,13 @@ module.exports = {
                     }
                     else {
                         console.log(err);
-                        if (!req.errs) req.errs = {};
-                        req.errs.database = err.message;
+                        if (!res.locals.errs) res.locals.errs = {};
+                        res.locals.errs.database = err.message;
                         next();
                         return;
                     }
                 }
-                req.credential = result;
+                res.locals.credential = result;
                 next();
             })
         } else next();
@@ -53,10 +53,10 @@ module.exports = {
 
             if (result === null || result.expired_at < Date.now()) {
                 req.acceptCredential = false;
-                if (!req.errs) req.errs = {};
-                if (result === null) req.errs.credential = "Token not found";
+                if (!res.locals.errs) res.locals.errs = {};
+                if (result === null) res.locals.errs.credential = "Token not found";
                 else {
-                    req.errs.credential = 'Token is out of date, please log out and try again';
+                    res.locals.errs.credential = 'Token is out of date, please log out and try again';
                     model.findOneAndUpdate(query, {$set: {status: -1}}, (err1, result1) => {
                         if (err1) console.log(err1);
                         else console.log(result1);
@@ -65,21 +65,19 @@ module.exports = {
                 next();
                 return;
             }
-            req.credential = result;
-            req.acceptCredential = true;
+            res.locals.credential = result;
+            res.locals.acceptCredential = true;
             next();
         });
     },
 
     checkAdminEmployeeCredential: (req, res, next) => {
-        if (!req.acceptCredential) {
-            next();
-            return;
-        }
-        if (![0,2].includes(req.credential.type)) {
-            if (!req.errs) req.errs = {};
-            req.errs.credential = 'The account can not use this page';
-            req.acceptCredential = false;
+        if (!res.locals.acceptCredential) return next();
+
+        if (![0,2].includes(res.locals.credential.type)) {
+            if (!res.locals.errs) res.locals.errs = {};
+            res.locals.errs.credential = 'The account can not use this page';
+            res.locals.acceptCredential = false;
         }
         next();
     },
@@ -93,10 +91,10 @@ module.exports = {
      * @param next
      */
     acceptPermissionAfterCheck: (req, res, next) => {
-        if (req.errs && Object.keys(req.errs).length !== 0 && !req.headers.contentType) {
+        if (res.locals.errs && Object.keys(res.locals.errs).length !== 0 && !req.headers.contentType) {
             res.render('index', {
                 title: 'Credential error',
-                detail: req.errs.credential,
+                detail: res.locals.errs.credential | res.locals.errs.database,
                 link: '/manager'
             });
             return;
