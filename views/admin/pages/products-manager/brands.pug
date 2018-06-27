@@ -50,7 +50,8 @@ block content
                 .col-lg-1.col-sm-2.col-xs-1.m-t-15(style='float: right')
                     button#search-btn.btn.btn-danger.btn-circle.waves-effect.waves-circle.waves-float(type='button')
                         i.material-icons search
-        - if (type === 0)
+        - if (brands.length === 0)
+            - link = '/manager/dashboard/products-manager/brands'
             include 404
         - else
             .body
@@ -80,7 +81,7 @@ block content
                                                 button.btn.btn-link.waves-effect(type='button', data-type="ajax-loader" data-b=brands[i].name)
                                                     i.material-icons delete
 
-                    - if (type === 2)
+                    - if (meta)
                         - let limit = ''
                         - let q = ''
                         - if (meta.limit !== 10)
