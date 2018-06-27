@@ -56,10 +56,31 @@ module.exports = {
     },
 
     getOne: function (req, res, next) {
-        let query = {
-            code: req.params.code
-        };
-        model.find(query, function (err, result) {
+        let query = [
+            {
+                $match: {
+                    status: 1,
+                    code: req.params.code
+                }
+            },
+            {
+                "$lookup" : {
+                    "from" : "categories",
+                    "localField" : "categories",
+                    "foreignField" : "_id",
+                    "as" : "categories"
+                }
+            },
+            {
+                "$lookup" : {
+                    "from" : "brands",
+                    "localField" : "brand",
+                    "foreignField" : "_id",
+                    "as" : "brand"
+                }
+            }
+        ];
+        model.aggregate(query, function (err, result) {
             if (err) {
                 console.log(err);
                 if (!req.errs) req.errs = {};
@@ -67,6 +88,7 @@ module.exports = {
                 next();
                 return;
             }
+            console.log(result);
             req.products = result;
             next();
         });

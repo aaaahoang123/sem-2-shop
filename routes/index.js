@@ -5,6 +5,7 @@ const router = express.Router({});
 
 const categoryController = require('../app/controllers/category');
 const productController = require('../app/controllers/product');
+const brandController = require('../app/controllers/brand');
 const renderer = require('../app/controllers/client');
 
 /* GET home page. */
@@ -26,10 +27,11 @@ router.get('/contact', categoryController.findAll, function(req, res, next) {
     res.render('client/pages/contact', {categories: req.categories});
 });
 
-router.get('/product/:code',categoryController.findAll, productController.getOne, function(req, res, next) {
+router.get('/product/:code',categoryController.findAll, productController.getOne, brandController.getList, function(req, res, next) {
     res.render('client/pages/product', {
         categories: req.categories,
-        products: req.products
+        products: req.products,
+        brands: req.brands
     });
 });
 
