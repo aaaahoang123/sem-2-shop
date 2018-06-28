@@ -197,19 +197,6 @@ module.exports = {
         });
     },
 
-    comparePassword: (req, res, next) => {
-        if (!req.account) {
-            next();
-            return;
-        }
-        req.isComparePassword = bcrypt.compareSync(req.body.password, req.account.password);
-        if (!req.isComparePassword) {
-            if (!req.errs) req.errs = {};
-            req.errs.password = 'Password not match';
-        }
-        next();
-    },
-
     responseDeleteJson: (req, res) => {
         if (req.errs) {
             res.status(409);
