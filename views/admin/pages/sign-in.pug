@@ -26,24 +26,30 @@ body.login-page
         small Admin BootStrap Based - Material Design
     .card
         .body
-            form#sign_in(method='POST')
+            - if (errs && errs.database)
+                h4 #{errs.database}
+            form#sign_in(method='POST' action='/manager')
                 .msg Sign in to start your session
                 .input-group
                     span.input-group-addon
                         i.material-icons person
                     .form-line
-                        input.form-control(type='text' name='username' placeholder='Username' required='' autofocus='')
+                        input.form-control(type='text' name='username' placeholder='Username' value=account&&account.username?account.username:'' required='' autofocus='')
+                    - if (errs && errs.username)
+                        p.text-danger #{errs.username}
                 .input-group
                     span.input-group-addon
                         i.material-icons lock
                     .form-line
-                        input.form-control(type='password' name='password' placeholder='Password' required='')
+                        input.form-control(type='password' name='password' value=account&&account.password?account.password:'' placeholder='Password' required='')
+                    - if (errs && errs.password)
+                        p.text-danger #{errs.password}
                 .row
                     .col-xs-8.p-t-5
                         input#rememberme.filled-in.chk-col-pink(type='checkbox' name='rememberme')
                         label(for='rememberme') Remember Me
                     .col-xs-4
-                        a.btn.btn-block.bg-pink.waves-effect(href='/manager/dashboard') SIGN IN
+                        input.btn.btn-block.bg-pink.waves-effect(type='submit' value='SIGN IN')
 // Jquery Core Js
 script(src='/admin/plugins/jquery/jquery.min.js')
 // Bootstrap Core Js

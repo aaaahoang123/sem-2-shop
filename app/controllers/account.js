@@ -5,26 +5,33 @@ const bcrypt = require('bcrypt');
 
 module.exports = {
 
+    /**
+     * Validate account, các trường không được null, rỗng
+     * Nếu có lỗi, pass lỗi vào res.locals và next()
+     * @param req
+     * @param res
+     * @param next
+     */
     validate: (req, res, next) => {
-        if (!req.errs) req.errs = {};
+        if (!res.locals.errs) res.locals.errs = {};
+        let errs = res.locals.errs;
 
-        if (!req.body.username) req.errs.username = "Please enter username!";
-        else if (req.body.username.length < 8) req.errs.username = "Username must have at least 8 character";
+        if (!req.body.username) errs.username = "Please enter username!";
+        else if (req.body.username.length < 8) errs.username = "Username must have at least 8 character";
 
-        if (!req.body.password) req.errs.password = "Please enter password!";
-        else if (req.body.password.length < 8) req.errs.password = "Password must have at least 8 character";
+        if (!req.body.password) errs.password = "Please enter password!";
+        else if (req.body.password.length < 8) errs.password = "Password must have at least 8 character";
 
-        if (!req.body.type) req.errs.type = "Type is required";
+        if (!req.body.type) errs.type = "Type is required";
 
-        if (!req.body.user_id) req.errs.user_id = "Please show us owner of this account";
+        if (!req.body.user_id) errs.user_id = "Please show us owner of this account";
 
         next();
     },
 
     insertOne: (req, res, next) => {
-        if (req.errs && Object.keys(req.errs).length !== 0) {
-            next();
-            return;
+        if (res.locals.errs && Object.keys(res.locals.errs).length !== 0) {
+            return next();
         }
 
         let op = req.body.password;
@@ -34,14 +41,14 @@ module.exports = {
         account.save((err, result) => {
             if (err) {
                 console.log(err);
-                if (!req.errs) req.errs = {};
-                if (err.code === 11000) req.errs.username = "This username has already existed";
-                req.errs.database = err.message;
+                if (!res.locals.errs) res.locals.errs = {};
+                if (err.code === 11000) res.locals.errs.username = "This username has already existed";
+                res.locals.errs.database = res.locals.errs.message;
                 req.body.password = op;
+                res.locals.account = req.body;
                 next();
-                return;
             }
-            req.successResponse = {
+            res.locals = {
                 result: result,
                 title: 'Success',
                 detail: 'Add account successfully',
@@ -51,49 +58,12 @@ module.exports = {
         });
     },
 
-    updateOne: (req, res, next) => {
-        if (req.errs && Object.keys(req.errs).length !== 0) {
-            next();
-            return;
-        }
-        const op = req.body.password;
-        if (!bcrypt.compareSync(op, req.account.password)) {
-            req.body.password = bcrypt.hashSync(op, Math.floor((Math.random() * 10) + 1));
-        }
-        model.findOneAndUpdate({username: req.account.username}, {$set: req.body}, {new: true}, (err, result) => {
-            if (err) {
-                console.log(err);
-                if (!req.errs) req.errs = {};
-                req.errs.database = err.message;
-                req.body.password = op;
-                next();
-                return;
-            }
-            req.accountSuccessResponse = {
-                title: 'Success',
-                detail: 'Update account successfully',
-                link: '/manager/dashboard/users-manager/users/',
-                result: result
-            };
-            next();
-        });
-    },
-
-    responseAccountFormView: (req, res, next) => {
-        if ((!req.errs || Object.keys(req.errs).length === 0) && (!req.successResponse || Object.keys(req.successResponse).length === 0)) {
-            res.render('admin/pages/users-manager/accounts-form', {path: '/users-manager/users', user: req.user});
-        } else if (req.errs && Object.keys(req.errs).length !== 0) {
-            res.render('admin/pages/users-manager/accounts-form', {
-                path: '/users-manager/users',
-                errs: req.errs,
-                account: req.body,
-                user: req.user
-            });
-        } else {
-            res.render('index', req.successResponse);
-        }
-    },
-
+    /**
+     * get One account by username
+     * @param req
+     * @param res
+     * @param next
+     */
     getOne: (req, res, next) => {
         let username;
         if (req.params.username) username = req.params.username;
@@ -104,25 +74,53 @@ module.exports = {
             return;
         }
 
-        model.find({username: username}, function (err, result) {
+        model.findOne({username: username, status: 1}, function (err, result) {
             if (err) {
                 console.log(err);
-                if (!req.errs) req.errs = {};
-                req.errs.database = err.message;
+                if (!res.locals.errs) res.locals.errs = {};
+                res.locals.errs.database = err.message;
                 next();
-                return;
             }
-            if (result.length === 0) {
-                if (!req.errs) req.errs = {};
-                req.errs.username = "This username isn't existed";
-                next();
-                return;
-            }
-            req.account = result[0];
+            res.locals.account = result;
             next();
         });
     },
 
+    updateOne: (req, res, next) => {
+        if (res.locals.errs && Object.keys(res.locals.errs).length !== 0) {
+            next();
+            return;
+        }
+        const op = req.body.password;
+        if (!bcrypt.compareSync(op, res.locals.account.password)) {
+            req.body.password = bcrypt.hashSync(op, Math.floor((Math.random() * 10) + 1));
+        }
+        req.body.updated_at = Date.now();
+        model.findOneAndUpdate({username: res.locals.account.username}, {$set: req.body}, {new: true}, (err, result) => {
+            if (err) {
+                console.log(err);
+                if (!res.locals.errs) res.locals.errs = {};
+                res.locals.errs.database = err.message;
+                req.body.password = op;
+                next();
+                return;
+            }
+            res.locals = {
+                title: 'Success',
+                detail: 'Update account successfully',
+                link: '/manager/dashboard/users-manager/users/',
+                result: result
+            };
+            next();
+        });
+    },
+
+    /**
+     * Delete one account after delete an user, when delete user success, the req.successResponse.result._id will be the id of deleted user
+     * @param req
+     * @param res
+     * @param next
+     */
     deleteOne: (req, res, next) => {
         if (!req.successResponse) {
             next();
@@ -147,6 +145,26 @@ module.exports = {
             req.rollBack = false;
             next();
         })
+    },
+
+    /**
+     * Compared password sau khi đã get được account theo username, nếu đúng thì set req.isComparePassword = true, sai thì thêm mỗi req.errs.password
+     * @param req
+     * @param res
+     * @param next
+     */
+    comparePassword: (req, res, next) => {
+        if (!res.locals.account) {
+            next();
+            return;
+        }
+
+        req.isComparePassword = bcrypt.compareSync(req.body.password, res.locals.account.password);
+        if (!req.isComparePassword) {
+            if (!res.locals.errs) res.locals.errs = {};
+            res.locals.errs.password = 'Password not match';
+        }
+        next();
     },
 
     deleteMulti: (req, res, next) => {
@@ -179,16 +197,6 @@ module.exports = {
         });
     },
 
-    comparePassword: (req, res, next) => {
-        if (!req.account) {
-            next();
-            return;
-        }
-
-        req.isComparedPassword = bcrypt.compareSync(req.body.pasword, req.account.pasword);
-        next();
-    },
-
     responseDeleteJson: (req, res) => {
         if (req.errs) {
             res.status(409);
@@ -199,13 +207,30 @@ module.exports = {
         res.json([req.successResponse.result, req.accountSuccessResponse.result]);
     },
 
-    responseAccountUpdateView: (req, res) => {
-        if (req.errs && Object.keys(req.errs).length !== 0) {
-            res.status(409);
-            res.json(req.errs);
+    responseInsertOneByAccountFormView: (req, res) => {
+        if (res.locals.errs && Object.keys(res.locals.errs).length !== 0) {
+            console.log(req.cookies.user);
+            res.render('admin/pages/users-manager/accounts-form', {
+                path: '/users-manager/users',
+                account: req.body,
+                user: req.cookies.user
+            });
+        } else {
+            res.render('index');
+        }
+    },
+
+    responseUpdateByUAView: (req, res) => {
+        if (res.locals.errs && Object.keys(res.locals.errs).length !== 0) {
+            let user = req.cookies.user;
+            user.account = [req.body];
+            res.render('admin/pages/users-manager/index', {
+                path: '/users-manager/users',
+                user: user,
+                method: 'PUT'
+            });
             return;
         }
-        console.log(req.accountSuccessResponse);
-        res.render('index', req.accountSuccessResponse);
+        res.render('index');
     }
 };

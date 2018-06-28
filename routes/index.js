@@ -8,31 +8,28 @@ const productController = require('../app/controllers/product');
 const brandController = require('../app/controllers/brand');
 const renderer = require('../app/controllers/client');
 
+router.use('/*', categoryController.findAll);
 /* GET home page. */
-router.get('/', categoryController.findAll, renderer.renderHomePage);
+router.get('/', renderer.renderHomePage);
 
-router.get('/blog', categoryController.findAll, function(req, res, next) {
+router.get('/blog', function(req, res, next) {
     res.render('client/pages/blog', {categories: req.categories});
 });
 
-router.get('/blog_single',categoryController.findAll, function(req, res, next) {
+router.get('/blog_single', function(req, res, next) {
     res.render('client/pages/blog_single', {categories: req.categories});
 });
 
-router.get('/cart', categoryController.findAll, function(req, res, next) {
+router.get('/cart', function(req, res, next) {
     res.render('client/pages/cart', {categories: req.categories});
 });
 
-router.get('/contact', categoryController.findAll, function(req, res, next) {
+router.get('/contact', function(req, res, next) {
     res.render('client/pages/contact', {categories: req.categories});
 });
 
 router.get('/product/:code',categoryController.findAll, productController.getOne, brandController.getList, function(req, res, next) {
-    res.render('client/pages/product', {
-        categories: req.categories,
-        products: req.products,
-        brands: req.brands
-    });
+    res.render('client/pages/product', {products: req.products});
 });
 
 router.get('/regular', categoryController.findAll,function(req, res, next) {
@@ -40,7 +37,7 @@ router.get('/regular', categoryController.findAll,function(req, res, next) {
 });
 
 router.get('/shop', categoryController.findAll, function(req, res, next) {
-    res.render('client/pages/shop', {categories: req.categories});
+    res.render('client/pages/shop');
 });
 
 // router.put('/', function (req, res, next) {

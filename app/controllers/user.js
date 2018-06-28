@@ -5,42 +5,41 @@ const model = require('../models/user');
 module.exports = {
 
     validate: (req, res, next) => {
-        if(!req.errs) req.errs = {};
+        if(!res.locals.errs) res.locals.errs = {};
 
-        if(!req.body.full_name || req.body.full_name === null || req.body.full_name === '') req.errs.full_name = 'Full name is required';
+        if(!req.body.full_name || req.body.full_name === null || req.body.full_name === '') res.locals.errs.full_name = 'Full name is required';
 
-        if(!req.body.gender || req.body.gender === null || req.body.gender === '') req.errs.gender = 'Gender is required';
+        if(!req.body.gender || req.body.gender === null || req.body.gender === '') res.locals.errs.gender = 'Gender is required';
 
-        if (req.body.birthday && req.body.birthday !== '' && new Date(req.body.birthday) > Date.now()) req.errs.birthday = 'Your birthday must be sooner than today!';
+        if (req.body.birthday && req.body.birthday !== '' && new Date(req.body.birthday) > Date.now()) res.locals.errs.birthday = 'Your birthday must be sooner than today!';
 
-        if(!req.body.address || req.body.address === null || req.body.address === '') req.errs.address = 'Address is required';
+        if(!req.body.address || req.body.address === null || req.body.address === '') res.locals.errs.address = 'Address is required';
 
-        if(!req.body.email || req.body.email === null || req.body.email === '') req.errs.email = 'Email is required';
+        if(!req.body.email || req.body.email === null || req.body.email === '') res.locals.errs.email = 'Email is required';
         else {
             let pattern = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
-            if (!pattern.test(req.body.email.toString().toLowerCase())) req.errs.email = 'Please enter a correct email!';
+            if (!pattern.test(req.body.email.toString().toLowerCase())) res.locals.errs.email = 'Please enter a correct email!';
         }
 
-        if(!req.body.phone || req.body.phone === null || req.body.phone === '') req.errs.phone = 'Phone is required';
+        if(!req.body.phone || req.body.phone === null || req.body.phone === '') res.locals.errs.phone = 'Phone is required';
 
         next();
     },
 
     insertOne: (req, res, next) => {
-        if (req.errs && Object.keys(req.errs).length !== 0) {
+        if (res.locals.errs && Object.keys(res.locals.errs).length !== 0) {
             next();
             return;
         }
         let user = new model(req.body);
         user.save(function (err, result) {
             if (err) {
-                if (!req.errs) req.errs = {};
-                req.errs.database = err.message;
+                if (!res.locals.errs) res.locals.errs = {};
+                res.locals.errs.database = err.message;
                 console.log(err);
                 next();
-                return;
             }
-            req.successResponse = {
+            res.locals = {
                 title: 'Success',
                 detail: 'Add user successfully',
                 link: '/manager/dashboard/users-manager/users/create',
@@ -74,15 +73,14 @@ module.exports = {
 
         model.aggregate(pipeline, (err, result) => {
             if (err) {
-                if (!req.errs) req.errs = {};
-                req.errs.database = err.message;
+                if (!res.locals.errs) res.locals.errs = {};
+                res.locals.errs.database = err.message;
                 console.log(err);
                 next();
-                return;
             }
 
             if (result.length !== 0) {
-                req.user = result[0];
+                res.locals.user = result[0];
             }
             next();
         });
@@ -167,20 +165,18 @@ module.exports = {
             console.log(query);
             if (err) {
                 console.log(err);
-                if (!req.errs) req.errs = {};
-                req.errs.database = err.message;
-                next();
-                return;
+                if (!res.locals.errs) res.locals.errs = {};
+                res.locals.errs.database = err.message;
+                return next();
             }
             // Kết quả trả về có dạng [{meta: [{}], data: [{}]}]. Trong trường hợp không tìm thấy thì đặt req.users = [] và next()
             if (result.length === 0 || result[0].meta.length === 0) {
-                req.users = [];
-                next();
-                return;
+                res.locals.users = [];
+                return next();
             }
-            req.users = result[0].data;
+            res.locals.users = result[0].data;
             let totalItems = result[0].meta[0].totalItems;
-            req.meta = {
+            res.locals.meta = {
                 totalItems: totalItems,
                 total: Math.ceil(totalItems / limit),
                 limit: limit,
@@ -194,19 +190,17 @@ module.exports = {
     },
 
     updateOne: (req, res, next) => {
-        if (req.errs && Object.keys(req.errs).length !== 0) {
-            next();
-            return
-        }
+        if (res.locals.errs && Object.keys(res.locals.errs).length !== 0) return next();
+
+        req.body.updated_at = Date.now();
         model.findOneAndUpdate({mid: req.params.mid}, {$set: req.body},{new: true}, (err, result) => {
             if (err) {
                 console.log(err);
-                if (!req.errs) req.errs = {};
-                req.errs.database = err.message;
-                next();
-                return;
+                if (!res.locals.errs) res.locals.errs = {};
+                res.locals.errs.database = err.message;
+                return next();
             }
-            req.successResponse = req.successResponse = {
+            res.locals = {
                 title: 'Success',
                 detail: 'Update user successfully',
                 link: '/manager/dashboard/users-manager/users/' + req.params.mid,
@@ -290,67 +284,40 @@ module.exports = {
 
     },
 
-    responseUsersView: (req, res, next) => {
+    responseUsersView: (req, res) => {
         res.render('admin/pages/users-manager/users', {
             path: '/users-manager/users',
-            users: req.users,
-            meta: req.meta,
             link: '/manager/dashboard/users-manager/users'
         });
     },
 
-    responseUsersFormView: (req, res, next) => {
+    responseInsertOneByUsersFormView: (req, res) => {
         res.locals.path = '/users-manager/users/create';
-        if ((!req.errs || Object.keys(req.errs).length === 0) && (!req.successResponse || Object.keys(req.successResponse).length === 0)) {
-            res.render('admin/pages/users-manager/add-user-form');
+
+        if (!res.locals.errs || Object.keys(res.locals.errs).length === 0) {
+            res.locals.user_mid = res.locals.result.mid
         }
-        else if (req.errs && Object.keys(req.errs).length !== 0) {
-            res.render('admin/pages/users-manager/add-user-form', {
-                errs: req.errs,
-                user: req.body,
-            });
-        }
-        else {
-            res.render('admin/pages/users-manager/add-user-form', {
-                user_mid: req.successResponse.result.mid
-            });
-        }
+        res.render('admin/pages/users-manager/add-user-form');
     },
 
-    responseAccountFormView: (req, res, next) => {
-        if (!res.locals) res.locals = {};
-        res.locals.page_type = 2;
-        res.locals.path = '/users-manager/users';
-        res.locals.user_t_title = 'USER INFO';
-        res.locals.account_title = 'ADD ACCOUNT';
-        res.locals.user = req.user;
-        if ((!req.errs || Object.keys(req.errs).length === 0) && (!req.successResponse || Object.keys(req.successResponse).length === 0)) {
-            res.render('admin/pages/users-manager/users-form');
-        }
-        else if (req.errs && Object.keys(req.errs).length !== 0) {
-            res.render('admin/pages/users-manager/users-form', {
-                errs: req.errs,
-                account: req.body
-            });
-        }
-        else {
-            res.render('index', req.successResponse);
-        }
-    },
-
-    responseUserWithAccountView: (req, res, next) => {
+    responseUserWithAccountView: (req, res) => {
+        res.cookie('user', res.locals.user);
         res.render('admin/pages/users-manager/index', {
-            user: req.user,
-            path: '/users-manager/users'
+            path: '/users-manager/users',
+            method: 'PUT'
         })
     },
 
-    responseUserUpdateView: (req, res, next) => {
-        if (req.errs && Object.keys(req.errs).length > 0) {
-            res.status(409);
-            res.json(req.errs);
+    responseUpdateByUAView: (req, res) => {
+        if (res.locals.errs && Object.keys(res.locals.errs).length > 0) {
+            res.locals.user = req.cookies.user;
+            res.locals.user = Object.assign(res.locals.user, req.body);
+            res.render('admin/pages/users-manager/index', {
+                path: '/users-manager/users',
+                method: 'PUT'
+            });
             return;
         }
-        res.render('index', req.successResponse);
+        res.render('index');
     }
 };
