@@ -6,8 +6,7 @@ section
             .image
                 img(src='/admin/images/user.png' width='48' height='48' alt='User')
             .info-container
-                .name(data-toggle='dropdown' aria-haspopup='true' aria-expanded='false') John Doe
-                .email john.doe@example.com
+                .name(data-toggle='dropdown' aria-haspopup='true' aria-expanded='false')= credential&&credential.account&&credential.account.length!==0?credential.account[0].username:''
                 .btn-group.user-helper-dropdown
                     i.material-icons(data-toggle='dropdown' aria-haspopup='true' aria-expanded='true') keyboard_arrow_down
                     ul.dropdown-menu.pull-right
@@ -82,6 +81,10 @@ section
                             a(href='/manager/dashboard/users-manager/users') Users
                         li(class={'active': path === '/users-manager/users/create'})
                             a(href='/manager/dashboard/users-manager/users/create') Add User
+                li(class={'active': path === '/orders'})
+                    a(href='/manager/dashboard/orders')
+                        i.material-icons shopping_cart
+                        span Orders
                 li(class={'active': path.includes('/warehouse-manager')})
                     a.menu-toggle(href='javascript:void(0);')
                         i.material-icons store

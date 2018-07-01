@@ -1,0 +1,108 @@
+extends ../../layouts/master
+
+block extra-css
+    link(rel='stylesheet' href='/admin/plugins/bootstrap-select/css/bootstrap-select.min.css')
+    link(rel='stylesheet' href='/admin/plugins/bootstrap-suggest/bootstrap-suggest.css')
+
+block extra-js
+    script(type='text/javascript' src='/admin/plugins/autosize/autosize.min.js')
+    script(type='text/javascript' src='/admin/plugins/bootstrap-suggest/bootstrap-suggest.js')
+    script(type='text/javascript').
+        autosize($('textarea.auto-growth'));
+        var users = [
+            {username: 'lodev09', fullname: 'Jovanni Lo'},
+            {username: 'foo', fullname: 'Foo User'},
+            {username: 'bar', fullname: 'Bar User'},
+            {username: 'twbs', fullname: 'Twitter Bootstrap'},
+            {username: 'john', fullname: 'John Doe'},
+            {username: 'jane', fullname: 'Jane Doe'},
+        ];
+        timeout = null;
+        $('textarea.auto-growth').suggest('@', {
+            data: function (q, lookup) {
+                var processData = function () {
+                    $.ajax({
+                        url: 'https://thongtindoanhnghiep.co/api/city',
+                        method: 'GET',
+                        contentType: 'application/json;charset=utf-8',
+                        success: function (res) {
+                            lookup(res);
+                        },
+                        error: function (err) {
+                            console.log(err);
+                        }
+                    });
+                };
+
+                if (timeout) {
+                    clearTimeout(timeout);
+                    timeout = null;
+                }
+
+                timeout = setTimeout(processData, 500);
+            },
+            map: function (product) {
+                return {
+                    value: product._id,
+                    text: '<strong>' + product.code + '</strong> <small>' + product.name + '</small>'
+                }
+            }
+        })
+
+block content
+    .card.p-b-15
+        .header
+            h2
+                | Orders
+            ul.header-dropdown.m-r--5
+                li.dropdown
+                    a.dropdown-toggle(href='javascript:void(0);' data-toggle='dropdown' role='button' aria-haspopup='true' aria-expanded='false')
+                        i.material-icons more_vert
+                    ul.dropdown-menu.pull-right
+                        li
+                            a(href='javascript:void(0);') Action
+                        li
+                            a(href='javascript:void(0);') Another action
+                        li
+                            a(href='javascript:void(0);') Something else here
+        .body.table-responsive
+            .row
+                .col-sm-3.col-md-2
+                    .input-group
+                        span.input-group-addon
+                            | Type
+                        .form-line
+                            textarea.form-control.no-resize.auto-growth(rows='1')
+            table.table.table-bordered
+                thead
+                    tr
+                        th CODE
+                        th FIRST NAME
+                        th LAST NAME
+                        th USERNAME
+                tbody
+                    tr
+                        th(scope='row') 1
+                        td Mark
+                        td Otto
+                        td @mdo
+                    tr
+                        th(scope='row') 2
+                        td Jacob
+                        td Thornton
+                        td @fat
+                    tr
+                        th(scope='row') 3
+                        td Larry
+                        td the Bird
+                        td @twitter
+                    tr
+                        th(scope='row') 4
+                        td Larry
+                        td Jellybean
+                        td @lajelly
+                    tr
+                        th(scope='row') 5
+                        td Larry
+                        td Kikat
+                        td @lakitkat

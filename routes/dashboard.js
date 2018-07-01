@@ -11,7 +11,7 @@ router.get('/', function (req, res, next) {
     res.render('admin/pages/home');
 }).get('/user', function (req, res, next) {
     res.render('admin/pages/user');
-});
+}).get('/orders', (req, res) => res.render('admin/pages/orders', {path: '/orders'}));
 
 router.use('/web-config', express.Router()
     .get('/information', function (req, res, next) {

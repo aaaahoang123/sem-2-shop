@@ -265,12 +265,12 @@ module.exports = {
         model.aggregate(query, function (err, result) {
             if (err) {
                 console.log(err);
-                if (!req.errs) req.errs = {};
-                req.errs.database = err.message;
+                if (!res.locals.errs) res.locals.errs = {};
+                res.locals.errs.database = err.message;
                 next();
                 return;
             }
-            req.categories = result;
+            res.locals.categories = result;
             next();
         });
     },
