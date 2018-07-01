@@ -2,52 +2,69 @@ extends ../../layouts/master
 
 block extra-css
     link(rel='stylesheet' href='/admin/plugins/bootstrap-select/css/bootstrap-select.min.css')
-    link(rel='stylesheet' href='/admin/plugins/bootstrap-suggest/bootstrap-suggest.css')
 
 block extra-js
     script(type='text/javascript' src='/admin/plugins/autosize/autosize.min.js')
-    script(type='text/javascript' src='/admin/plugins/bootstrap-suggest/bootstrap-suggest.js')
-    script(type='text/javascript').
-        autosize($('textarea.auto-growth'));
-        var users = [
-            {username: 'lodev09', fullname: 'Jovanni Lo'},
-            {username: 'foo', fullname: 'Foo User'},
-            {username: 'bar', fullname: 'Bar User'},
-            {username: 'twbs', fullname: 'Twitter Bootstrap'},
-            {username: 'john', fullname: 'John Doe'},
-            {username: 'jane', fullname: 'Jane Doe'},
-        ];
-        timeout = null;
-        $('textarea.auto-growth').suggest('@', {
-            data: function (q, lookup) {
-                var processData = function () {
-                    $.ajax({
-                        url: 'https://thongtindoanhnghiep.co/api/city',
-                        method: 'GET',
-                        contentType: 'application/json;charset=utf-8',
-                        success: function (res) {
-                            lookup(res);
-                        },
-                        error: function (err) {
-                            console.log(err);
-                        }
-                    });
-                };
-
-                if (timeout) {
-                    clearTimeout(timeout);
-                    timeout = null;
-                }
-
-                timeout = setTimeout(processData, 500);
-            },
-            map: function (product) {
-                return {
-                    value: product._id,
-                    text: '<strong>' + product.code + '</strong> <small>' + product.name + '</small>'
-                }
-            }
-        })
+    //script(type='text/javascript' src='/admin/plugins/bootstrap-suggest/bootstrap-suggest.js')
+    //script(type='text/javascript').
+    //    autosize($('textarea.auto-growth'));
+    //    var users = [
+    //        {username: 'lodev09', fullname: 'Jovanni Lo'},
+    //        {username: 'foo', fullname: 'Foo User'},
+    //        {username: 'bar', fullname: 'Bar User'},
+    //        {username: 'twbs', fullname: 'Twitter Bootstrap'},
+    //        {username: 'john', fullname: 'John Doe'},
+    //        {username: 'jane', fullname: 'Jane Doe'},
+    //    ];
+    //    timeout = null;
+    //    $('textarea.auto-growth').suggest('@', {
+    //        data: function (q, lookup) {
+    //            var processData = function () {
+    //                // $.ajax({
+    //                //     url: 'https://thongtindoanhnghiep.co/api/city',
+    //                //     type: 'GET',
+    //                //     accept: 'text/plain',
+    //                //     contentType: 'text/plain',
+    //                //     success: function (res) {
+    //                //         console.log(res);
+    //                //         lookup(res.LtsItem);
+    //                //     },
+    //                //     error: function (err) {
+    //                //         console.log(err);
+    //                //     }
+    //                // });
+    //                fetch('https://thongtindoanhnghiep.co/api/city', {
+    //                    mode: 'no-cors'
+    //                })
+    //                    .then(function (res) {
+    //                        console.log(res);
+    //                        lookup(res.LtsItem);
+    //                    });
+    //                // var req = new XMLHttpRequest();
+    //                // req.open('GET', 'http://localhost:8080/api/city');
+    //                // req.onloadend = function () {
+    //                //     console.log(this.status);
+    //                //     console.log(this.responseText)
+    //                // }
+    //                // req.setRequestHeader('Content-Type', 'application/json');
+    //                // req.setRequestHeader("Access-Control-Allow-Origin", "*");
+    //                // req.send();
+    //            };
+    //
+    //            if (timeout) {
+    //                clearTimeout(timeout);
+    //                timeout = null;
+    //            }
+    //
+    //            timeout = setTimeout(processData, 500);
+    //        },
+    //        map: function (product) {
+    //            return {
+    //                value: product.ID,
+    //                text: '<strong>' + product.ID + '</strong> <small>' + product.Title + '</small>'
+    //            }
+    //        }
+    //    })
 
 block content
     .card.p-b-15
@@ -70,9 +87,21 @@ block content
                 .col-sm-3.col-md-2
                     .input-group
                         span.input-group-addon
-                            | Type
+                            | City
                         .form-line
-                            textarea.form-control.no-resize.auto-growth(rows='1')
+                            select.form-control.show-tick.no-resize(data-live-search='true')
+                                - if (cities&&cities.length !=0)
+                                    - for (city of cities)
+                                        option(value=city.ID)= city.Title
+                .col-sm-3.col-md-2
+                    .input-group
+                        span.input-group-addon
+                            | District
+                        .form-line
+                            select.form-control.show-tick.no-resize(data-live-search='true')
+                                - if (cities&&cities.length !=0)
+                                    - for (city of cities)
+                                        option(value=city.ID)= city.Title
             table.table.table-bordered
                 thead
                     tr

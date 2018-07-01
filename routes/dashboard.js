@@ -1,8 +1,9 @@
 const express = require('express');
 const router = express.Router();
 
-const productsController = require('../app/controllers/product');
-const brandController = require('../app/controllers/brand');
+const productsController = require('../app/controllers/product'),
+    brandController = require('../app/controllers/brand'),
+    cdController = require('../app/controllers/city-and-district');
 
 /* GET users listing. */
 router.get('/', function (req, res, next) {
@@ -11,7 +12,8 @@ router.get('/', function (req, res, next) {
     res.render('admin/pages/home');
 }).get('/user', function (req, res, next) {
     res.render('admin/pages/user');
-}).get('/orders', (req, res) => res.render('admin/pages/orders', {path: '/orders'}));
+})
+    .get('/orders', cdController.getAllCities, (req, res) => res.render('admin/pages/orders', {path: '/orders'}));
 
 router.use('/web-config', express.Router()
     .get('/information', function (req, res, next) {
