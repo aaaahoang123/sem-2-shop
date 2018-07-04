@@ -5,8 +5,9 @@ block extra-css
     link(rel='stylesheet' href='https://fonts.googleapis.com/icon?family=Material+Icons')
 
 block extra-js
-    script(type='text/javascript' src='/admin/js/pages/forms/basic-form-elements.js')
+    script(type='text/javascript' src='/admin/plugins/autosize/autosize.min.js')
     script(type='text/javascript' src='/admin/plugins/bootstrap-select/js/bootstrap-select.min.js')
+    script(type='text/javascript' src='/admin/js/pages/web-config/top-categories.js')
 
 block content
     .row.clearfix
@@ -27,27 +28,58 @@ block content
                                 li
                                     a.waves-effect.waves-block(href='javascript:void(0);') Something else here
                 .body
-                    form(method='POST')
+                    -if(errs && errs.database)
+                        label.text-danger #{errs.database}
+                    form(name='top-categories' action='/manager/dashboard/web-config/top-category' method="POST")
                         .row.clearfix
+                            .col-sm-4
+                                .input-group
+                                    span.input-group-addon
+                                        i.material-icons view_list
+                                    .select-clear
+                                        select.form-control.show-tick(name='top-categ1' id='dkmm')
+                                            option(value='') -- Please select --
+                                            -if(categories && categories.length !== 0)
+                                                -for(let value of categories)
+                                                    optgroup(label=value._id)
+                                                        -for(let c of value.categories_group)
+                                                            option(value=c._id selected=(topCategories[0]===c._id.toString())) #{c.name}
+
+
+                            .col-sm-4
+                                .input-group
+                                    span.input-group-addon
+                                        i.material-icons view_list
+                                    .select-clear
+                                        select.form-control.show-tick(name='top-categ2')
+                                            option(value='') -- Please select --
+                                            -if(categories && categories.length !== 0)
+                                                -for(let value of categories)
+                                                    optgroup(label=value._id)
+                                                        -for(let c of value.categories_group)
+                                                             option(value=c._id selected=(topCategories[1]===c._id.toString())) #{c.name}
+
+
+                            .col-sm-4
+                                .input-group
+                                    span.input-group-addon
+                                        i.material-icons view_list
+                                    .select-clear
+                                        select.form-control.show-tick(name='top-categ3')
+                                            option(value='') -- Please select --
+                                            -if(categories && categories.length !== 0)
+                                                -for(let value of categories)
+                                                    optgroup(label=value._id)
+                                                        -for(let c of value.categories_group)
+                                                             option(value=c._id selected=(topCategories[2]===c._id.toString())) #{c.name}
+
+                        .row.clearfix
+                            .col-sm-4
+                            .col-sm-2
+                                button.btn.btn-block.btn-primary.waves-effect(type='submit') SUBMIT
+                            .col-sm-2
+                                button#btn-reset.btn.btn-block.btn-warning.waves-effect(type='button') RESET
                             .col-sm-1
-                                i.material-icons view_list
-                            .col-sm-5
-                                select.form-control.show-tick
-                                    option(value='') -- Category 1 --
-                                    option(value='10') 10
-                                    option(value='20') 20
-                                    option(value='30') 30
-                                    option(value='40') 40
-                                    option(value='50') 50
-                            .col-sm-1
-                                i.material-icons view_list
-                            .col-sm-5
-                                select.form-control.show-tick
-                                    option(value='') -- Category 2 --
-                                    option(value='10') 10
-                                    option(value='20') 20
-                                    option(value='30') 30
-                                    option(value='40') 40
-                                    option(value='50') 50
-                        button.btn.btn-primary.waves-effect(type='submit') Submit
+                                button#btn-clear.btn.btn-warning.waves-effect(type='button') CLEAR
+                            .col-sm-3
 

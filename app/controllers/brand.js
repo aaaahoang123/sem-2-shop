@@ -243,7 +243,7 @@ module.exports = {
         res.render('index');
     },
 
-    responseJson: function (req, res, next) {
+    responseJson: function (req, res) {
         if(res.locals.errs && Object.keys(res.locals.errs).length !== 0) {
             res.status(404);
             res.json(res.locals.errs);
