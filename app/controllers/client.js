@@ -2,6 +2,6 @@
 
 module.exports = {
     renderHomePage: (req, res, next) => {
-        res.render('client/pages/index', {categories: req.categories});
+        res.render('client/pages/index');
     }
 };

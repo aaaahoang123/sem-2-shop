@@ -186,11 +186,15 @@ module.exports = {
     },
 
     getOne: function (req, res, next) {
+        let name = '';
+        if (req.params.name) name = req.params.name;
+        if (req.query.category) name = req.query.category;
+        if (name === '') return next();
         let query = [
             {
                 $match: {
                     status: 1,
-                    name: req.params.name
+                    name: name
                 }
             },
             {

@@ -63,19 +63,24 @@ module.exports = {
      * @param next
      */
     getOne: function (req, res, next) {
-        let query = {
-            name: req.params.name
-        };
-        model.find(query, function (err, result) {
+        let name = '';
+        if (req.params.name) name = req.params.name;
+        if (req.query.brand) name = req.query.brand;
+        if (name === '') return next();
+        let query = [{
+            $match: {
+                status: 1,
+                name: name
+            }
+        }];
+        model.aggregate(query, function (err, result) {
             if (err) {
                 console.log(err);
                 if (!res.locals.errs) res.locals.errs = {};
                 res.locals.errs.database = err.message;
                 return next();
             }
-            if (result.length !== 0) {
-                res.locals.brand = result[0];
-            }
+            if (result.length !== 0) res.locals.brand = result[0];
             next();
         });
     },
@@ -89,11 +94,11 @@ module.exports = {
      * @param next
      */
     getList: function (req, res, next) {
-        let limit = 10, skip = 0, page = 1;
+        let limit = 10, skip = 0, cpage = 1;
         if (req.query.limit && /^\d+$/.test(req.query.limit)) limit = Math.abs(Number(req.query.limit));
-        if (req.query.page && !['-1', '1'].includes(req.query.page) && /^\d+$/.test(req.query.page)) {
-            page = Math.abs(Number(req.query.page));
-            skip = (page - 1) * limit;
+        if (req.query.cpage && !['-1', '1'].includes(req.query.cpage) && /^\d+$/.test(req.query.cpage)) {
+            cpage = Math.abs(Number(req.query.cpage));
+            skip = (cpage - 1) * limit;
         }
         /**
          * Sử dụng mongodb aggregate, $facet
@@ -146,7 +151,7 @@ module.exports = {
                 total: Math.ceil(totalItems / limit),
                 limit: limit,
                 offset: skip,
-                page: page,
+                cpage: cpage,
                 q: req.query.q
             };
             next();
