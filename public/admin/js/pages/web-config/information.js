@@ -43,3 +43,7 @@ $('#btn-clear').on('click', function () {
     document.getElementById('blah').setAttribute('src', '/admin/images/placeholder.png');
 });
 
+$('#btn-reset').on('click', function () {
+    location.reload();
+});
+
