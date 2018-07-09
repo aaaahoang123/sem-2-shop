@@ -4,6 +4,7 @@ const mongoose = require('mongoose');
 let schema = mongoose.Schema({
     name: {
         type: String,
+        unique: true,
         required: true
     },
     description: {
@@ -15,7 +16,8 @@ let schema = mongoose.Schema({
         required: true,
     },
     children: {
-        type: [Object]
+        type: [mongoose.Schema.Types.ObjectId],
+        ref: 'categories'
     },
     created_at: {
         type: Date,
@@ -29,7 +31,8 @@ let schema = mongoose.Schema({
     },
     status: {
         type: Number,
-        required: true
+        required: true,
+        default: 1
     }
 });
 

@@ -11,8 +11,8 @@ module.exports = {
      * @details random generate a salt
      * @returns salt
      */
-    gensalt: function() {
-        return "a";
+    gensalt: function(cb) {
+
     },
 
     /**

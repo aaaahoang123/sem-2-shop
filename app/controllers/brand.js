@@ -7,51 +7,43 @@ module.exports = {
     /**
      * Validate dữ liệu từ req.body
      * name, description, logo không null
-     * Nếu không thỏa mãn, nhét lỗi vào req.errs
+     * Nếu không thỏa mãn, nhét lỗi vào res.locals.errs
      * Sau khi validate hoàn tất thì next()
      * @param req
      * @param res
      * @param next
      */
     validate: function(req, res, next){
-        if(!req.errs) req.errs = {};
-
-        if(!req.body.name || req.body.name === null || req.body.name === '') req.errs.name = 'Brand name can not be null';
-
-        if(!req.body.description || req.body.description === null || req.body.description === '') req.errs.description = 'Brand description can not be null';
-
-        if(!req.body.logo || req.body.logo === null || req.body.logo === '') req.errs.logo = 'Brand logo can not be null';
-
+        if(!res.locals.errs) res.locals.errs = {};
+        if(!req.body.name || req.body.name === null || req.body.name === '') res.locals.errs.name = 'Brand name can not be null';
+        if(!req.body.description || req.body.description === null || req.body.description === '') res.locals.errs.description = 'Brand description can not be null';
+        if(!req.body.logo || req.body.logo === null || req.body.logo === '') res.locals.errs.logo = 'Brand logo can not be null';
         next();
     },
 
     /**
      * Thực hiện sau khi chạy hàm validate
-     * Nếu có lỗi, và object req.errs không empty thì next() luôn, sang hàm response view (hoặc có thể là response json)
+     * Nếu có lỗi, và object res.locals.errs không empty thì next() luôn, sang hàm response view (hoặc có thể là response json)
      * Nếu không lỗi, thực hiện insert brand mới vào db
-     * Nếu insert vào db có lỗi, log lỗi, nhét lỗi vào req.errs và next()
-     * Nếu thành công, setup req.successResponse (là option để hiển thị trang thông báo thành công), và next();
+     * Nếu insert vào db có lỗi, log lỗi, nhét lỗi vào res.locals.errs và next()
+     * Nếu thành công, setup res.locals (là option để hiển thị trang thông báo thành công), và next();
      * @param req
      * @param res
      * @param next
      */
     insertOne: function (req, res, next) {
-        if (req.errs && Object.keys(req.errs).length !== 0) {
-            next();
-            return;
-        }
+        if (res.locals.errs && Object.keys(res.locals.errs).length !== 0) return next();
 
         let brand = new model(req.body);
         brand.save(function (err, result) {
             if (err) {
                 console.log(err);
-                if (!req.errs) req.errs = {};
-                if (err.code === 11000) req.errs.name = "This brand name has already existed";
-                req.errs.database = err.message;
-                next();
-                return;
+                if (!res.locals.errs) res.locals.errs = {};
+                if (err.code === 11000) res.locals.errs.name = "This brand name has already existed";
+                res.locals.errs.database = err.message;
+                return next();
             }
-            req.successResponse = {
+            res.locals = {
                 title: 'Success',
                 detail: 'Add brand successfully',
                 link: '/manager/dashboard/products-manager/brands/create',
@@ -61,6 +53,15 @@ module.exports = {
         })
     },
 
+    /**
+     * Lấy query từ params của url
+     * Tìm brand với tên này, nếu lỗi, log lỗi và set res.locals.errs.database
+     * Nếu tìm được brand, set res.locals.brand = result[0], nếu không thì thôi
+     * next() để sang hàm response
+     * @param req
+     * @param res
+     * @param next
+     */
     getOne: function (req, res, next) {
         let query = {
             name: req.params.name
@@ -68,16 +69,25 @@ module.exports = {
         model.find(query, function (err, result) {
             if (err) {
                 console.log(err);
-                if (!req.errs) req.errs = {};
-                req.errs.database = err.message;
-                next();
-                return;
+                if (!res.locals.errs) res.locals.errs = {};
+                res.locals.errs.database = err.message;
+                return next();
             }
-            req.brands = result;
+            if (result.length !== 0) {
+                res.locals.brand = result[0];
+            }
             next();
         });
     },
 
+    /**
+     * Thông số mặc định: limit: 10, skip 0, page 1
+     * Nếu có query gửi lên, thay thông số query theo đó
+     * Sau khi tìm thành công, pug view sẽ có brands là list get được, cùng meta là thông số phân trang.
+     * @param req
+     * @param res
+     * @param next
+     */
     getList: function (req, res, next) {
         let limit = 10, skip = 0, page = 1;
         if (req.query.limit && /^\d+$/.test(req.query.limit)) limit = Math.abs(Number(req.query.limit));
@@ -119,20 +129,19 @@ module.exports = {
         model.aggregate(query, function (err, result) {
             if (err) {
                 console.log(err);
-                if (!req.errs) req.errs = {};
-                req.errs.database = err.message;
+                if (!res.locals.errs) res.locals.errs = {};
+                res.locals.errs.database = err.message;
                 next();
                 return;
             }
-            // Kết quả trả về có dạng [{meta: [{}], data: [{}]}]. Trong trường hợp không tìm thấy thì đặt req.products = [] và next()
+            // Kết quả trả về có dạng [{meta: [{}], data: [{}]}]. Trong trường hợp không tìm thấy thì đặt res.locals.brands = [] và next()
             if (result.length === 0 || result[0].meta.length === 0) {
-                req.brands = [];
-                next();
-                return;
+                res.locals.brands = [];
+                return next();
             }
-            req.brands = result[0].data;
+            res.locals.brands = result[0].data;
             let totalItems = result[0].meta[0].totalItems;
-            req.meta = {
+            res.locals.meta = {
                 totalItems: totalItems,
                 total: Math.ceil(totalItems / limit),
                 limit: limit,
@@ -145,27 +154,23 @@ module.exports = {
     },
 
     editOne: function(req, res, next) {
-        if (req.errs && Object.keys(req.errs).length !== 0) {
-            next();
-            return;
-        }
+        if (res.locals.errs && Object.keys(res.locals.errs).length !== 0) return next();
 
         let brand = req.body;
         brand.updated_at = Date.now();
-        model.findOneAndUpdate({name: req.params.name}, {$set: brand}, function (err, result) {
+        model.findOneAndUpdate({name: req.params.name}, {$set: brand}, {new: true}, (err, result) => {
             if (err) {
                 console.log(err);
-                if (!req.errs) req.errs = {};
-                if (err.code === 11000) req.errs.name = "This brand name has already existed";
-                req.errs.database = err.message;
-                next();
-                return;
+                if (!res.locals.errs) res.locals.errs = {};
+                if (err.code === 11000) res.locals.errs.name = "This brand name has already existed";
+                res.locals.errs.database = err.message;
+                return next();
             }
-            req.successResponse = {
+            res.locals = {
                 title: 'Success',
                 detail: 'Edit brand successfully',
                 link: '/manager/dashboard/products-manager/brands',
-                added: result
+                result: result
             };
             next();
         });
@@ -178,20 +183,18 @@ module.exports = {
         model.findOneAndUpdate(query, {$set: {status: -1, updated_at: Date.now()}}, {new: true}, function (err, result) {
             if(err){
                 console.log(err);
-                if (!req.errs) req.errs = {};
-                req.errs.database = err.message;
-                next();
-                return;
+                if (!res.locals.errs) req.res.locals = {};
+                res.locals.errs.database = res.locals.message;
+                return next();
             }
             if(result === null) {
-                if (!req.errs) req.errs = {};
-                req.errs["404"] = 'Brand not found';
-                next();
-                return;
+                if (!res.locals.errs) res.locals.errs = {};
+                res.locals.errs["404"] = 'Brand not found';
+                return next();
             }
-            req.successResponse = {
+            res.locals = {
                 title: 'Success',
-                detail: 'Add brand successfully',
+                detail: 'Delete brand successfully',
                 link: '/manager/dashboard/products-manager/brands',
                 result: result
             };
@@ -201,95 +204,59 @@ module.exports = {
 
     /**
      * Trả về view brand form sau khi đã chạy qua các middleware
-     * Nếu không có lỗi, và không có successResponse, thì trả về brand-form trắng (chạy ghi vào brand-form lần đầu)
      * Nếu có lỗi, trả về form, kèm lỗi và dữ liệu đã nhập
      * Nếu đã success, gửi về trang success, kèm successResponse
      * @param req
      * @param res
      * @param next
      */
-    responseBrandFormView: function(req, res, next) {
-        if ((!req.errs || Object.keys(req.errs).length === 0) && (!req.successResponse || Object.keys(req.successResponse).length === 0)) {
-            res.render('admin/pages/products-manager/brands-form', {path: '/products-manager/add-brand', title: 'ADD BRAND'});
-        } else if (req.errs && Object.keys(req.errs).length !== 0) {
+    responseInsertOneByBrandFormView: (req, res) => {
+        if (res.locals.errs && Object.keys(res.locals.errs).length !== 0) {
             res.render('admin/pages/products-manager/brands-form', {
                 path: '/products-manager/add-brand',
-                errs: req.errs,
                 brand: req.body,
                 title: 'ADD BRAND'
             });
         } else {
-            res.render('index', req.successResponse);
+            res.render('index');
         }
     },
 
-    responseBrandEditFormView: function(req, res, next) {
-        if (!res.locals) res.locals = {};
-        res.locals.method = 'PUT';
-        res.locals.title = 'EDIT BRAND';
-        res.locals.path = '/products-manager/brands';
-        res.locals.action = '/manager/dashboard/products-manager/brands/' + req.params.name + '?_method=PUT';
-        if (req.brands && req.brands.length !== 0) {
+    responseBrandEditForm: (req, res) => {
+        res.render('admin/pages/products-manager/brands-form', {
+            path: '/products-manager/brands',
+            method: 'PUT',
+            title: 'EDIT BRAND'
+        });
+    },
+
+    responseEditByBrandForm: (req, res) => {
+        if (res.locals.errs && Object.keys(res.locals.errs).length !== 0) {
             res.render('admin/pages/products-manager/brands-form', {
-                brand: req.brands[0]
-            });
-        }
-        else if (req.errs && Object.keys(req.errs).length !== 0) {
-            res.render('admin/pages/products-manager/brands-form', {
-                errs: req.errs,
+                title: 'EDIT BRAND',
                 brand: req.body,
+                path: '/products-manager/brands',
+                method: 'PUT'
             });
+            return;
         }
-        else if (req.successResponse && Object.keys(req.successResponse).length !== 0) {
-            res.render('index', req.successResponse);
-        }
-        else {
-            res.render('admin/pages/products-manager/brands-form', {
-                brand: undefined,
-                link: '/manager/dashboard/products-manager/brands',
-            });
-        }
+        res.render('index');
     },
 
     responseJson: function (req, res, next) {
-        if(req.errs && Object.keys(req.errs).length !== 0) {
+        if(res.locals.errs && Object.keys(res.locals.errs).length !== 0) {
             res.status(404);
-            res.json(req.errs);
+            res.json(res.locals.errs);
             return;
         }
         res.status(200);
-        res.json(req.successResponse.result);
+        res.json(res.locals.result);
     },
 
     /**
-     * Trả về bảng các brands
-     * Nếu không có brand, trả về thông báo 404
-     * Nếu có brand mà không có meta, trả về bảng không có phân trang
-     * Trường hợp còn lại, trả về có meta và phân trang đầy đủ
+     * Trả về bảng brand sau khi đã get list
      * @param req
      * @param res
-     * @param next
      */
-    responseBrandView: function (req, res, next) {
-        let length = req.brands.length;
-        res.locals.path = '/products-manager/brands';
-        if (length === 0 || req.brands.status === -1) {
-            res.render('admin/pages/products-manager/brands', {
-                type: 0,
-            });
-        }
-        else if (!req.meta) {
-            res.render('admin/pages/products-manager/brands', {
-                type: 1,
-                brands: req.brands,
-            });
-        }
-        else {
-            res.render('admin/pages/products-manager/brands', {
-                type: 2,
-                brands: req.brands,
-                meta: req.meta
-            });
-        }
-    }
+    responseBrandTable: (req, res) => res.render('admin/pages/products-manager/brands', {path: '/products-manager/brands'})
 };

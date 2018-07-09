@@ -1,42 +1,58 @@
 'use strict';
 
 const model = require('../models/product');
+//const Set = require('collections/set');
 
 module.exports = {
-    validate: function (req,res,next) {
-        console.log(req.body);
-        if(!req.errs) req.errs = {};
+    validate: function (req, res, next) {
+        if (!req.errs) req.errs = {};
 
-        if(!req.body.name || req.body.name === null || req.body.name === "") req.errs.name = "Product Name cant not null";
+        if (!req.body.name || req.body.name === null || req.body.name === "") req.errs.name = "Product Name cant not null";
 
-        if(!req.body.code || req.body.code === null || req.body.code === "") req.errs.code = "Product Code cant not null";
+        if (!req.body.code || req.body.code === null || req.body.code === "") req.errs.code = "Product Code cant not null";
 
-        if(!req.body.description || req.body.description === null || req.body.description === "") req.errs.description = "Product Description cant not null";
+        if (!req.body.description || req.body.description === null || req.body.description === "") req.errs.description = "Product Description cant not null";
 
-        if(!req.body.categories || req.body.categories === null || req.body.categories === "") req.errs.categories = "Product Categories cant not null";
+        if (!req.body.categories || req.body.categories === null || req.body.categories === "" || req.body.categories.length === 0) req.errs.categories = "Product Categories cant not null";
 
-        if(!req.body.brand || req.body.brand === null || req.body.brand === "") req.errs.brand = "Product Brand cant not null";
+        if (!req.body.brand || req.body.brand === null || req.body.brand === "") req.errs.brand = "Product Brand cant not null";
 
-        if(!req.body.price || req.body.price === null || req.body.price === "") req.errs.price = "Product Price cant not null";
+        if (!req.body.price || req.body.price === null || req.body.price === "") req.errs.price = "Product Price cant not null";
 
-        if(!req.body.images || req.body.images === null || req.body.images === "") req.errs.images = "Product Images cant not null";
+        if (!req.body.images || req.body.images === null || req.body.images === "") req.errs.images = "Product Images cant not null";
 
-        if(Object.keys(req.errs).length !== 0){
+        if (Object.keys(req.errs).length !== 0) {
             req.errStatus = 400;
         }
         next();
     },
 
+    filterCategoriesSet: (req, res, next) => {
+        let set = new Set();
+        res.locals.categories.forEach(cate => {
+            set.add(String(cate._id));
+            cate.parent.forEach(p => {
+                set.add(String(p._id));
+                p.parent.forEach(gp => {
+                    set.add(String(gp._id))
+                })
+            })
+        });
+        set.delete('undefined');
+        req.body.categories = [...set];
+        next();
+    },
+
     insertOne: function (req, res, next) {
-        if(req.errs && Object.keys(req.errs).length !== 0){
+        if (req.errs && Object.keys(req.errs).length !== 0) {
             next();
             return;
         }
-        var newProduct = new model(req.body);
+        let newProduct = new model(req.body);
         newProduct.save(function (err, result) {
-            if(err){
-                if(!req.errs) req.errs = {};
-                if(err.code === 11000){
+            if (err) {
+                if (!req.errs) req.errs = {};
+                if (err.code === 11000) {
                     req.errStatus = 409;
                     req.errs.name = "This product code has already existed";
                 }
@@ -62,7 +78,7 @@ module.exports = {
         model.find(query, function (err, result) {
             if (err) {
                 console.log(err);
-                if(!req.errs) req.errs = {};
+                if (!req.errs) req.errs = {};
                 req.errs.database = err.message;
                 next();
                 return;
@@ -107,12 +123,35 @@ module.exports = {
          * Cấu trúc result trả về, bao gồm 2 trường meta và data, meta là thông số phân trang, data là dữ liệu lấy được
          * Tham khảo: https://docs.mongodb.com/manual/reference/operator/aggregation/facet/
          */
-        let query = [{
-            '$facet': {
-                meta: [{$count: "totalItems"}],
-                data: [{$skip: skip}, {$limit: limit}] // add projection here wish you re-shape the docs
+        let query = [
+            {
+                $match: {
+                    status: 1,
+                }
+            },
+            {
+                "$lookup" : {
+                    "from" : "categories",
+                    "localField" : "categories",
+                    "foreignField" : "_id",
+                    "as" : "categories"
+                }
+            },
+            {
+                "$lookup" : {
+                    "from" : "brands",
+                    "localField" : "brand",
+                    "foreignField" : "_id",
+                    "as" : "brand"
+                }
+            },
+            {
+                '$facet': {
+                    meta: [{$count: "totalItems"}],
+                    data: [{$skip: skip}, {$limit: limit}] // add projection here wish you re-shape the docs
+                }
             }
-        }];
+            ];
 
         /**
          * Nếu có tìm kiếm, tạo match và đẩy vào đầu array query
@@ -120,22 +159,18 @@ module.exports = {
          */
         if (req.query.q) {
             let pattern = new RegExp(req.query.q, 'i');
-            query.unshift({
-                $match: {
-                    $or: [
-                        {code: pattern},
-                        {description: pattern},
-                        {name: pattern}
-                    ]
-                }
-            });
+            query[0].$match.$or = [
+                {code: pattern},
+                {description: pattern},
+                {name: pattern}
+            ];
         }
 
         // Thực thi aggregate query
         model.aggregate(query, function (err, result) {
             if (err) {
                 console.log(err);
-                if(!req.errs) req.errs = {};
+                if (!req.errs) req.errs = {};
                 req.errs.database = err.message;
                 next();
                 return;
@@ -160,18 +195,84 @@ module.exports = {
         });
     },
 
+    editOne: function(req, res, next) {
+        if (req.errs && Object.keys(req.errs).length !== 0) {
+            next();
+            return;
+        }
+
+        let product = req.body;
+        product.updated_at = Date.now();
+        model.findOneAndUpdate({code: req.params.code}, {$set: product}, function (err, result) {
+            if (err) {
+                console.log(err);
+                if (!req.errs) req.errs = {};
+                if (err.code === 11000){
+                    req.errStatus = 409;
+                    req.errs.name = "This Product code has already existed";
+                }
+                req.errs.database = err.message;
+                next();
+                return;
+            }
+            req.successResponse = {
+                title: 'Success',
+                detail: 'Edit product successfully',
+                link: '/manager/dashboard/products-manager/products',
+                result: result,
+                status: 200
+            };
+            next();
+        });
+    },
+
+    deleteOne: function (req, res, next) {
+        let query = {
+            code: req.params.code
+        };
+        model.findOneAndUpdate(query, {$set: {status: -1, updated_at: Date.now()}}, {new: true}, function (err, result) {
+            if(err){
+                console.log(err);
+                if (!req.errs) req.errs = {};
+                req.errs.database = err.message;
+                next();
+                return;
+            }
+            if(result === null) {
+                if (!req.errs) req.errs = {};
+                req.errStatus = 404;
+                req.errs["404"] = 'Product not found';
+                next();
+                return;
+            }
+            req.successResponse = {
+                title: 'Success',
+                detail: 'Delete product successfully',
+                link: '/manager/dashboard/products-manager/product',
+                status: 200,
+                result: result
+            };
+            next();
+        });
+    },
+
     responseProductJson:  function (req, res, next) {
         if(req.errs && Object.keys(req.errs).length !== 0){
             res.status(req.errStatus);
-            if(req.errStatus === 400){
+            if (req.errStatus === 400) {
                 res.send({
                     code: 400,
                     message: "Product code, name, description, brand, images, category not null"
                 });
-            }else if(req.errStatus === 409){
+            } else if (req.errStatus === 409) {
                 res.send({
                     code: 409,
                     message: req.errs.name
+                })
+            }else if(req.errStatus === 404){
+                res.send({
+                    code: 404,
+                    message: req.errs["404"]
                 })
             }
             return;
@@ -181,9 +282,25 @@ module.exports = {
 
     },
 
+    responseEditFormView: function(req, res, next){
+        res.render('admin/pages/products-manager/products-form', {
+            path: '/products-manager/products',
+            products: (req.products && req.products.length !== 0)?req.products[0]:undefined,
+            categories: (req.categories && req.categories.length !== 0)?req.categories:[],
+            title: 'EDIT PRODUCTS',
+            link: '/manager/dashboard/products-manager/products',
+            extraJs: '/admin/js/pages/products-manager/edit-product.js',
+            editBtnSubmit: 'edit-btn-submit'
+        });
+    },
+
     responseProductFormView: function (req, res, next) {
         if((!req.errs || Object.keys(req.errs).length === 0) && (!req.successResponse || Object.keys(req.successResponse).length === 0)){
-            res.render('admin/pages/products-manager/products-form', {path: '/products-manager/add-product'});
+            res.render('admin/pages/products-manager/products-form', {
+                path: '/products-manager/add-product',
+                title: 'ADD PRODUCT',
+                categories: (req.categories && req.categories.length !== 0)?req.categories:[]
+            });
         }
     }
 };

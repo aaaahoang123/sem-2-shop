@@ -51,6 +51,7 @@ $(function () {
                 validateImages(document.getElementById("frm-file-upload"), getValueImages());
             });
             this.on("removedfile", function (file) {
+                console.log(file.name);
                 $("#url-images > input[name='"+ file.name +"']").remove();
                 if(r === 0) validateImages(document.getElementById("frm-file-upload"), getValueImages());
             });
@@ -60,6 +61,15 @@ $(function () {
                 r = 1;
                 _this.removeAllFiles();
             });
+
+            var inputs = document.getElementById("url-images").querySelectorAll(".edit-img");
+            for(var i=0; i< inputs.length; i++){
+                var mockFile = { name: inputs[i].name, size: 1, type: 'image/jpeg' };
+                _this.emit("addedfile", mockFile);
+                _this.emit("thumbnail", mockFile, inputs[i].value);
+                _this.emit("complete", mockFile);
+                _this.files.push( mockFile );
+            }
         }
     };
 
@@ -67,7 +77,9 @@ $(function () {
     $('#optgroup').multiSelect({ selectableOptgroup: true });
 });
 
-
+function removeSpecRow(elm){
+    $(elm).parent().parent().remove();
+}
 $("#add-spec-btn").click(function () {
     var inputF = createInput("settings", "Feature");
     var inputD = createInput("details", "Details");
@@ -205,6 +217,11 @@ $('#btn-reset').click(function () {
 
     $("#brand select").val('default');
     $("#brand select").selectpicker('refresh');
+
+    var forms = document.forms['product-form'];
+    forms['name'].value = "";
+    forms['price'].value = "";
+    forms['code'].value = "";
 
     CKEDITOR.instances.ckeditor.setData('');
 

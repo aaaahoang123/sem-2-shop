@@ -1,0 +1,79 @@
+.card
+    .header
+        h2
+            | USER FORM
+        ul.header-dropdown.m-r--5
+            li.dropdown
+                a.dropdown-toggle(href='javascript:void(0);' data-toggle='dropdown' role='button' aria-haspopup='true' aria-expanded='false')
+                    i.material-icons more_vert
+                ul.dropdown-menu.pull-right
+                    li
+                        a(href='javascript:void(0);') Action
+                    li
+                        a(href='javascript:void(0);') Another action
+                    li
+                        a(href='javascript:void(0);') Something else here
+    .body
+        - u_action = method==='PUT'?'/manager/dashboard/users-manager/users/'+user.mid+'?_method=PUT':'/manager/dashboard/users-manager/users/create'
+        form(method='POST' action=u_action name='user-form')
+            .row.clearfix
+                .col-lg-1
+                .col-md-6.col-lg-4
+                    h4.m-b-20 Person info
+                    .input-group
+                        span.input-group-addon
+                            i.material-icons person
+                        .form-line
+                            input.form-control(type='text' name='full_name' placeholder="Full name" value=user&&user.full_name?user.full_name:'')
+                    - if (errs && errs.full_name)
+                        p.text-danger #{errs.full_name}
+
+                    .input-group
+                        span.input-group-addon
+                            i.material-icons date_range
+                        .form-line
+                            input.datepicker.form-control(type='text' name='birthday' placeholder='Birthday' value=user&&user.birthday?user.birthday:'')
+                    - if (errs && errs.birthday)
+                        p.text-danger #{errs.birthday}
+
+                    .input-group
+                        span.input-group-addon
+                            i.material-icons wc
+                        .form-line
+                            select.form-control.show-tick(name='gender')
+                                option(value='') -- Select Gender --
+                                option(value=1 selected=user&&(user.gender===1||user.gender==='1')) Male
+                                option(value=0 selected=user&&(user.gender===0||user.gender==='0')) Female
+                    - if (errs && errs.gender)
+                        p.text-danger #{errs.gender}
+                .col-lg-2
+                .col-lg-4.col-md-6
+                    h4.m-b-20 Contact info
+                    .input-group
+                        span.input-group-addon
+                            i.material-icons home
+                        .form-line
+                            input.form-control(type='text' name='address' placeholder='Address' value=user&&user.address?user.address:'')
+                    - if (errs && errs.address)
+                        p.text-danger #{errs.address}
+
+                    .input-group
+                        span.input-group-addon
+                            i.material-icons email
+                        .form-line
+                            input.form-control(type='text' name='email' placeholder='Email' value=user&&user.email?user.email:'')
+                    - if (errs && errs.email)
+                        p.text-danger #{errs.email}
+
+                    .input-group
+                        span.input-group-addon
+                            i.material-icons phone
+                        .form-line
+                            input.form-control(type='text' name='phone' placeholder='Phone' value=user&&user.phone?user.phone:'')
+                    - if (errs && errs.phone)
+                        p.text-danger #{errs.phone}
+                .col-lg-1
+
+            .row.text-center
+                button.btn-lg.btn.btn-primary.waves-effect.m-r-5(type='submit') SUBMIT
+                input.btn-lg.btn.btn-warning.waves-effect.m-l-5(type='reset' value="RESET")

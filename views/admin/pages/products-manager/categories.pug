@@ -1,14 +1,18 @@
 extends ../../layouts/master
 
 block extra-css
+    link(rel='stylesheet' href='/admin/plugins/bootstrap-select/css/bootstrap-select.min.css')
+    link(rel='stylesheet' href='/admin/plugins/sweetalert/sweetalert.min.css')
 
 block extra-js
+    script(type='text/javascript' src='/admin/plugins/sweetalert/sweetalert.min.js')
+    script(type='text/javascript' src='/admin/js/pages/products-manager/category.js')
 
 block content
     .container-fluid
         .row.clearfix
             .col-lg-12.col-md-12.col-sm-12.col-xs-12
-                .card
+                .card.p-b-15
                     .header
                         h2
                             | LIST CATEGORIES
@@ -23,97 +27,128 @@ block content
                                         a(href='javascript:void(0);') Another action
                                     li
                                         a(href='javascript:void(0);') Something else here
-                    .body.table-responsive
-                        .row
-                            .col-sm-8
-
-                            .col-sm-3
+                    .row.m-t-20
+                        .col-sm-4
+                            - if (meta)
+                                - let limit = meta.limit
+                                .col-xs-3.m-t-25
+                                    label Show
+                                .col-lg-6.col-md-4.col-sm-5.col-xs-3.m-t-15
+                                    select.select-limit.form-control.show-tick
+                                        option(selected disabled) #{limit}
+                                        option(value='5') 5
+                                        option(value='10') 10
+                                        option(value='20') 20
+                                        option(value='30') 30
+                                        option(value='40') 40
+                                        option(value='50') 50
+                                .col-xs-3.m-t-25
+                                    label entries
+                        .col-sm-4
+                            .col-xs-5.m-t-25
+                                label Please select
+                            .col-lg-7.col-md-4.col-sm-5.col-xs-3.m-t-15
+                                select.select-level.form-control.show-tick(name='categories')
+                                    //option(value='') -- Select level --
+                                    option(selected disabled) Level #{level}
+                                    option(value='1') Level 1
+                                    option(value='2') Level 2
+                                    option(value='3') Level 3
+                        .col-sm-4
+                            .col-sm-10.col-xs-5.m-t-15(style='float: right')
                                 .form-group
                                     .form-line
-                                        input.form-control(type='text', placeholder='Search')
-                            .col-sm-1
-                                button.btn.btn-danger.btn-circle.waves-effect.waves-circle.waves-float(type='button')
+                                        input#search-input.form-control(type='text', placeholder='Search' value=meta && meta.q ? meta.q : '')
+                            .col-lg-2.col-sm-2.col-xs-1.m-t-15(style='float: right')
+                                button#search-btn.btn.btn-danger.btn-circle.waves-effect.waves-circle.waves-float(type='button')
                                     i.material-icons search
-                            table.table.table-bordered.table-hover
-                                thead
-                                    tr
-                                        th #
-                                        th.text-center NAME
-                                        th.text-center DESCRIPTION
-                                        th.text-center CHILDREN
-                                        th.text-center UPDATED AT
-                                        th.text-center ACTION
-                                tbody.text-center
-                                    tr
-                                        th(scope='row') 1
-                                        td Markg
-                                        td Ottog
-                                        td @mdogd
-                                        td
-                                        td
-                                            a.btn.btn-link(title="details")
-                                                i.material-icons details
-                                            a.btn.btn-link
-                                                i.material-icons edit
-                                            a.btn.btn-link
-                                                i.material-icons delete
-                                    tr
-                                        th(scope='row') 2
-                                        td Jacob
-                                        td Thornton
-                                        td @fat
-                                        td
-                                        td
-                                            a.btn.btn-link(title="details")
-                                                i.material-icons details
-                                            a.btn.btn-link
-                                                i.material-icons edit
-                                            a.btn.btn-link
-                                                i.material-icons delete
-                                    tr
-                                        th(scope='row') 3
-                                        td Larry
-                                        td the Bird
-                                        td @twitter
-                                        td
-                                        td
-                                            a.btn.btn-link(title="details")
-                                                i.material-icons details
-                                            a.btn.btn-link
-                                                i.material-icons edit
-                                            a.btn.btn-link
-                                                i.material-icons delete
-                                    tr
-                                        th(scope='row') 4
-                                        td Larry
-                                        td Jellybean
-                                        td @lajelly
-                                        td
-                                        td
-                                            a.btn.btn-link(title="details")
-                                                i.material-icons details
-                                            a.btn.btn-link
-                                                i.material-icons edit
-                                            a.btn.btn-link
-                                                i.material-icons delete
-                        .row
-                            .col-md-7
-                            .col-md-5
-                                #DataTables_Table_0_paginate.dataTables_paginate.paging_simple_numbers(style='text-align: right')
-                                    ul.pagination
-                                        li#DataTables_Table_0_previous.paginate_button.previous.disabled
-                                            a(href='#' aria-controls='DataTables_Table_0' data-dt-idx='0' tabindex='0') Previous
-                                        li.paginate_button.active
-                                            a(href='#' aria-controls='DataTables_Table_0' data-dt-idx='1' tabindex='0') 1
-                                        li.paginate_button
-                                            a(href='#' aria-controls='DataTables_Table_0' data-dt-idx='2' tabindex='0') 2
-                                        li.paginate_button
-                                            a(href='#' aria-controls='DataTables_Table_0' data-dt-idx='3' tabindex='0') 3
-                                        li.paginate_button
-                                            a(href='#' aria-controls='DataTables_Table_0' data-dt-idx='4' tabindex='0') 4
-                                        li.paginate_button
-                                            a(href='#' aria-controls='DataTables_Table_0' data-dt-idx='5' tabindex='0') 5
-                                        li.paginate_button
-                                            a(href='#' aria-controls='DataTables_Table_0' data-dt-idx='6' tabindex='0') 6
-                                        li#DataTables_Table_0_next.paginate_button.next
-                                            a(href='#' aria-controls='DataTables_Table_0' data-dt-idx='7' tabindex='0') Next
+                    - if (!categories || categories.length === 0)
+                        - link = '/manager/dashboard/products-manager/categories/create'
+                        include 404
+                    - else
+                        .body.table-responsive
+                            .row
+                                .col-sm-12
+                                    table.table.table-bordered.table-hover
+                                        thead
+                                            tr
+                                                th #
+                                                th.text-center NAME
+                                                th.text-center DESCRIPTION
+                                                - if (level === 1)
+                                                    th.text-center CHILDREN
+                                                - if (level === 2)
+                                                    th.text-center PARENT
+                                                    th.text-center CHILDREN
+                                                - if (level === 3)
+                                                    th.text-center PARENT
+                                                th.text-center ACTION
+                                        tbody.text-center
+                                            - let length = categories.length;
+                                            - for (let i = 0; i < length; i ++)
+                                                tr
+                                                    th(scope='row') #{i + 1}
+                                                    td #{categories[i].name}
+                                                    td #{categories[i].description}
+                                                    - if (level === 1)
+                                                         td
+                                                             -let lengthC = categories[i].children.length
+                                                             -for (k = 0; k < lengthC; k ++)
+                                                                p #{categories[i].children[k].name}
+                                                    - if (level === 2)
+                                                         td
+                                                             -let lengthP = categories[i].parent.length
+                                                             -for (m = 0; m < lengthP; m ++)
+                                                                p #{categories[i].parent[m].name}
+                                                         td
+                                                             -let lengthC = categories[i].children.length
+                                                             -for (k = 0; k < lengthC; k ++)
+                                                                 p #{categories[i].children[k].name}
+                                                    - if (level === 3)
+                                                         td
+                                                             -let lengthP = categories[i].parent.length
+                                                             -for (m = 0; m < lengthP; m ++)
+                                                                p #{categories[i].parent[m].name}
+                                                    td
+                                                        a.btn.btn-link(href='/manager/dashboard/products-manager/categories/' + categories[i].name + '/edit')
+                                                            i.material-icons edit
+                                                        button.btn.btn-link.waves-effect(type='button', data-type="ajax-loader" data-b=categories[i].name)
+                                                            i.material-icons delete
+
+                            - if (meta)
+                                - let limit = ''
+                                - let q = ''
+                                - if (meta.limit !== 10)
+                                    - limit += '&limit=' + meta.limit
+                                -if (meta.q)
+                                    - q = '&q=' + meta.q
+                                -if (level)
+                                    - level = '&level=' + level
+                                .row.text-right
+                                    ul.pagination(style='margin-right: 1%')
+                                        - if (meta.page === 1)
+                                            li.paginate_button.disabled
+                                                a First
+                                        - else
+                                            li.paginate_button
+                                                a(href='/manager/dashboard/products-manager/categories?' + limit.substring(1) + q + level) First
+                                        - let i = meta.page > 5 ? meta.page - 4 : 1
+                                        - if (i !== 1)
+                                            li.paginate_button.disabled
+                                                a ...
+                                        - for (; i <= meta.page + 4 && i <= meta.total; i ++)
+                                            - if (i === meta.page)
+                                                li.paginate_button.active
+                                                    a= i
+                                            - else
+                                                li.paginate_button
+                                                    a(href='/manager/dashboard/products-manager/categories?page=' + i + limit + q + level)= i
+                                            - if (i === meta.page + 4 && i < meta.total)
+                                                li.paginate_button.disabled
+                                                    a ...
+                                        - if (meta.page === meta.total)
+                                            li.paginate_button.disabled
+                                                a Last
+                                        - else
+                                            li.paginate_button
+                                                a(href='/manager/dashboard/products-manager/categories?page=' + meta.total + limit + q + level) Last

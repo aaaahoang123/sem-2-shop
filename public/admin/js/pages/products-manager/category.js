@@ -5,7 +5,7 @@ $(function () {
 function showAjaxLoaderMessage() {
     var name = $(this).data('b');
     swal({
-        title: "Do you want to delete brand: " + name,
+        title: "Do you want to delete category: " + name,
         text: "Submit to delete this brand",
         type: "info",
         showCancelButton: true,
@@ -13,7 +13,7 @@ function showAjaxLoaderMessage() {
         showLoaderOnConfirm: true,
     }, function () {
         $.ajax({
-            url: '/manager/dashboard/products-manager/brands/' + name,
+            url: '/manager/dashboard/products-manager/categories/' + name,
             type: 'DELETE',
             success: function (res) {
                 console.log(res);
@@ -43,16 +43,19 @@ $('#search-input').keyup(function (ev) {
     }
 });
 
-$('#select-limit').change(function () {
+$('.select-limit').change(function () {
     changeSearchByInput(this, 'limit=')
+});
+
+$('.select-level').change(function () {
+    changeSearchByInput(this, 'level=')
 });
 
 function changeSearchByInput(el, except) {
     var searchArray = location.search.split('&');
     var href = '?';
-        // ?q=b limit=5
     for (var i = 0; i < searchArray.length; i++) {
-        if (!searchArray[i].includes('page=') && !searchArray[i].includes(except) && searchArray[i] !== "") {
+        if (!searchArray[i].includes('page=') && !searchArray[i].includes(except) && searchArray[i] !== '') {
             href += searchArray[i].replace("?", "") + '&';
         }
     }
