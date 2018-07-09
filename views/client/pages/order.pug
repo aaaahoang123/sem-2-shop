@@ -43,9 +43,11 @@ block content
                             .order_total_content.text-md-right
                                 .order_total_title Order Total:
                                 .order_total_amount $2000
+                        //Customer form
+
+
                         .cart_buttons
-                            a.button.cart_button_clear(href="/") Continue shopping
-                            a.button.cart_button_checkout(href="/order") Place order
+                            button.button.cart_button_checkout(type='button') Submit
 
 block append script
     script(src='client/js/cart_custom.js')

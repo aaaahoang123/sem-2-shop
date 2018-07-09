@@ -24,12 +24,16 @@ router.get('/cart', function(req, res, next) {
     res.render('client/pages/cart');
 });
 
+router.get('/order', function(req, res, next) {
+    res.render('client/pages/order');
+});
+
 router.get('/contact', function(req, res, next) {
     res.render('client/pages/contact');
 });
 
-router.get('/product/:code',categoryController.findAll,
-    productController.getOne, productController.recentlyViewed,
+router.get('/product/:code', productController.getOne,
+    productController.recentlyViewed,
     brandController.getList, function(req, res, next) {
     res.render('client/pages/product', {products: req.products});
 });
@@ -38,7 +42,7 @@ router.get('/regular', categoryController.findAll,function(req, res, next) {
     res.render('client/pages/regular');
 });
 
-router.get('/shop', categoryController.findAll, categoryController.getOne,
+router.get('/shop', categoryController.getOne,
     brandController.getList, brandController.getOne,
     productController.getMaxPrice, productController.recentlyViewed, productController.getList,
     function(req, res, next) {
@@ -65,10 +69,5 @@ router.get('/shop', categoryController.findAll, categoryController.getOne,
         }
     }
 );
-
-// router.put('/', function (req, res, next) {
-//     console.log('abc');
-//     res.send('âcc');
-// });
 
 module.exports = router;
