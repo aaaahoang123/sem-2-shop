@@ -3,10 +3,18 @@ extends ../layout/master
 block title
     title Shop
 
+block extra-meta
+    meta(name='max-price' content=maxPrice)
+    -if (meta.min)
+        meta(name='min-value' content=meta.min)
+    -if (meta.max)
+        meta(name='max-value' content=meta.max)
+
 block append link
     link(rel='stylesheet' type='text/css' href='client/plugins/jquery-ui-1.12.1.custom/jquery-ui.css')
     link(rel='stylesheet' type='text/css' href='client/styles/shop_styles.css')
     link(rel='stylesheet' type='text/css' href='client/styles/shop_responsive.css')
+    link(rel='stylesheet' type='text/css' href='admin/css/materialize.css')
 
 block content
     // Home
@@ -18,509 +26,174 @@ block content
     // Shop
     .shop
         .container
-            .row
-                .col-lg-3
-                    // Shop Sidebar
-                    .shop_sidebar
-                        .sidebar_section
-                            .sidebar_title Categories
-                            ul.sidebar_categories
-                                li
-                                    a(href='#') Computers &amp; Laptops
-                                li
-                                    a(href='#') Cameras &amp; Photos
-                                li
-                                    a(href='#') Hardware
-                                li
-                                    a(href='#') Smartphones &amp; Tablets
-                                li
-                                    a(href='#') TV &amp; Audio
-                                li
-                                    a(href='#') Gadgets
-                                li
-                                    a(href='#') Car Electronics
-                                li
-                                    a(href='#') Video Games &amp; Consoles
-                                li
-                                    a(href='#') Accessories
-                        .sidebar_section.filter_by_section
-                            .sidebar_title Filter By
-                            .sidebar_subtitle Price
-                            .filter_price
-                                #slider-range.slider_range
-                                p Range:
-                                p
-                                    input#amount.amount(type='text' readonly='' style='border:0; font-weight:bold;')
-                        .sidebar_section
-                            .sidebar_subtitle.color_subtitle Color
-                            ul.colors_list
-                                li.color
-                                    a(href='#' style='background: #b19c83;')
-                                li.color
-                                    a(href='#' style='background: #000000;')
-                                li.color
-                                    a(href='#' style='background: #999999;')
-                                li.color
-                                    a(href='#' style='background: #0e8ce4;')
-                                li.color
-                                    a(href='#' style='background: #df3b3b;')
-                                li.color
-                                    a(href='#' style='background: #ffffff; border: solid 1px #e1e1e1;')
-                        .sidebar_section
-                            .sidebar_subtitle.brands_subtitle Brands
-                            ul.brands_list
-                                li.brand
-                                    a(href='#') Apple
-                                li.brand
-                                    a(href='#') Beoplay
-                                li.brand
-                                    a(href='#') Google
-                                li.brand
-                                    a(href='#') Meizu
-                                li.brand
-                                    a(href='#') OnePlus
-                                li.brand
-                                    a(href='#') Samsung
-                                li.brand
-                                    a(href='#') Sony
-                                li.brand
-                                    a(href='#') Xiaomi
-                .col-lg-9
-                    // Shop Content
-                    .shop_content
-                        .shop_bar.clearfix
-                            .shop_product_count
-                                span 186
-                                |  products found
-                            .shop_sorting
-                                span Sort by:
-                                ul
-                                    li
-                                        span.sorting_text
-                                            | highest rated
-                                            i.fas.fa-chevron-down
-                                        ul
-                                            li.shop_sorting_button(data-isotope-option='{ "sortBy": "original-order" }') highest rated
-                                            li.shop_sorting_button(data-isotope-option='{ "sortBy": "name" }') name
-                                            li.shop_sorting_button(data-isotope-option='{ "sortBy": "price" }') price
-                        .product_grid
-                            .product_grid_border
-                            // Product Item
-                            .product_item.is_new
-                                .product_border
-                                .product_image.d-flex.flex-column.align-items-center.justify-content-center
-                                    img(src='images/new_5.jpg' alt='')
-                                .product_content
-                                    .product_price $225
-                                    .product_name
-                                        div
-                                            a(href='#' tabindex='0') Philips BT6900A
-                                .product_fav
-                                    i.fas.fa-heart
-                                ul.product_marks
-                                    li.product_mark.product_discount -25%
-                                    li.product_mark.product_new new
-                            // Product Item
-                            .product_item.discount
-                                .product_border
-                                .product_image.d-flex.flex-column.align-items-center.justify-content-center
-                                    img(src='images/featured_1.png' alt='')
-                                .product_content
-                                    .product_price
-                                        | $225
-                                        span $300
-                                    .product_name
-                                        div
-                                            a(href='#' tabindex='0') Huawei MediaPad...
-                                .product_fav
-                                    i.fas.fa-heart
-                                ul.product_marks
-                                    li.product_mark.product_discount -25%
-                                    li.product_mark.product_new new
-                            // Product Item
-                            .product_item
-                                .product_border
-                                .product_image.d-flex.flex-column.align-items-center.justify-content-center
-                                    img(src='images/featured_2.png' alt='')
-                                .product_content
-                                    .product_price $379
-                                    .product_name
-                                        div
-                                            a(href='#' tabindex='0') Apple iPod shuffle
-                                .product_fav
-                                    i.fas.fa-heart
-                                ul.product_marks
-                                    li.product_mark.product_discount -25%
-                                    li.product_mark.product_new new
-                            // Product Item
-                            .product_item
-                                .product_border
-                                .product_image.d-flex.flex-column.align-items-center.justify-content-center
-                                    img(src='images/featured_3.png' alt='')
-                                .product_content
-                                    .product_price $225
-                                    .product_name
-                                        div
-                                            a(href='#' tabindex='0') Sony MDRZX310W
-                                .product_fav
-                                    i.fas.fa-heart
-                                ul.product_marks
-                                    li.product_mark.product_discount -25%
-                                    li.product_mark.product_new new
-                            // Product Item
-                            .product_item.is_new
-                                .product_border
-                                .product_image.d-flex.flex-column.align-items-center.justify-content-center
-                                    img(src='images/featured_4.png' alt='')
-                                .product_content
-                                    .product_price $379
-                                    .product_name
-                                        div
-                                            a(href='#' tabindex='0') LUNA Smartphone
-                                .product_fav
-                                    i.fas.fa-heart
-                                ul.product_marks
-                                    li.product_mark.product_discount -25%
-                                    li.product_mark.product_new new
-                            // Product Item
-                            .product_item.is_new
-                                .product_border
-                                .product_image.d-flex.flex-column.align-items-center.justify-content-center
-                                    img(src='images/shop_1.jpg' alt='')
-                                .product_content
-                                    .product_price $379
-                                    .product_name
-                                        div
-                                            a(href='#' tabindex='0') Canon IXUS 175...
-                                .product_fav
-                                    i.fas.fa-heart
-                                ul.product_marks
-                                    li.product_mark.product_discount -25%
-                                    li.product_mark.product_new new
-                            // Product Item
-                            .product_item
-                                .product_border
-                                .product_image.d-flex.flex-column.align-items-center.justify-content-center
-                                    img(src='images/featured_5.png' alt='')
-                                .product_content
-                                    .product_price
-                                        | $379
-                                        span $300
-                                    .product_name
-                                        div
-                                            a(href='#' tabindex='0') Canon STM Kit...
-                                .product_fav
-                                    i.fas.fa-heart
-                                ul.product_marks
-                                    li.product_mark.product_discount -25%
-                                    li.product_mark.product_new new
-                            // Product Item
-                            .product_item
-                                .product_border
-                                .product_image.d-flex.flex-column.align-items-center.justify-content-center
-                                    img(src='images/featured_6.png' alt='')
-                                .product_content
-                                    .product_price
-                                        | $225
-                                        span $300
-                                    .product_name
-                                        div
-                                            a(href='#' tabindex='0') Samsung J330F
-                                .product_fav
-                                    i.fas.fa-heart
-                                ul.product_marks
-                                    li.product_mark.product_discount -25%
-                                    li.product_mark.product_new new
-                            // Product Item
-                            .product_item
-                                .product_border
-                                .product_image.d-flex.flex-column.align-items-center.justify-content-center
-                                    img(src='images/featured_7.png' alt='')
-                                .product_content
-                                    .product_price $225
-                                    .product_name
-                                        div
-                                            a(href='#' tabindex='0') Lenovo IdeaPad
-                                .product_fav
-                                    i.fas.fa-heart
-                                ul.product_marks
-                                    li.product_mark.product_discount -25%
-                                    li.product_mark.product_new new
-                            // Product Item
-                            .product_item
-                                .product_border
-                                .product_image.d-flex.flex-column.align-items-center.justify-content-center
-                                    img(src='images/featured_8.png' alt='')
-                                .product_content
-                                    .product_price $379
-                                    .product_name
-                                        div
-                                            a(href='#' tabindex='0') Digitus EDNET...
-                                .product_fav
-                                    i.fas.fa-heart
-                                ul.product_marks
-                                    li.product_mark.product_discount -25%
-                                    li.product_mark.product_new new
-                            // Product Item
-                            .product_item.is_new
-                                .product_border
-                                .product_image.d-flex.flex-column.align-items-center.justify-content-center
-                                    img(src='images/new_1.jpg' alt='')
-                                .product_content
-                                    .product_price $225
-                                    .product_name
-                                        div
-                                            a(href='#' tabindex='0') Astro M2 Black
-                                .product_fav
-                                    i.fas.fa-heart
-                                ul.product_marks
-                                    li.product_mark.product_discount -25%
-                                    li.product_mark.product_new new
-                            // Product Item
-                            .product_item.is_new
-                                .product_border
-                                .product_image.d-flex.flex-column.align-items-center.justify-content-center
-                                    img(src='images/new_2.jpg' alt='')
-                                .product_content
-                                    .product_price $225
-                                    .product_name
-                                        div
-                                            a(href='#' tabindex='0') Transcend T.Sonic
-                                .product_fav
-                                    i.fas.fa-heart
-                                ul.product_marks
-                                    li.product_mark.product_discount -25%
-                                    li.product_mark.product_new new
-                            // Product Item
-                            .product_item.is_new
-                                .product_border
-                                .product_image.d-flex.flex-column.align-items-center.justify-content-center
-                                    img(src='images/new_3.jpg' alt='')
-                                .product_content
-                                    .product_price $225
-                                    .product_name
-                                        div
-                                            a(href='#' tabindex='0') Xiaomi Band 2...
-                                .product_fav
-                                    i.fas.fa-heart
-                                ul.product_marks
-                                    li.product_mark.product_discount -25%
-                                    li.product_mark.product_new new
-                            // Product Item
-                            .product_item.is_new
-                                .product_border
-                                .product_image.d-flex.flex-column.align-items-center.justify-content-center
-                                    img(src='images/new_4.jpg' alt='')
-                                .product_content
-                                    .product_price $379
-                                    .product_name
-                                        div
-                                            a(href='#' tabindex='0') Rapoo T8 White
-                                .product_fav
-                                    i.fas.fa-heart
-                                ul.product_marks
-                                    li.product_mark.product_discount -25%
-                                    li.product_mark.product_new new
-                            // Product Item
-                            .product_item.discount
-                                .product_border
-                                .product_image.d-flex.flex-column.align-items-center.justify-content-center
-                                    img(src='images/featured_1.png' alt='')
-                                .product_content
-                                    .product_price
-                                        | $225
-                                        span $300
-                                    .product_name
-                                        div
-                                            a(href='#' tabindex='0') Huawei MediaPad...
-                                .product_fav
-                                    i.fas.fa-heart
-                                ul.product_marks
-                                    li.product_mark.product_discount -25%
-                                    li.product_mark.product_new new
-                            // Product Item
-                            .product_item.is_new
-                                .product_border
-                                .product_image.d-flex.flex-column.align-items-center.justify-content-center
-                                    img(src='images/new_6.jpg' alt='')
-                                .product_content
-                                    .product_price $379
-                                    .product_name
-                                        div
-                                            a(href='#' tabindex='0') Nokia 3310 (2017)
-                                .product_fav
-                                    i.fas.fa-heart
-                                ul.product_marks
-                                    li.product_mark.product_discount -25%
-                                    li.product_mark.product_new new
-                            // Product Item
-                            .product_item.is_new
-                                .product_border
-                                .product_image.d-flex.flex-column.align-items-center.justify-content-center
-                                    img(src='images/new_7.jpg' alt='')
-                                .product_content
-                                    .product_price $225
-                                    .product_name
-                                        div
-                                            a(href='#' tabindex='0') Rapoo 7100p Gray
-                                .product_fav
-                                    i.fas.fa-heart
-                                ul.product_marks
-                                    li.product_mark.product_discount -25%
-                                    li.product_mark.product_new new
-                            // Product Item
-                            .product_item.is_new
-                                .product_border
-                                .product_image.d-flex.flex-column.align-items-center.justify-content-center
-                                    img(src='images/new_8.jpg' alt='')
-                                .product_content
-                                    .product_price $379
-                                    .product_name
-                                        div
-                                            a(href='#' tabindex='0') Canon EF
-                                .product_fav
-                                    i.fas.fa-heart
-                                ul.product_marks
-                                    li.product_mark.product_discount -25%
-                                    li.product_mark.product_new new
-                            // Product Item
-                            .product_item.is_new
-                                .product_border
-                                .product_image.d-flex.flex-column.align-items-center.justify-content-center
-                                    img(src='images/shop_2.jpg' alt='')
-                                .product_content
-                                    .product_price $225
-                                    .product_name
-                                        div
-                                            a(href='#' tabindex='0') Gembird SPK-103
-                                .product_fav
-                                    i.fas.fa-heart
-                                ul.product_marks
-                                    li.product_mark.product_discount -25%
-                                    li.product_mark.product_new new
-                            // Product Item
-                            .product_item.is_new
-                                .product_border
-                                .product_image.d-flex.flex-column.align-items-center.justify-content-center
-                                    img(src='images/featured_5.png' alt='')
-                                .product_content
-                                    .product_price $379
-                                    .product_name
-                                        div
-                                            a(href='#' tabindex='0') Canon STM Kit...
-                                .product_fav
-                                    i.fas.fa-heart
-                                ul.product_marks
-                                    li.product_mark.product_discount -25%
-                                    li.product_mark.product_new new
-                        // Shop Page Navigation
-                        .shop_page_nav.d-flex.flex-row
-                            .page_prev.d-flex.flex-column.align-items-center.justify-content-center
-                                i.fas.fa-chevron-left
-                            ul.page_nav.d-flex.flex-row
-                                li
-                                    a(href='#') 1
-                                li
-                                    a(href='#') 2
-                                li
-                                    a(href='#') 3
-                                li
-                                    a(href='#') ...
-                                li
-                                    a(href='#') 21
-                            .page_next.d-flex.flex-column.align-items-center.justify-content-center
-                                i.fas.fa-chevron-right
+            - if (type === 0)
+                include 404
+            - else
+                .row
+                    .col-lg-3
+                        // Shop Sidebar
+                        .shop_sidebar
+                            .sidebar_section
+                                .sidebar_title Categories
+                                ul.sidebar_categories
+                                    - for (let c of categories)
+                                        .row
+                                            input(id=c.name type='checkbox' name='category' value=c.name checked=(category&&c.name===category.name)).chk-col-blue
+                                            label(for=c.name) #{c.name}
+                            .sidebar_section.filter_by_section
+                                .sidebar_title Filter By
+                                .sidebar_subtitle Price
+                                .filter_price
+                                    #slider-range.slider_range
+                                    p Range:
+                                    p
+                                        input#amount.amount(type='text' readonly='' style='border:0; font-weight:bold;')
+                            //.sidebar_section
+                            //    .sidebar_subtitle.color_subtitle Color
+                            //    ul.colors_list
+                            //        li.color
+                            //            a(href='#' style='background: #b19c83;')
+                            //        li.color
+                            //            a(href='#' style='background: #000000;')
+                            //        li.color
+                            //            a(href='#' style='background: #999999;')
+                            //        li.color
+                            //            a(href='#' style='background: #0e8ce4;')
+                            //        li.color
+                            //            a(href='#' style='background: #df3b3b;')
+                            //        li.color
+                            //            a(href='#' style='background: #ffffff; border: solid 1px #e1e1e1;')
+                            .sidebar_section
+                                .sidebar_subtitle.brands_subtitle Brands
+                                ul.brands_list
+                                    - for (let b of brands)
+                                        .row
+                                            input(id=b.name type='checkbox' name='brand' value=b.name checked=(brand&&b.name===brand.name)).chk-col-blue
+                                            label(for=b.name) #{b.name}
+                            .sidebar_section
+                                .sidebar_subtitle.brands_subtitle
+                                    .button-place
+                                        button.btn.btn-outline-primary.waves-effect Search
+                    .col-lg-9
+                        // Shop Content
+                        .shop_content
+                            .shop_bar.clearfix
+                                .shop_product_count
+                                    span #{total}
+                                    |  products found
+                                .shop_sorting
+                                    span Sort by:
+                                    ul
+                                        li
+                                            -if(sort && sort === 'price_-1')
+                                                span.sorting_text priceDown
+                                            -if(sort && sort === 'price_1')
+                                                span.sorting_text priceUp
+                                            -if(!sort)
+                                                span.sorting_text
+                                                    i.fas.fa-chevron-circle-down
+                                            ul
+                                                li.shop_sorting_button priceUp
+                                                li.shop_sorting_button priceDown
+                            .product_grid
+                                .product_grid_border
+                                // Product Item
+                                - for (let product of products)
+                                    .product_item
+                                        .product_border
+                                        .product_image.d-flex.flex-column.align-items-center.justify-content-center
+                                            img(src=product.images[0] alt='')
+                                        .product_content
+                                            .product_price $ #{product.price}
+                                            .product_name
+                                                div
+                                                    a.product_code(href='/product/'+product.code tabindex='0' name=product.code) #{product.name}
+                                        .product_fav
+                                            i.fas.fa-heart
+                            // Shop Page Navigation
+                            - if (type === 2)
+                                -let categoryP = '', brandP = '', minP = '', maxP = '', search = '', sortP = '', price
+                                -if (category) categoryP = 'category=' + category.name + '&'
+                                -if (brand) brandP = 'brand=' + brand.name + '&'
+                                -if (meta.min) minP = 'min=' + meta.min + '&'
+                                -if (meta.max) maxP = 'max=' + meta.max + '&'
+                                -if (meta.price) price = 'price=' + meta.price + '&'
+                                -if (sort) sortP = 'sort=' + sort + '&'
+                                - search = categoryP + brandP + minP + maxP + sortP
+                                - search = (search === '')?'':search.slice(0, -1)
+                                .shop_page_nav.d-flex.flex-row
+                                    ul.page_nav.d-flex.flex-row
+                                        - if (meta.page === 1)
+                                            li.disabled
+                                                a First
+                                        - else
+                                            li
+                                                a(href='/shop?' + search) First
+                                        - let i = meta.page > 5 ? meta.page - 4 : 1
+                                        - if (i !== 1)
+                                            li.disabled
+                                                a ...
+                                        - for (; i <= meta.page + 4 && i <= meta.total; i ++)
+                                            - if (i === meta.page)
+                                                li.active
+                                                    a= i
+                                            - else
+                                                -if(search !== '')
+                                                    - search = '&' + search
+                                                li
+                                                    a(href='/shop?page=' + i + search)= i
+                                            - if (i === meta.page + 4 && i < meta.total)
+                                                li.disabled
+                                                    a ...
+                                        - if (meta.page === meta.total)
+                                            li.disabled
+                                                a Last
+                                        - else
+                                            -if(search !== '')
+                                                - search = '&' + search
+                                            li
+                                                a(href='/shop?page=' + meta.total + search) Last
     // Recently Viewed
-    .viewed
-        .container
-            .row
-                .col
-                    .viewed_title_container
-                        h3.viewed_title Recently Viewed
-                        .viewed_nav_container
-                            .viewed_nav.viewed_prev
-                                i.fas.fa-chevron-left
-                            .viewed_nav.viewed_next
-                                i.fas.fa-chevron-right
-                    .viewed_slider_container
-                        // Recently Viewed Slider
-                        .owl-carousel.owl-theme.viewed_slider
-                            // Recently Viewed Item
-                            .owl-item
-                                .viewed_item.discount.d-flex.flex-column.align-items-center.justify-content-center.text-center
-                                    .viewed_image
-                                        img(src='images/view_1.jpg' alt='')
-                                    .viewed_content.text-center
-                                        .viewed_price
-                                            | $225
-                                            span $300
-                                        .viewed_name
-                                            a(href='#') Beoplay H7
-                                    ul.item_marks
-                                        li.item_mark.item_discount -25%
-                                        li.item_mark.item_new new
-                            // Recently Viewed Item
-                            .owl-item
-                                .viewed_item.d-flex.flex-column.align-items-center.justify-content-center.text-center
-                                    .viewed_image
-                                        img(src='images/view_2.jpg' alt='')
-                                    .viewed_content.text-center
-                                        .viewed_price $379
-                                        .viewed_name
-                                            a(href='#') LUNA Smartphone
-                                    ul.item_marks
-                                        li.item_mark.item_discount -25%
-                                        li.item_mark.item_new new
-                            // Recently Viewed Item
-                            .owl-item
-                                .viewed_item.d-flex.flex-column.align-items-center.justify-content-center.text-center
-                                    .viewed_image
-                                        img(src='images/view_3.jpg' alt='')
-                                    .viewed_content.text-center
-                                        .viewed_price $225
-                                        .viewed_name
-                                            a(href='#') Samsung J730F...
-                                    ul.item_marks
-                                        li.item_mark.item_discount -25%
-                                        li.item_mark.item_new new
-                            // Recently Viewed Item
-                            .owl-item
-                                .viewed_item.is_new.d-flex.flex-column.align-items-center.justify-content-center.text-center
-                                    .viewed_image
-                                        img(src='images/view_4.jpg' alt='')
-                                    .viewed_content.text-center
-                                        .viewed_price $379
-                                        .viewed_name
-                                            a(href='#') Huawei MediaPad...
-                                    ul.item_marks
-                                        li.item_mark.item_discount -25%
-                                        li.item_mark.item_new new
-                            // Recently Viewed Item
-                            .owl-item
-                                .viewed_item.discount.d-flex.flex-column.align-items-center.justify-content-center.text-center
-                                    .viewed_image
-                                        img(src='images/view_5.jpg' alt='')
-                                    .viewed_content.text-center
-                                        .viewed_price
-                                            | $225
-                                            span $300
-                                        .viewed_name
-                                            a(href='#') Sony PS4 Slim
-                                    ul.item_marks
-                                        li.item_mark.item_discount -25%
-                                        li.item_mark.item_new new
-                            // Recently Viewed Item
-                            .owl-item
-                                .viewed_item.d-flex.flex-column.align-items-center.justify-content-center.text-center
-                                    .viewed_image
-                                        img(src='images/view_6.jpg' alt='')
-                                    .viewed_content.text-center
-                                        .viewed_price $375
-                                        .viewed_name
-                                            a(href='#') Speedlink...
-                                    ul.item_marks
-                                        li.item_mark.item_discount -25%
-                                        li.item_mark.item_new new
+    - if (rvProducts && rvProducts.length !== 0)
+        .viewed
+            .container
+                .row
+                    .col
+                        .viewed_title_container
+                            h3.viewed_title Recently Viewed
+                            .viewed_nav_container
+                                .viewed_nav.viewed_prev
+                                    i.fas.fa-chevron-left
+                                .viewed_nav.viewed_next
+                                    i.fas.fa-chevron-right
+                        - if (rvProducts.length>6)
+                            .viewed_slider_container
+                                // Recently Viewed Slider
+                                .owl-carousel.owl-theme.viewed_slider
+                                    // Recently Viewed Item
+                                    - for (let i=0; i<rvProducts.length; i++)
+                                        .owl-item
+                                            .viewed_item.discount.d-flex.flex-column.align-items-center.justify-content-center.text-center
+                                                .viewed_image
+                                                    img(src=rvProducts[i].images[0] alt='')
+                                                .viewed_content.text-center
+                                                    .viewed_price $ #{rvProducts[i].price}
+                                                    .viewed_name
+                                                        a.product_code(href='/product/'+rvProducts[i].code) #{rvProducts[i].name}
+                        - if (rvProducts.length<=6)
+                            .viewed_slider_container
+                                .row
+                                    - for (let i=0; i<rvProducts.length; i++)
+                                        .col-sm-2
+                                            .row
+                                                .owl-item.col-sm-11
+                                                    .viewed_item.discount.d-flex.flex-column.align-items-center.justify-content-center.text-center
+                                                        .viewed_image
+                                                            img(src=rvProducts[i].images[0] alt='')
+                                                        .viewed_content.text-center
+                                                            .viewed_price $ #{rvProducts[i].price}
+                                                            .viewed_name
+                                                                a.product_code(href='/product/' + rvProducts[i].code) #{rvProducts[i].name}
     // Brands
     .brands
         .container
@@ -529,30 +202,10 @@ block content
                     .brands_slider_container
                         // Brands Slider
                         .owl-carousel.owl-theme.brands_slider
-                            .owl-item
-                                .brands_item.d-flex.flex-column.justify-content-center
-                                    img(src='client/images/brands_1.jpg' alt='')
-                            .owl-item
-                                .brands_item.d-flex.flex-column.justify-content-center
-                                    img(src='client/images/brands_2.jpg' alt='')
-                            .owl-item
-                                .brands_item.d-flex.flex-column.justify-content-center
-                                    img(src='client/images/brands_3.jpg' alt='')
-                            .owl-item
-                                .brands_item.d-flex.flex-column.justify-content-center
-                                    img(src='client/images/brands_4.jpg' alt='')
-                            .owl-item
-                                .brands_item.d-flex.flex-column.justify-content-center
-                                    img(src='client/images/brands_5.jpg' alt='')
-                            .owl-item
-                                .brands_item.d-flex.flex-column.justify-content-center
-                                    img(src='client/images/brands_6.jpg' alt='')
-                            .owl-item
-                                .brands_item.d-flex.flex-column.justify-content-center
-                                    img(src='client/images/brands_7.jpg' alt='')
-                            .owl-item
-                                .brands_item.d-flex.flex-column.justify-content-center
-                                    img(src='client/images/brands_8.jpg' alt='')
+                            - for (let b of brands)
+                                .owl-item
+                                    .brands_item.d-flex.flex-column.justify-content-center
+                                        img(src=b.logo alt='' style='width: 10%')
                         // Brands Slider Navigation
                         .brands_nav.brands_prev
                             i.fas.fa-chevron-left
@@ -562,6 +215,5 @@ block content
 block append script
     script(src='client/plugins/Isotope/isotope.pkgd.min.js')
     script(src='client/plugins/jquery-ui-1.12.1.custom/jquery-ui.js')
-    script(src='client/plugins/parallax-js-master/parallax.min.js')
     script(src='client/js/shop_custom.js')
-
+    script(src='client/js/shop.js')
