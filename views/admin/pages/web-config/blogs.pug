@@ -7,13 +7,13 @@ block extra-css
 
 block extra-js
     script(type='text/javascript' src='/admin/plugins/sweetalert/sweetalert.min.js')
-    script(type='text/javascript' src='/admin/js/pages/products-manager/brand.js')
+    script(type='text/javascript' src='/admin/js/pages/web-config/blogs.js')
 
 block content
     .card.p-b-15
         .header
             h2
-                | List brands
+                | LIST BLOGS
             ul.header-dropdown.m-r--5
                 li.dropdown
                     a.dropdown-toggle(href='javascript:void(0);' data-toggle='dropdown' role='button' aria-haspopup='true' aria-expanded='false')
@@ -50,8 +50,8 @@ block content
                 .col-lg-1.col-sm-2.col-xs-1.m-t-15(style='float: right')
                     button#search-btn.btn.btn-danger.btn-circle.waves-effect.waves-circle.waves-float(type='button')
                         i.material-icons search
-        - if (brands.length === 0)
-            - link = '/manager/dashboard/products-manager/brands'
+        - if (blogs.length === 0)
+            - link = '/manager/dashboard/web-config/blogs'
             include 404
         - else
             .body
@@ -62,23 +62,18 @@ block content
                                 thead
                                     tr
                                         th #
-                                        th.text-center NAME
-                                        th.text-center DESCRIPTION
-                                        th.text-center LOGO
+                                        th.text-center TITLE
                                         th.text-center ACTION
                                 tbody.text-center
-                                    - let length = brands.length;
+                                    - let length = blogs.length;
                                     - for (let i = 0; i < length; i ++)
                                         tr
                                             th(scope='row') #{i + 1}
-                                            td #{brands[i].name}
-                                            td #{brands[i].description}
-                                            td(align='center')
-                                                div(style='background-image: url('+brands[i].logo+');background-size: cover; height: 70px; width: 100px;')
+                                            td #{blogs[i].title}
                                             td
-                                                a.btn.btn-link(href='/manager/dashboard/products-manager/brands/' + brands[i].name + '/edit')
+                                                a.btn.btn-link(href='/manager/dashboard/web-config/blogs/' + blogs[i].uri_title + '/edit')
                                                     i.material-icons edit
-                                                button.btn.btn-link.waves-effect(type='button', data-type="ajax-loader" data-b=brands[i].name)
+                                                button.btn.btn-link.waves-effect(type='button', data-type="ajax-loader" data-b=blogs[i].uri_title)
                                                     i.material-icons delete
 
                     - if (meta)
@@ -95,24 +90,24 @@ block content
                                         a First
                                 - else
                                     li.paginate_button
-                                        a(href='/manager/dashboard/products-manager/brands?' + limit.substring(1) + q) First
-                                - let i = meta.cpage > 5 ? meta.cpage - 4 : 1
+                                        a(href='/manager/dashboard/web-config/blogs?' + limit.substring(1) + q) First
+                                - let i = meta.page > 5 ? meta.page - 4 : 1
                                 - if (i !== 1)
                                     li.paginate_button.disabled
                                         a ...
-                                - for (; i <= meta.cpage + 4 && i <= meta.total; i ++)
-                                    - if (i === meta.cpage)
+                                - for (; i <= meta.page + 4 && i <= meta.total; i ++)
+                                    - if (i === meta.page)
                                         li.paginate_button.active
                                             a= i
                                     - else
                                         li.paginate_button
-                                            a(href='/manager/dashboard/products-manager/brands?cpage=' + i + limit + q)= i
+                                            a(href='/manager/dashboard/web-config/blogs?page=' + i + limit + q)= i
                                     - if (i === meta.page + 4 && i < meta.total)
                                         li.paginate_button.disabled
                                             a ...
-                                - if (meta.cpage === meta.total)
+                                - if (meta.page === meta.total)
                                     li.paginate_button.disabled
                                         a Last
                                 - else
                                     li.paginate_button
-                                        a(href='/manager/dashboard/products-manager/brands?cpage=' + meta.total + limit + q) Last
+                                        a(href='/manager/dashboard/web-config/blogs?page=' + meta.total + limit + q) Last

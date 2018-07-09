@@ -360,14 +360,24 @@ $(document).ready(function()
 
     function initPriceSlider()
     {
+        var maxPrice = $('meta[name="max-price"]').attr("content");
+        var minValue = 0;
+        var maxValue = maxPrice;
+        if ($('meta[name="min-value"]').attr("content")) {
+            minValue = $('meta[name="min-value"]').attr("content");
+        }
+        if ($('meta[name="max-value"]').attr("content")) {
+            maxValue = $('meta[name="max-value"]').attr("content");
+        }
+
     	if($("#slider-range").length)
     	{
     		$("#slider-range").slider(
 			{
 				range: true,
 				min: 0,
-				max: 1000,
-				values: [ 0, 580 ],
+				max: maxPrice,
+				values: [ minValue, maxValue ],
 				slide: function( event, ui )
 				{
 					$( "#amount" ).val( "$" + ui.values[ 0 ] + " - $" + ui.values[ 1 ] );
@@ -378,15 +388,15 @@ $(document).ready(function()
 			$('.ui-slider-handle').on('mouseup', function()
 			{
 				$('.product_grid').isotope({
-		            filter: function()
-		            {
-		            	var priceRange = $('#amount').val();
-			        	var priceMin = parseFloat(priceRange.split('-')[0].replace('$', ''));
-			        	var priceMax = parseFloat(priceRange.split('-')[1].replace('$', ''));
-			        	var itemPrice = $(this).find('.product_price').clone().children().remove().end().text().replace( '$', '' );
-
-			        	return (itemPrice > priceMin) && (itemPrice < priceMax);
-		            },
+		            // filter: function()
+		            // {
+		            // 	var priceRange = $('#amount').val();
+			        	// var priceMin = parseFloat(priceRange.split('-')[0].replace('$', ''));
+			        	// var priceMax = parseFloat(priceRange.split('-')[1].replace('$', ''));
+			        	// var itemPrice = $(this).find('.product_price').clone().children().remove().end().text().replace( '$', '' );
+                    //
+			        	// return (itemPrice > priceMin) && (itemPrice < priceMax);
+		            // },
 		            animationOptions: {
 		                duration: 750,
 		                easing: 'linear',

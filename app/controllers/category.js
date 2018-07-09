@@ -112,6 +112,8 @@ module.exports = {
         req.body.categories.forEach(c => {
             arr.push(mongoose.Types.ObjectId(c));
         });
+        console.log(arr);
+        console.log("1");
         let pipeline = [
             {
                 $match: {
@@ -143,11 +145,13 @@ module.exports = {
             {
                 $group: {
                     _id: '$_id',
-                    parent: {'$push': '$parent'}
+                    parent: {
+                        '$push': '$parent'
+                    }
                 }
             }
         ];
-
+        // console.log(pipeline);
         model.aggregate(pipeline, (err, result) => {
             if (err) {
                 console.log(err);
@@ -186,11 +190,15 @@ module.exports = {
     },
 
     getOne: function (req, res, next) {
+        let name = '';
+        if (req.params.name) name = req.params.name;
+        if (req.query.category) name = req.query.category;
+        if (name === '') return next();
         let query = [
             {
                 $match: {
                     status: 1,
-                    name: req.params.name
+                    name: name
                 }
             },
             {
@@ -379,6 +387,65 @@ module.exports = {
             return;
         }
         res.render('index')
+    },
+
+    findAll: function (req, res, next) {
+        let query = [
+            {
+                "$match": {"level": 1, "status": 1}
+            },
+            {
+                "$lookup": {
+                    "from": "categories",
+                    "localField": "children",
+                    "foreignField": "_id",
+                    "as": "childrenObj"
+                }
+            },
+            {
+                "$unwind": {
+                    "path": "$childrenObj",
+                    "preserveNullAndEmptyArrays": true
+                }
+            },
+            {
+                "$lookup": {
+                    "from": "categories",
+                    "localField": "childrenObj.children",
+                    "foreignField": "_id",
+                    "as": "childrenObj.childrenObj"
+                }
+            },
+            {
+                "$group": {
+                    "_id": "$_id",
+                    "level": {"$first": "$level"},
+                    "name": {"$first": "$name"},
+                    "description": {"$first": "$description"},
+                    "created_at": {"$first": "$created_at"},
+                    "updated_at": {"$first": "$updated_at"},
+                    "status": {"$first": "$status"},
+                    "children": {"$first": "$children"},
+                    "childrenObj": {"$push": "$childrenObj"}
+                }
+            }
+        ];
+        model.aggregate(query, function (err, result) {
+            if (err) {
+                console.log(err);
+                if (!res.locals.errs) res.locals.errs = {};
+                res.locals.errs.database = err.message;
+                next();
+                return;
+            }
+            if (result.length === 0) {
+                res.locals.categories = [];
+                next();
+                return;
+            }
+            res.locals.categories = result;
+            next();
+        })
     },
 
     responseFormView: function (req, res) {
