@@ -380,29 +380,40 @@ module.exports = {
     },
 
     recentlyViewed: function (req, res, next) {
-        console.log(JSON.parse(req.cookies.code)); //cho nay dang la code treen server, thang server no doc cookie dc gui len tu trinh duyet
+        //console.log(JSON.parse(req.cookies.code)); //cho nay dang la code treen server, thang server no doc cookie dc gui len tu trinh duyet
         // server co the set nguoc cookie ve client sau khi xu ly.
-        var codes = JSON.parse(req.cookies.code);
-        var query = [
-            {
-                $match: {
-                    status: 1,
-                    code: {$in: codes}
+        console.log(req.cookies.code);
+        if (req.cookies.code) {
+            var codes = JSON.parse(req.cookies.code);
+            var query = [
+                {
+                    $match: {
+                        status: 1,
+                        code: {$in: codes}
+                    }
                 }
-            }
-        ];
-        model.aggregate(query, function (err, result) {
-            if (err) {
-                console.log(err);
-                if (!req.errs) req.errs = {};
-                req.errs.database = err.message;
+            ];
+            model.aggregate(query, function (err, result) {
+                if (err) {
+                    console.log(err);
+                    if (!req.errs) req.errs = {};
+                    req.errs.database = err.message;
+                    next();
+                    return;
+                }
+                console.log(result);
+                res.locals.rvProducts = result;
                 next();
-                return;
-            }
-            console.log(result);
-            res.locals.rvProducts = result;
-            next();
-        });
+            });
+        } else return next();
+    },
+
+    getProductInCart: (req, res, next) => {
+        if (!req.cookies.cart) return next();
+
+        let cart = JSON.parse(req.cookies.cart);
+
+
     }
 };
 

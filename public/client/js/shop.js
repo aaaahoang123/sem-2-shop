@@ -24,7 +24,7 @@ $('.product_code').on('click', function () {
         if (codeArr[i] !== $(this).attr("name")) code.push(codeArr[i])
     }
     code.unshift($(this).attr("name"));
-    Cookies.set('code', code, { expires: 3, path: '/shop'});
+    Cookies.set('code', code, { expires: 3});
     //console.log(Cookies.get('code'));  con o day la js tren trinh duyet lay ra cookie dc luu thoi
 });
 
