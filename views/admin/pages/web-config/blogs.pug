@@ -1,0 +1,113 @@
+extends ../../layouts/master
+
+block extra-css
+    link(href='/admin/css/brands.css' rel='stylesheet')
+    link(rel='stylesheet' href='/admin/plugins/bootstrap-select/css/bootstrap-select.min.css')
+    link(rel='stylesheet' href='/admin/plugins/sweetalert/sweetalert.min.css')
+
+block extra-js
+    script(type='text/javascript' src='/admin/plugins/sweetalert/sweetalert.min.js')
+    script(type='text/javascript' src='/admin/js/pages/web-config/blogs.js')
+
+block content
+    .card.p-b-15
+        .header
+            h2
+                | LIST BLOGS
+            ul.header-dropdown.m-r--5
+                li.dropdown
+                    a.dropdown-toggle(href='javascript:void(0);' data-toggle='dropdown' role='button' aria-haspopup='true' aria-expanded='false')
+                        i.material-icons more_vert
+                    ul.dropdown-menu.pull-right
+                        li
+                            a(href='javascript:void(0);') Action
+                        li
+                            a(href='javascript:void(0);') Another action
+                        li
+                            a(href='javascript:void(0);') Something else here
+        .row.m-t-20
+            .col-sm-6
+                - if (meta)
+                    - let limit = meta.limit
+                    .col-xs-1.m-t-25
+                        label Show
+                    .col-lg-3.col-md-4.col-sm-5.col-xs-3.m-t-15
+                        select#select-limit.form-control.show-tick
+                            option(selected disabled) #{limit}
+                            option(value='5') 5
+                            option(value='10') 10
+                            option(value='20') 20
+                            option(value='30') 30
+                            option(value='40') 40
+                            option(value='50') 50
+                    .col-xs-2.m-t-25
+                        label entries
+            .col-sm-6
+                .col-sm-5.col-xs-5.m-t-15(style='float: right')
+                    .form-group
+                        .form-line
+                            input#search-input.form-control(type='text', placeholder='Search' value=meta && meta.q ? meta.q : '')
+                .col-lg-1.col-sm-2.col-xs-1.m-t-15(style='float: right')
+                    button#search-btn.btn.btn-danger.btn-circle.waves-effect.waves-circle.waves-float(type='button')
+                        i.material-icons search
+        - if (blogs.length === 0)
+            - link = '/manager/dashboard/web-config/blogs'
+            include 404
+        - else
+            .body
+                .table-responsive
+                    .row
+                        .col-sm-12
+                            table.table.table-bordered.table-hover
+                                thead
+                                    tr
+                                        th #
+                                        th.text-center TITLE
+                                        th.text-center ACTION
+                                tbody.text-center
+                                    - let length = blogs.length;
+                                    - for (let i = 0; i < length; i ++)
+                                        tr
+                                            th(scope='row') #{i + 1}
+                                            td #{blogs[i].title}
+                                            td
+                                                a.btn.btn-link(href='/manager/dashboard/web-config/blogs/' + blogs[i].uri_title + '/edit')
+                                                    i.material-icons edit
+                                                button.btn.btn-link.waves-effect(type='button', data-type="ajax-loader" data-b=blogs[i].uri_title)
+                                                    i.material-icons delete
+
+                    - if (meta)
+                        - let limit = ''
+                        - let q = ''
+                        - if (meta.limit !== 10)
+                            - limit += '&limit=' + meta.limit
+                        -if (meta.q)
+                            - q = '&q=' + meta.q
+                        .row.text-right
+                            ul.pagination(style='margin-right: 1%')
+                                - if (meta.page === 1)
+                                    li.paginate_button.disabled
+                                        a First
+                                - else
+                                    li.paginate_button
+                                        a(href='/manager/dashboard/web-config/blogs?' + limit.substring(1) + q) First
+                                - let i = meta.page > 5 ? meta.page - 4 : 1
+                                - if (i !== 1)
+                                    li.paginate_button.disabled
+                                        a ...
+                                - for (; i <= meta.page + 4 && i <= meta.total; i ++)
+                                    - if (i === meta.page)
+                                        li.paginate_button.active
+                                            a= i
+                                    - else
+                                        li.paginate_button
+                                            a(href='/manager/dashboard/web-config/blogs?page=' + i + limit + q)= i
+                                    - if (i === meta.page + 4 && i < meta.total)
+                                        li.paginate_button.disabled
+                                            a ...
+                                - if (meta.page === meta.total)
+                                    li.paginate_button.disabled
+                                        a Last
+                                - else
+                                    li.paginate_button
+                                        a(href='/manager/dashboard/web-config/blogs?page=' + meta.total + limit + q) Last
