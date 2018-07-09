@@ -380,8 +380,12 @@ module.exports = {
     },
 
     recentlyViewed: function (req, res, next) {
-        console.log(JSON.parse(req.cookies.code)); //cho nay dang la code treen server, thang server no doc cookie dc gui len tu trinh duyet
+        //console.log(req.cookies.code); //cho nay dang la code treen server, thang server no doc cookie dc gui len tu trinh duyet
         // server co the set nguoc cookie ve client sau khi xu ly.
+        if (req.cookies.code === null || req.cookies.code === '' || req.cookies.code === undefined) {
+            next();
+            return;
+        }
         var codes = JSON.parse(req.cookies.code);
         var query = [
             {

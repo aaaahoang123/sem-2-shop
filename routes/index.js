@@ -10,7 +10,7 @@ const renderer = require('../app/controllers/client');
 
 router.use('/*', categoryController.findAll);
 /* GET home page. */
-router.get('/', renderer.renderHomePage);
+router.get('/', productController.recentlyViewed, brandController.getList, renderer.renderHomePage);
 
 router.get('/blog', function(req, res, next) {
     res.render('client/pages/blog');
@@ -28,7 +28,9 @@ router.get('/contact', function(req, res, next) {
     res.render('client/pages/contact');
 });
 
-router.get('/product/:code',categoryController.findAll, productController.getOne, brandController.getList, function(req, res, next) {
+router.get('/product/:code',categoryController.findAll,
+    productController.getOne, productController.recentlyViewed,
+    brandController.getList, function(req, res, next) {
     res.render('client/pages/product', {products: req.products});
 });
 
@@ -36,12 +38,9 @@ router.get('/regular', categoryController.findAll,function(req, res, next) {
     res.render('client/pages/regular');
 });
 
-router.get('/shop', categoryController.findAll,
-    categoryController.getOne,
-    brandController.getList,
-    brandController.getOne,
-    productController.getMaxPrice, productController.recentlyViewed,
-    productController.getList,
+router.get('/shop', categoryController.findAll, categoryController.getOne,
+    brandController.getList, brandController.getOne,
+    productController.getMaxPrice, productController.recentlyViewed, productController.getList,
     function(req, res, next) {
         res.locals.path = '/shop';
         if (req.products.length === 0) {
