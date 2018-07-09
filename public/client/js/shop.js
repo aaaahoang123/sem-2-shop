@@ -16,18 +16,6 @@ $("input:checkbox").on('click', function() {
     }
 });
 
-
-$('.product_code').on('click', function () {
-    var code = [];
-    var codeArr = JSON.parse(Cookies.get('code'));
-    for (let i=0; i<codeArr.length && i<9; i++){
-        if (codeArr[i] !== $(this).attr("name")) code.push(codeArr[i])
-    }
-    code.unshift($(this).attr("name"));
-    Cookies.set('code', code, { expires: 3});
-    //console.log(Cookies.get('code'));  con o day la js tren trinh duyet lay ra cookie dc luu thoi
-});
-
 $('.btn.btn-outline-primary.waves-effect').click(function () {
     var category = $("input:checked[name='category']").val();
     var brand = $("input:checked[name='brand']").val();
@@ -59,17 +47,3 @@ function changeSearchByInput(category, brand, minValue, maxValue, sort) {
     }
     location.search = (search === '')?'':search.slice(0, -1)
 };
-
-// $('.price_up').click(function () {
-//     var s = location.search.split('?');
-//     if (s.includes('?')) s = s[1] + '&price=1';
-//     s = '?price=1';
-//     location.search += s;
-// });
-//
-// $('.price_down').click(function () {
-//     var s = location.search.split('?');
-//     if (s.includes('?')) s = s[1] + '&price=-1';
-//     s = '?price=-1';
-//     location.search += s;
-// });

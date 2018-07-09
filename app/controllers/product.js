@@ -41,6 +41,7 @@ module.exports = {
         });
         set.delete('undefined');
         req.body.categories = [...set];
+        // console.log(req.body.categories);
         next();
     },
 
@@ -379,17 +380,20 @@ module.exports = {
         })
     },
 
-    recentlyViewed: function (req, res, next) {
+    setProductCodeArrayFromCookie: (req, res, next) => {
+        if (req.cookies.code) req.productCodesArray = JSON.parse(req.cookies.code);
+        next();
+    },
+
+    getProductByCodesArray: function (req, res, next) {
         //console.log(JSON.parse(req.cookies.code)); //cho nay dang la code treen server, thang server no doc cookie dc gui len tu trinh duyet
         // server co the set nguoc cookie ve client sau khi xu ly.
-        console.log(req.cookies.code);
-        if (req.cookies.code) {
-            var codes = JSON.parse(req.cookies.code);
+        if (req.productCodesArray) {
             var query = [
                 {
                     $match: {
                         status: 1,
-                        code: {$in: codes}
+                        code: {$in: req.productCodesArray}
                     }
                 }
             ];
@@ -408,12 +412,9 @@ module.exports = {
         } else return next();
     },
 
-    getProductInCart: (req, res, next) => {
-        if (!req.cookies.cart) return next();
-
-        let cart = JSON.parse(req.cookies.cart);
-
-
+    setProductCodeArrayFromCart: (req, res, next) => {
+        if (req.cookies.cart) req.productCodesArray = Object.keys(JSON.parse(req.cookies.cart));
+        next();
     }
 };
 
