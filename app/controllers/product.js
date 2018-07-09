@@ -41,6 +41,7 @@ module.exports = {
         });
         set.delete('undefined');
         req.body.categories = [...set];
+        // console.log(req.body.categories);
         next();
     },
 

@@ -2,6 +2,7 @@
 
 const express = require('express');
 const router = express.Router({});
+const webConfigController = require('../app/controllers/web-config');
 
 const categoryController = require('../app/controllers/category');
 const productController = require('../app/controllers/product');
@@ -10,6 +11,7 @@ const renderer = require('../app/controllers/client');
 
 router.use('/*', categoryController.findAll);
 /* GET home page. */
+
 router.get('/', productController.recentlyViewed, brandController.getList, renderer.renderHomePage);
 
 router.get('/blog', function(req, res, next) {
