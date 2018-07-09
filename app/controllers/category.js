@@ -112,6 +112,8 @@ module.exports = {
         req.body.categories.forEach(c => {
             arr.push(mongoose.Types.ObjectId(c));
         });
+        console.log(arr);
+        console.log("1");
         let pipeline = [
             {
                 $match: {
@@ -143,11 +145,13 @@ module.exports = {
             {
                 $group: {
                     _id: '$_id',
-                    parent: {'$push': '$parent'}
+                    parent: {
+                        '$push': '$parent'
+                    }
                 }
             }
         ];
-
+        // console.log(pipeline);
         model.aggregate(pipeline, (err, result) => {
             if (err) {
                 console.log(err);

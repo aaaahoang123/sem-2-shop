@@ -1,8 +1,9 @@
 const express = require('express');
 const router = express.Router({});
+const webConfigController = require('../app/controllers/web-config');
 
 /* GET home page. */
-router.get('/', function(req, res, next) {
+router.get('/', webConfigController.getTopCategories, function(req, res, next) {
   res.render('client/pages/index');
 });
 
