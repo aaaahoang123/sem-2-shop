@@ -56,6 +56,12 @@ section
                         li(class={'active': path === '/web-config/top-category'})
                             a(href='/manager/dashboard/web-config/top-category') Top-Category
 
+                        li(class={'active': path === '/web-config/add-blog'})
+                            a(href='/manager/dashboard/web-config/blogs/create') Add Blog
+
+                        li(class={'active': path === '/web-config/blogs'})
+                            a(href='/manager/dashboard/web-config/blogs') Blogs
+
                 li(class={'active': path.includes('/products-manager')})
                     a.menu-toggle(href='javascript:void(0);')
                         i.material-icons shop
