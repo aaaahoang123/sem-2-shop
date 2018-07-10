@@ -6,65 +6,25 @@ block extra-css
 block extra-js
     script(type='text/javascript' src='/admin/plugins/autosize/autosize.min.js')
     //script(type='text/javascript' src='/admin/plugins/bootstrap-suggest/bootstrap-suggest.js')
-    //script(type='text/javascript').
-    //    autosize($('textarea.auto-growth'));
-    //    var users = [
-    //        {username: 'lodev09', fullname: 'Jovanni Lo'},
-    //        {username: 'foo', fullname: 'Foo User'},
-    //        {username: 'bar', fullname: 'Bar User'},
-    //        {username: 'twbs', fullname: 'Twitter Bootstrap'},
-    //        {username: 'john', fullname: 'John Doe'},
-    //        {username: 'jane', fullname: 'Jane Doe'},
-    //    ];
-    //    timeout = null;
-    //    $('textarea.auto-growth').suggest('@', {
-    //        data: function (q, lookup) {
-    //            var processData = function () {
-    //                // $.ajax({
-    //                //     url: 'https://thongtindoanhnghiep.co/api/city',
-    //                //     type: 'GET',
-    //                //     accept: 'text/plain',
-    //                //     contentType: 'text/plain',
-    //                //     success: function (res) {
-    //                //         console.log(res);
-    //                //         lookup(res.LtsItem);
-    //                //     },
-    //                //     error: function (err) {
-    //                //         console.log(err);
-    //                //     }
-    //                // });
-    //                fetch('https://thongtindoanhnghiep.co/api/city', {
-    //                    mode: 'no-cors'
-    //                })
-    //                    .then(function (res) {
-    //                        console.log(res);
-    //                        lookup(res.LtsItem);
-    //                    });
-    //                // var req = new XMLHttpRequest();
-    //                // req.open('GET', 'http://localhost:8080/api/city');
-    //                // req.onloadend = function () {
-    //                //     console.log(this.status);
-    //                //     console.log(this.responseText)
-    //                // }
-    //                // req.setRequestHeader('Content-Type', 'application/json');
-    //                // req.setRequestHeader("Access-Control-Allow-Origin", "*");
-    //                // req.send();
-    //            };
-    //
-    //            if (timeout) {
-    //                clearTimeout(timeout);
-    //                timeout = null;
-    //            }
-    //
-    //            timeout = setTimeout(processData, 500);
-    //        },
-    //        map: function (product) {
-    //            return {
-    //                value: product.ID,
-    //                text: '<strong>' + product.ID + '</strong> <small>' + product.Title + '</small>'
-    //            }
-    //        }
-    //    })
+    script(type='text/javascript').
+        $('#select-city').on('change', function () {
+            $.ajax({
+                url: '/api/districts?cid=' + $(this).val(),
+                method: 'GET',
+                success: function (res) {
+                    var s = $('#select-district');
+                    s.html('');
+                    res.forEach(function (d) {
+                        s.append($('<option>').val(d.ID).text(d.Title))
+                    });
+                    s.removeAttr('disabled');
+                    s.selectpicker('refresh');
+                },
+                error: function (err) {
+                    console.log(err);
+                }
+            });
+        })
 
 block content
     .card.p-b-15
@@ -89,7 +49,8 @@ block content
                         span.input-group-addon
                             | City
                         .form-line
-                            select.form-control.show-tick.no-resize(data-live-search='true')
+                            select#select-city.form-control.show-tick.no-resize(data-live-search='true')
+                                option Choose city
                                 - if (cities&&cities.length !=0)
                                     - for (city of cities)
                                         option(value=city.ID)= city.Title
@@ -98,10 +59,8 @@ block content
                         span.input-group-addon
                             | District
                         .form-line
-                            select.form-control.show-tick.no-resize(data-live-search='true')
-                                - if (cities&&cities.length !=0)
-                                    - for (city of cities)
-                                        option(value=city.ID)= city.Title
+                            select#select-district.form-control.show-tick.no-resize(data-live-search='true' disabled)
+
             table.table.table-bordered
                 thead
                     tr

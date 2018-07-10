@@ -36,7 +36,7 @@ router
     .delete('/products/:code', productsController.deleteOne, productsController.responseProductJson)
 
     .get('/cities', cdController.getAllCities, (req, res) => {
-        if (res.locals.errs) {
+        if (res.locals.errs && Object.keys(res.locals.errs).length !== 0) {
             res.status(404);
             res.json({
                 error: 404,
@@ -47,7 +47,7 @@ router
         res.json(res.locals.cities);
     })
     .get('/districts', cdController.getDistrictOfCity, (req, res) => {
-        if (res.locals.errs) {
+        if (res.locals.errs && Object.keys(res.locals.errs).length !== 0) {
             res.status(404);
             res.json({
                 error: 404,
@@ -55,6 +55,6 @@ router
             });
             return;
         }
-        res.json(res.locals.cities);
+        res.json(res.locals.districts);
     });
 module.exports = router;
