@@ -12,6 +12,7 @@ router
         res.render('admin/pages/sign-in');
     })
     .post('/', accountController.getOne, accountController.comparePassword, credentialController.insertOne, (req, res) => {
+        console.log(res.locals);
         if (res.locals.errs) {
             res.render('admin/pages/sign-in', {account: req.body});
             return;

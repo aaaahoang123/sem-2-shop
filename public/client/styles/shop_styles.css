@@ -1652,6 +1652,15 @@ select option
 {
 	border-right: none;
 }
+.page_nav li.active
+{
+	color: #0e8ce4;
+}
+.page_nav li.disabled
+{
+	pointer-events:none; /*This makes it not clickable*/
+	opacity:0.6;         /*This grays it out to look disabled*/
+}
 
 /*********************************
 6. Shop Sidebar

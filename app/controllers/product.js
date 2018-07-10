@@ -2,6 +2,7 @@
 
 const model = require('../models/product');
 //const Set = require('collections/set');
+const mongoose = require('mongoose');
 
 module.exports = {
     validate: function (req, res, next) {
@@ -40,6 +41,7 @@ module.exports = {
         });
         set.delete('undefined');
         req.body.categories = [...set];
+        // console.log(req.body.categories);
         next();
     },
 
@@ -72,10 +74,31 @@ module.exports = {
     },
 
     getOne: function (req, res, next) {
-        let query = {
-            code: req.params.code
-        };
-        model.find(query, function (err, result) {
+        let query = [
+            {
+                $match: {
+                    status: 1,
+                    code: req.params.code
+                }
+            },
+            {
+                "$lookup" : {
+                    "from" : "categories",
+                    "localField" : "categories",
+                    "foreignField" : "_id",
+                    "as" : "categories"
+                }
+            },
+            {
+                "$lookup" : {
+                    "from" : "brands",
+                    "localField" : "brand",
+                    "foreignField" : "_id",
+                    "as" : "brand"
+                }
+            }
+        ];
+        model.aggregate(query, function (err, result) {
             if (err) {
                 console.log(err);
                 if (!req.errs) req.errs = {};
@@ -109,7 +132,7 @@ module.exports = {
     },
 
     getList: function (req, res, next) {
-        let limit = 10, skip = 0, page = 1;
+        let limit = 10, skip = 0, page = 1, min = 0, max = res.locals.maxPrice, sort = '';
         if (req.query.limit && /^\d+$/.test(req.query.limit)) limit = Math.abs(Number(req.query.limit));
         if (req.query.page && !['-1', '1'].includes(req.query.page) && /^\d+$/.test(req.query.page)) {
             page = Math.abs(Number(req.query.page));
@@ -154,16 +177,38 @@ module.exports = {
          * Nếu có tìm kiếm, tạo match và đẩy vào đầu array query
          * Tham khảo: https://docs.mongodb.com/manual/reference/operator/aggregation/match/
          */
+        var q;
         if (req.query.q) {
             let pattern = new RegExp(req.query.q, 'i');
-            query[0].$match.$or = [
+            q = [
                 {code: pattern},
                 {description: pattern},
                 {name: pattern}
             ];
         }
         if (req.query.noneLimitProduct) query[query.length-1].$facet.data.length = 1;
-
+        if (res.locals.category || res.locals.brand || req.query.min || req.query.max || req.query.sort) {
+            query[0].$match.$and = [];
+            if (q) query[0].$match.$and.push({$or: q});
+            if (res.locals.category) query[0].$match.$and.push({categories: res.locals.category._id});
+            if (res.locals.brand) query[0].$match.$and.push({brand: res.locals.brand._id});
+            if (req.query.min) {
+                min=Number(req.query.min);
+                query[0].$match.$and.push({price: {$gt: min-1}});
+            }
+            if (req.query.max) {
+                max=Number(req.query.max);
+                query[0].$match.$and.push({price: {$lt: max+1}});
+            }
+            if (req.query.sort) {
+                sort = req.query.sort;
+                let sortArr = req.query.sort.split('_');
+                let sortObj = {$sort: {}};
+                sortObj.$sort[sortArr[0]] = Number(sortArr[1]);
+                query.splice(1,0,sortObj)
+            }
+        }
+        else if(q) query[0].$match.$or = q;
         // Thực thi aggregate query
         model.aggregate(query, function (err, result) {
             if (err) {
@@ -179,6 +224,7 @@ module.exports = {
                 next();
                 return;
             }
+            if (sort !== '') res.locals.sort = sort;
             res.locals.products = result[0].data;
             let totalItems = result[0].meta[0].totalItems;
             res.locals.meta = {
@@ -187,7 +233,9 @@ module.exports = {
                 limit: !req.lp?limit:'none',
                 offset: skip,
                 page: page,
-                q: req.query.q
+                q: req.query.q,
+                min: min,
+                max: max,
             };
             next();
         });
@@ -297,6 +345,70 @@ module.exports = {
                 title: 'ADD PRODUCT',
             });
         }
+    },
+
+    getMaxPrice: function (req, res, next) {
+        let query = [
+            {
+                $match: {
+                    status: 1
+                }
+            },
+            {
+                $group: {
+                    _id: null,
+                    maxPrice: {$max: "$price"}
+                }
+            }
+        ];
+        model.aggregate(query, function (err, result) {
+            if (err) {
+                console.log(err);
+                if (!req.errs) req.errs = {};
+                req.errs.database = err.message;
+                next();
+                return;
+            }
+            res.locals.maxPrice = result[0].maxPrice;
+            next();
+        })
+    },
+
+    setProductCodeArrayFromCookie: (req, res, next) => {
+        if (req.cookies.code) req.productCodesArray = JSON.parse(req.cookies.code);
+        next();
+    },
+
+    getProductByCodesArray: function (req, res, next) {
+        //console.log(JSON.parse(req.cookies.code)); //cho nay dang la code treen server, thang server no doc cookie dc gui len tu trinh duyet
+        // server co the set nguoc cookie ve client sau khi xu ly.
+        if (req.productCodesArray) {
+            var query = [
+                {
+                    $match: {
+                        status: 1,
+                        code: {$in: req.productCodesArray}
+                    }
+                }
+            ];
+            model.aggregate(query, function (err, result) {
+                if (err) {
+                    console.log(err);
+                    if (!req.errs) req.errs = {};
+                    req.errs.database = err.message;
+                    next();
+                    return;
+                }
+                console.log(result);
+                res.locals.rvProducts = result;
+                next();
+            });
+        } else return next();
+    },
+
+    setProductCodeArrayFromCart: (req, res, next) => {
+        if (req.cookies.cart) req.productCodesArray = Object.keys(JSON.parse(req.cookies.cart));
+        next();
     }
 };
 

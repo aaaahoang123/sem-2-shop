@@ -1,7 +1,6 @@
 const express = require('express');
 const router = express.Router();
 
-
 const cdController = require('../app/controllers/city-and-district');
 const productsController = require('../app/controllers/product');
 const brandController = require('../app/controllers/brand');
@@ -19,23 +18,9 @@ router.get('/', function (req, res, next) {
 })
     .get('/orders', cdController.getAllCities, (req, res) => res.render('admin/pages/orders', {path: '/orders'}));
 
-router.use('/web-config', express.Router()
-    .get('/information', informationController.getInformation, function (req, res, next) {
-        res.render('admin/pages/web-config/information', {path:'/web-config/information'});
-    }).get('/top-category', categoriesController.getListGroup, topCategoriesController.getTopCategories, function (req, res, next) {
-        res.render('admin/pages/web-config/top-category', {path:'/web-config/top-category',
-            categories: (req.categories && req.categories.length !== 0)?req.categories:[]
-        });
-    }).get('/contact', contactController.getContact, function (req, res, next) {
-        res.render('admin/pages/web-config/contact', {path:'/web-config/contact'});
-    })
-
-    .post('/top-category',topCategoriesController.insert, topCategoriesController.responseTopCategoriesFormView)
-    .post('/contact',contactController.insert, contactController.responseContactFormView)
-    .post('/information',informationController.insert, informationController.responseInformationFormView)
-);
 
 router
+    .use('/web-config', require('./web-config'))
     .use('/products-manager', require('./products-manager'))
     .use('/users-manager', require('./users-manager'));
 

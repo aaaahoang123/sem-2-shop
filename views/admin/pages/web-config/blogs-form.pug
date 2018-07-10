@@ -1,0 +1,49 @@
+extends ../../layouts/master
+
+block extra-css
+
+block extra-js
+
+    script(type='text/javascript' src='/admin/plugins/ckeditor/ckeditor.js')
+    script(type='text/javascript' src='/admin/js/pages/web-config/blogs-form.js')
+
+block content
+    .card
+        .header
+            h2 #{title}
+
+        .body
+            - if (!blog && method==='PUT')
+                - link = '/manager/dashboard/web-config/brands'
+                include 404
+            - else
+                - action = method==='PUT'?'/manager/dashboard/web-config/blogs/'+blog.uri_title+'?_method=PUT':'/manager/dashboard/web-config/blogs'
+                form#form1(action=action method='POST' name='form-blog')
+                    .row
+                        .col-md-6
+                            b Title
+                            .input-group
+                                span.input-group-addon
+                                    i.material-icons notes
+                                .form-line
+                                    input.form-control(type='text' name='title' value=(blog && blog.title)?blog.title:'')
+                            - if (errs && errs.title)
+                                p.text-danger.m-t-15 #{errs.title}
+
+                    .row
+                        .col-md-12
+                            h3.card-inside-title Content
+                            textarea#ckeditor
+                                | #{(blog && blog.content) ? blog.content : ''}
+                            - if (errs && errs.content)
+                                p.text-danger.m-t-15 #{errs.content}
+
+                            input#content(type='hidden' name='content')
+
+                    .row
+                        .col-sm-4
+                        .col-sm-2
+                            button.btn.btn-block.btn-primary.waves-effect(type='submit') SUBMIT
+                        .col-sm-2
+                            button#btn-reset.btn.btn-block.btn-warning.waves-effect(type='button') RESET
+                        .col-sm-4

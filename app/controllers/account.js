@@ -24,7 +24,7 @@ module.exports = {
 
         if (!req.body.type) errs.type = "Type is required";
 
-        if (!req.body.user_id) errs.user_id = "Please show us owner of this account";
+        //if (!req.body.user_id) errs.user_id = "Please show us owner of this account";
 
         next();
     },
@@ -232,5 +232,11 @@ module.exports = {
             return;
         }
         res.render('index');
+    },
+
+    setUserIdAfterInsertUser: (req, res, next) => {
+        if (res.locals.errs && Object.keys(res.locals.errs).length !== 0) return next();
+        req.body.user_id = res.locals.result._id;
+        req.body.type = 1;
     }
 };
