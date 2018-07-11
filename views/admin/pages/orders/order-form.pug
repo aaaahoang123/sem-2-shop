@@ -8,6 +8,7 @@ block extra-js
     script(type='text/javascript').
         $(document).ready(function () {
             var searchProductTimeout = null;
+            var usedQuery = [];
             $('body').on('change', '.bs-searchbox > input.form-control', function () {
                 var el = this;
                 if (searchProductTimeout !== null) {
@@ -15,22 +16,29 @@ block extra-js
                     searchProductTimeout = null;
                 }
                 searchProductTimeout = setTimeout(function () {
-                    $.ajax({
-                        url: '/api/products?q=' + $(el).val(),
-                        method: 'GET',
-                        success: function (res) {
-                            var select = $(el).closest('td').find('select.select-product');
-                            console.log($('select.select-product'));
-                            res.forEach(function (pr) {
-                                if (select.find(`option[value=${pr._id}]`).length === 0) $('select.select-product').append($('<option>').val(pr._id).text(pr.name).attr('data-price', pr.price));
-                            });
-                            $('select.select-product').selectpicker('refresh');
-                        },
-                        error: function (err) {
-                            console.log(err)
-                        }
-                    })
-                }, 300)
+                    var q = $(el).val();
+                    if (!usedQuery.includes(q) && q !== '') {
+                        $.ajax({
+                            url: '/api/products?q=' + q,
+                            method: 'GET',
+                            success: function (res) {
+                                console.log('Load new product: ', res);
+                                usedQuery.push(q);
+                                var select = $(el).closest('td').find('select.select-product');
+                                res.forEach(function (pr) {
+                                    if (select.find(`option[value=${pr._id}]`).length === 0) {
+                                        var newOption = $('<option>').val(pr._id).append(pr.name).attr('data-price', pr.price);
+                                        $('select.select-product').append(newOption);
+                                    }
+                                });
+                                $('select.select-product').selectpicker('refresh');
+                            },
+                            error: function (err) {
+                                console.log(err)
+                            }
+                        })
+                    } else console.log('This query has been used, not load more product!')
+                }, 500)
             });
 
             $('body').on('change', 'select.select-product', function () {
@@ -55,15 +63,22 @@ block extra-js
             });
 
             $('#add-product-btn').click(function () {
-                $('#product-table').append(`
-                    <tr>
-                        <th>2</th>
-                        <td><select class='select-product form-control' data-live-search=true>${$('#product-table select.select-product').first().html()}</select></td>
-                        <td><div class="form-group" style='margin-bottom: 0'><div class="form-line"><input type="number" class="input-quantity form-control" placeholder="Quantity" value=1></div></div></td>
-                        <td class='total-price'>0</td>
-                    </tr>
-                `);
-                $('.select-product').selectpicker('refresh');
+               var innerOption = document.querySelector('#product-table select.select-product').outerHTML;
+               var row = `
+                   <tr>
+                       <th scope="row">2</th>
+                       <td>${innerOption}</td>
+                       <td><div class="form-group" style='margin-bottom: 0'><div class="form-line"><input type="number" class="input-quantity form-control" placeholder="Quantity" value=1></div></div></td>
+                       <td class='total-price'>0</td>
+                   </tr>
+               `;
+               // var row = $('<tr>')
+               //     .append($('<th>').html('2'))
+               //     .append($('<td>').append(innerOption))
+               //     .append($('<td>').addClass('total-price').html(0))
+               //  console.log(row);
+               $('#product-table').append(row);
+               $('.select-product').selectpicker('refresh');
                 $.AdminBSB.input.activate();
             })
         })
