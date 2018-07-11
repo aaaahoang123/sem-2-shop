@@ -76,7 +76,7 @@
                                             li
                                                 a.clc(href='#') Smartphones
                                 button.header_search_button.trans_300(type='submit' value='Submit')
-                                    img(src='client/images/search.png' alt='')
+                                    img(src='/client/images/search.png' alt='')
             // Wishlist
             .col-lg-4.col-9.order-lg-3.order-2.text-lg-left.text-right
                 .wishlist_cart.d-flex.flex-row.align-items-center.justify-content-end
@@ -93,11 +93,10 @@
                             .cart_icon
                                 img(src='client/images/cart.png' alt='')
                                 .cart_count
-                                    span 10
+                                    span #{cartLength}
                             .cart_content
                                 .cart_text
                                     a(href='/cart') Cart
-                                .cart_price $85
 // Main Navigation
 nav.main_nav
     .container
@@ -113,76 +112,21 @@ nav.main_nav
                                 span
                             .cat_menu_text categories
                         ul.cat_menu
-                            li
-                                a(href='#')
-                                    | Computers &amp; Laptops
-                                    i.fas.fa-chevron-right.ml-auto
-                            li
-                                a(href='#')
-                                    | Cameras &amp; Photos
-                                    i.fas.fa-chevron-right
-                            li.hassubs
-                                a(href='#')
-                                    | Hardware
-                                    i.fas.fa-chevron-right
-                                ul
-                                    li.hassubs
-                                        a(href='#')
-                                            | Menu Item
-                                            i.fas.fa-chevron-right
-                                        ul
-                                            li
-                                                a(href='#')
-                                                    | Menu Item
-                                                    i.fas.fa-chevron-right
-                                            li
-                                                a(href='#')
-                                                    | Menu Item
-                                                    i.fas.fa-chevron-right
-                                            li
-                                                a(href='#')
-                                                    | Menu Item
-                                                    i.fas.fa-chevron-right
-                                            li
-                                                a(href='#')
-                                                    | Menu Item
-                                                    i.fas.fa-chevron-right
+                            - for (let lv1 of categories)
+                                - if (lv1.level === 1)
                                     li
-                                        a(href='#')
-                                            | Menu Item
-                                            i.fas.fa-chevron-right
-                                    li
-                                        a(href='#')
-                                            | Menu Item
-                                            i.fas.fa-chevron-right
-                                    li
-                                        a(href='#')
-                                            | Menu Item
-                                            i.fas.fa-chevron-right
-                            li
-                                a(href='#')
-                                    | Smartphones &amp; Tablets
-                                    i.fas.fa-chevron-right
-                            li
-                                a(href='#')
-                                    | TV &amp; Audio
-                                    i.fas.fa-chevron-right
-                            li
-                                a(href='#')
-                                    | Gadgets
-                                    i.fas.fa-chevron-right
-                            li
-                                a(href='#')
-                                    | Car Electronics
-                                    i.fas.fa-chevron-right
-                            li
-                                a(href='#')
-                                    | Video Games &amp; Consoles
-                                    i.fas.fa-chevron-right
-                            li
-                                a(href='#')
-                                    | Accessories
-                                    i.fas.fa-chevron-right
+                                        a(href='#') #{lv1.name}
+                                        - if (lv1.children.length !== 0)
+                                            ul
+                                                - for (let lv2 of lv1.childrenObj)
+                                                    li
+                                                        a(href='#') #{lv2.name}
+                                                        - if (lv2.children.length !== 0)
+                                                            ul
+                                                                - for (let lv3 of lv2.childrenObj)
+                                                                    li
+                                                                        a(href='#') #{lv3.name}
+
                     // Main Nav Menu
                     .main_nav_menu.ml-auto
                         ul.standard_dropdown.main_nav_dropdown

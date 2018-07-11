@@ -96,23 +96,23 @@ block content
                                 - else
                                     li.paginate_button
                                         a(href='/manager/dashboard/products-manager/brands?' + limit.substring(1) + q) First
-                                - let i = meta.page > 5 ? meta.page - 4 : 1
+                                - let i = meta.cpage > 5 ? meta.cpage - 4 : 1
                                 - if (i !== 1)
                                     li.paginate_button.disabled
                                         a ...
-                                - for (; i <= meta.page + 4 && i <= meta.total; i ++)
-                                    - if (i === meta.page)
+                                - for (; i <= meta.cpage + 4 && i <= meta.total; i ++)
+                                    - if (i === meta.cpage)
                                         li.paginate_button.active
                                             a= i
                                     - else
                                         li.paginate_button
-                                            a(href='/manager/dashboard/products-manager/brands?page=' + i + limit + q)= i
+                                            a(href='/manager/dashboard/products-manager/brands?cpage=' + i + limit + q)= i
                                     - if (i === meta.page + 4 && i < meta.total)
                                         li.paginate_button.disabled
                                             a ...
-                                - if (meta.page === meta.total)
+                                - if (meta.cpage === meta.total)
                                     li.paginate_button.disabled
                                         a Last
                                 - else
                                     li.paginate_button
-                                        a(href='/manager/dashboard/products-manager/brands?page=' + meta.total + limit + q) Last
+                                        a(href='/manager/dashboard/products-manager/brands?cpage=' + meta.total + limit + q) Last

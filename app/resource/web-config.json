@@ -1,7 +1,21 @@
 {
   "top_categories": [
-    "5b33b3ffbb75c6097016da46",
-    "5b33b579bb75c6097016da47",
+    "5b33b642bb75c6097016da4c",
+    "5b33b5f2bb75c6097016da4a",
     "5b33b59cbb75c6097016da48"
-  ]
+  ],
+  "contact": {
+    "email": "dkmm@rwerwe",
+    "phone": "0965080258",
+    "address": "cau giay / ha noi",
+    "facebook": "afjs",
+    "instagram": "son191",
+    "twitter": "huhuhu#twitter"
+  },
+  "information": {
+    "aboutUs": "<p>ds</p>\r\n",
+    "slogan": "jkjkii",
+    "name": "Quan dai",
+    "logo": "https://res.cloudinary.com/fpt-aptech/image/upload/v1531062065/dycuga4hz2a69euuimj9.png"
+  }
 }

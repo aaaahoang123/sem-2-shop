@@ -13,4 +13,6 @@ function addToCart(el) {
         };
     }
     Cookies.set('cart', cart);
+    // console.log(Object.keys(JSON.parse(Cookies.get('cart'))).length);
+
 }
