@@ -10,6 +10,7 @@ const brandController = require('../app/controllers/brand');
 const renderer = require('../app/controllers/client');
 
 router.use('/*', categoryController.findAll, (req, res, next) => {
+    res.locals.webConfig = require('../app/resource/web-config');
     res.locals.cartLength = 0;
     console.log(req.cookies.cart);
     if (req.cookies.cart) {

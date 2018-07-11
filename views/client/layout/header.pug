@@ -5,11 +5,11 @@
                 .top_bar_contact_item
                     .top_bar_icon
                         img(src='client/images/phone.png' alt='')
-                    | +38 068 005 3570
+                    | #{webConfig.contact.phone}
                 .top_bar_contact_item
                     .top_bar_icon
                         img(src='client/images/mail.png' alt='')
-                    a(href='mailto:fastsales@gmail.com') fastsales@gmail.com
+                    | #{webConfig.contact.email}
                 .top_bar_content.ml-auto
                     .top_bar_menu
                         ul.standard_dropdown.top_bar_dropdown
@@ -50,7 +50,7 @@
             .col-lg-2.col-sm-3.col-3.order-1
                 .logo_container
                     .logo
-                        a(href='#') OneTech
+                        a(href='/') #{webConfig.information.name}
             // Search
             .col-lg-6.col-12.order-lg-2.order-3.text-lg-left.text-right
                 .header_search
@@ -77,21 +77,13 @@
                                                 a.clc(href='#') Smartphones
                                 button.header_search_button.trans_300(type='submit' value='Submit')
                                     img(src='/client/images/search.png' alt='')
-            // Wishlist
             .col-lg-4.col-9.order-lg-3.order-2.text-lg-left.text-right
                 .wishlist_cart.d-flex.flex-row.align-items-center.justify-content-end
-                    .wishlist.d-flex.flex-row.align-items-center.justify-content-end
-                        .wishlist_icon
-                            img(src='client/images/heart.png' alt='')
-                        .wishlist_content
-                            .wishlist_text
-                                a(href='#') Wishlist
-                            .wishlist_count 115
                     // Cart
                     .cart
                         .cart_container.d-flex.flex-row.align-items-center.justify-content-end
                             .cart_icon
-                                img(src='client/images/cart.png' alt='')
+                                img(src='/client/images/cart.png' alt='')
                                 .cart_count
                                     span #{cartLength}
                             .cart_content
