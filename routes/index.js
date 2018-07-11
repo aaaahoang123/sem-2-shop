@@ -9,9 +9,14 @@ const productController = require('../app/controllers/product');
 const brandController = require('../app/controllers/brand');
 const renderer = require('../app/controllers/client'),
     userController = require('../app/controllers/user'),
-    accountController = require('../app/controllers/account');
+    accountController = require('../app/controllers/account'),
+    credentialController = require('../app/controllers/credential');
 
-router.use('/*', categoryController.findAll);
+router.use('/*', categoryController.findAll, (req, res, next) => {
+    if (req.cookies.token) res.locals.logedIn = true;
+    if (req.cookies.username) res.locals.username = req.cookies.username;
+    next();
+});
 /* GET home page. */
 
 router.get('/', webConfigController.getTopCategories,
@@ -93,4 +98,14 @@ router.get('/register', (req, res) => res.render('client/pages/register'))
             res.redirect('/sign-in', {register_success: true});
         });
 
+router.get('/sign-in', (req, res) => res.render('client/pages/sign-in'))
+    .post('/sign-in', accountController.getOne, accountController.comparePassword, credentialController.insertOne, (req, res) => {
+        if (res.locals.errs) {
+            res.render('client/pages/sign-in', {account: req.body});
+            return;
+        }
+        res.cookie('token', res.locals.credential.token);
+        res.cookie('username', res.locals.account.username);
+        res.redirect('/');
+    });
 module.exports = router;
