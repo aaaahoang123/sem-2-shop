@@ -1,0 +1,97 @@
+extends ../../layouts/master
+
+block extra-css
+    link(rel='stylesheet' href='/admin/plugins/bootstrap-select/css/bootstrap-select.min.css')
+
+block extra-js
+    script(type='text/javascript' src='/admin/plugins/autosize/autosize.min.js')
+    script(type='text/javascript').
+        $(document).ready(function () {
+            var searchProductTimeout = null;
+            $('body').on('change', '.bs-searchbox > input.form-control', function () {
+                var el = this;
+                if (searchProductTimeout !== null) {
+                    clearTimeout(searchProductTimeout);
+                    searchProductTimeout = null;
+                }
+                searchProductTimeout = setTimeout(function () {
+                    $.ajax({
+                        url: '/api/products?q=' + $(el).val(),
+                        method: 'GET',
+                        success: function (res) {
+                            var select = $(el).closest('td').find('select.select-product');
+                            console.log($('select.select-product'));
+                            res.forEach(function (pr) {
+                                if (select.find(`option[value=${pr._id}]`).length === 0) $('select.select-product').append($('<option>').val(pr._id).text(pr.name).attr('data-price', pr.price));
+                            });
+                            $('select.select-product').selectpicker('refresh');
+                        },
+                        error: function (err) {
+                            console.log(err)
+                        }
+                    })
+                }, 300)
+            });
+
+            $('body').on('change', 'select.select-product', function () {
+                var up = parseInt($(this).find('option:selected').data('price'));
+                var row = $(this).closest('tr');
+                row.attr('data-price', up);
+                var quantity = row.find('input.input-quantity').val();
+                row.find('.total-price').html(up*quantity);
+                console.log(up*quantity);
+            });
+
+            $('body').on('change', '.input-quantity', function () {
+                var el = this;
+                if (searchProductTimeout !== null) {
+                    clearTimeout(searchProductTimeout);
+                    searchProductTimeout = null;
+                }
+                searchProductTimeout = setTimeout(function () {
+                    var row = $(el).closest('tr');
+                    row.find('.total-price').html($(el).val() * parseInt(row.data('price')));
+                }, 300);
+            });
+
+            $('#add-product-btn').click(function () {
+                $('#product-table').append(`
+                    <tr>
+                        <th>2</th>
+                        <td><select class='select-product form-control' data-live-search=true>${$('#product-table select.select-product').first().html()}</select></td>
+                        <td><div class="form-group" style='margin-bottom: 0'><div class="form-line"><input type="number" class="input-quantity form-control" placeholder="Quantity" value=1></div></div></td>
+                        <td class='total-price'>0</td>
+                    </tr>
+                `);
+                $('.select-product').selectpicker('refresh');
+                $.AdminBSB.input.activate();
+            })
+        })
+
+
+block content
+    .card.p-b-15
+        .header
+            h2
+                | Orders Form
+        .body
+            table.table.table-bordered
+                thead
+                    tr
+                        th #
+                        th PRODUCT
+                        th QUANTITY
+                        th TOTAL PRICE
+                tbody#product-table
+                    tr(data-price=0)
+                        th(scope='row') 1
+                        td
+                            select.select-product.form-control(data-live-search='true')
+                                option Search Product
+                        td
+                            .form-group(style='margin-bottom: 0')
+                                .form-line
+                                    input.input-quantity.form-control(placeholder='Quantity' type='number' value=1)
+                        td.total-price 0
+            button#add-product-btn.btn.btn-danger.waves-effect(type='button')
+                | Add Product

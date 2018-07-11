@@ -16,7 +16,8 @@ router.get('/', function (req, res, next) {
 }).get('/user', function (req, res, next) {
     res.render('admin/pages/user');
 })
-    .get('/orders', cdController.getAllCities, (req, res) => res.render('admin/pages/orders', {path: '/orders'}));
+    .get('/orders', cdController.getAllCities, (req, res) => res.render('admin/pages/orders', {path: '/orders'}))
+    .get('/orders/create', cdController.getAllCities, (req, res) => res.render('admin/pages/orders/order-form', {path: '/orders/create'}));
 
 
 router
