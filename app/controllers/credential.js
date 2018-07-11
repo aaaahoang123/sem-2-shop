@@ -39,10 +39,25 @@ module.exports = {
     checkCredential: (req, res, next) => {
         const query = {
             token: req.token,
-            status: 1
         };
 
-        model.findOne(query, (err, result) => {
+        const pipline = [
+            {
+                $match: {
+                    token: req.token,
+                    status: 1
+                }
+            },
+            {
+                $lookup: {
+                    from: 'accounts',
+                    localField: 'account_id',
+                    foreignField: '_id',
+                    as: 'account'
+                }
+            }
+        ];
+        model.aggregate(pipline, (err, result) => {
             if (err) {
                 console.log(err);
                 if (!req.errs) req.errs = {};
@@ -51,10 +66,10 @@ module.exports = {
                 return;
             }
 
-            if (result === null || result.expired_at < Date.now()) {
+            if (!result || result.length === 0 || result.expired_at < Date.now()) {
                 req.acceptCredential = false;
                 if (!res.locals.errs) res.locals.errs = {};
-                if (result === null) res.locals.errs.credential = "Token not found";
+                if (!result || result.length === 0) res.locals.errs.credential = "Token not found";
                 else {
                     res.locals.errs.credential = 'Token is out of date, please log out and try again';
                     model.findOneAndUpdate(query, {$set: {status: -1}}, (err1, result1) => {
@@ -62,10 +77,9 @@ module.exports = {
                         else console.log(result1);
                     })
                 }
-                next();
-                return;
+                return next();
             }
-            res.locals.credential = result;
+            res.locals.credential = result[0];
             res.locals.acceptCredential = true;
             next();
         });
@@ -100,6 +114,5 @@ module.exports = {
             return;
         }
         next();
-    },
-
+    }
 };

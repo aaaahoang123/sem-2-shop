@@ -3,9 +3,27 @@ const router = express.Router();
 
 const productsController = require('../app/controllers/product');
 const categoriesController = require('../app/controllers/category');
-const citiesAndDistricts = require('../app/controllers/cities-and-districts');
+const cdController = require('../app/controllers/city-and-district');
 
 router
+    .get('/products', productsController.getList,
+        (req, res) => {
+            if (res.locals.errs || res.locals.products.length === 0) {
+                res.status(404);
+                res.json({
+                    "errors": [
+                        {
+                            "status": "404",
+                            "title":  "Not found",
+                            "detail": "Not found any products"
+                        }
+                    ]
+                });
+                return;
+            }
+            res.status(200);
+            res.json(res.locals.products);
+        })
     .post('/products', productsController.validate,
         categoriesController.getMultiCategories,
         productsController.filterCategoriesSet,
@@ -18,9 +36,26 @@ router
         productsController.responseProductJson)
     .delete('/products/:code', productsController.deleteOne, productsController.responseProductJson)
 
-.get('/districts', citiesAndDistricts.getListDistricts, (req, res) => {
-    let dis = res.locals.districts;
-    res.json(dis);
-});
-
+    .get('/cities', cdController.getAllCities, (req, res) => {
+        if (res.locals.errs && Object.keys(res.locals.errs).length !== 0) {
+            res.status(404);
+            res.json({
+                error: 404,
+                detail: 'Cannot find cities'
+            });
+            return;
+        }
+        res.json(res.locals.cities);
+    })
+    .get('/districts', cdController.getDistrictOfCity, (req, res) => {
+        if (res.locals.errs && Object.keys(res.locals.errs).length !== 0) {
+            res.status(404);
+            res.json({
+                error: 404,
+                detail: 'Cannot find district'
+            });
+            return;
+        }
+        res.json(res.locals.districts);
+    });
 module.exports = router;

@@ -5,7 +5,7 @@ const mongoose = require('mongoose');
 
 module.exports = {
     validate: (req, res, next) => {
-        //if (!res.locals.acceptCredential) return next();
+        if (!res.locals.acceptCredential) return next();
 
         //if (!req.cookies.cart) return next();
 
@@ -31,8 +31,8 @@ module.exports = {
         //     return pr.selected;
         // });
         // req.body.products = products;
-        req.body.created_by = mongoose.Types.ObjectId("507f191e810c19729de860ea");
-        req.body.updated_by = mongoose.Types.ObjectId("507f191e810c19729de860ea");
+        req.body.created_by = mongoose.Types.ObjectId(res.locals.credential.account_id);
+        req.body.updated_by = mongoose.Types.ObjectId(res.locals.credential.account_id);
         let newOrder = new model(req.body);
         newOrder.save(function (err, result) {
             if (err) {
@@ -41,10 +41,10 @@ module.exports = {
                 next();
                 return;
             }
-            res.locals.successResponse = {
+            res.locals = {
                 title: 'Success',
                 detail: 'Order successfully',
-                link: '/manager/dashboard/orders-manager/orders',
+                link: '/',
                 result: result,
                 status: 201
             };

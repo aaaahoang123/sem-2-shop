@@ -7,15 +7,22 @@ const webConfigController = require('../app/controllers/web-config');
 const categoryController = require('../app/controllers/category');
 const productController = require('../app/controllers/product');
 const brandController = require('../app/controllers/brand');
-const renderer = require('../app/controllers/client');
-const citiesAndDistricts = require('../app/controllers/cities-and-districts');
-const credentialController = require('../app/controllers/credential');
-const orderController = require('../app/controllers/order');
+const renderer = require('../app/controllers/client'),
+    userController = require('../app/controllers/user'),
+    accountController = require('../app/controllers/account'),
+    credentialController = require('../app/controllers/credential'),
+    cityNDistrict = require('../app/controllers/city-and-district'),
+    orderController = require('../app/controllers/order');
 
-router.use('/*', categoryController.findAll);
+router.use('/*', categoryController.findAll, (req, res, next) => {
+    if (req.cookies.token) res.locals.logedIn = true;
+    if (req.cookies.username) res.locals.username = req.cookies.username;
+    next();
+});
 /* GET home page. */
 
-router.get('/', productController.setProductCodeArrayFromCookie,
+router.get('/', webConfigController.getTopCategories,
+    productController.setProductCodeArrayFromCookie,
     productController.getProductByCodesArray,
     brandController.getList,
     renderer.renderHomePage);
@@ -32,13 +39,13 @@ router.get('/cart', function(req, res, next) {
     res.render('client/pages/cart');
 });
 
-router.get('/order', citiesAndDistricts.getListCities, function(req, res, next) {
+router.get('/order', cityNDistrict.getAllCities, function(req, res, next) {
     res.render('client/pages/order');
 });
 
-router.post('/order',
+router.post('/order', credentialController.setTokenFromCookie, credentialController.checkCredential,
     orderController.validate, orderController.insertOne,
-    citiesAndDistricts.getListCities, orderController.responseInsertOneCustomerFormView);
+    cityNDistrict.getAllCities, orderController.responseInsertOneCustomerFormView);
 
 router.get('/contact', function(req, res, next) {
     res.render('client/pages/contact');
@@ -56,7 +63,7 @@ router.get('/regular', categoryController.findAll, function(req, res, next) {
     res.render('client/pages/regular');
 });
 
-router.get('/shop', categoryController.getOne,
+router.get('/shop', categoryController.findAll, categoryController.getOne,
     brandController.getList, brandController.getOne,
     productController.getMaxPrice,
     productController.setProductCodeArrayFromCookie,
@@ -64,7 +71,7 @@ router.get('/shop', categoryController.getOne,
     productController.getList,
     function(req, res, next) {
         res.locals.path = '/shop';
-        if (req.products.length === 0) {
+        if (res.locals.products.length === 0) {
             res.render('client/pages/shop', {
                 type: 0,
             });
@@ -72,14 +79,12 @@ router.get('/shop', categoryController.getOne,
         else if (!req.meta) {
             res.render('client/pages/shop', {
                 type: 1,
-                products: req.products,
                 total: req.total
             });
         }
         else {
             res.render('client/pages/shop', {
                 type: 2,
-                products: req.products,
                 total: req.total,
                 meta: req.meta
             });
@@ -87,4 +92,28 @@ router.get('/shop', categoryController.getOne,
     }
 );
 
+router.get('/register', (req, res) => res.render('client/pages/register'))
+    .post('/register', userController.validate,
+        accountController.validate,
+        userController.insertOne,
+        accountController.setUserIdAfterInsertUser,
+        accountController.insertOne,
+        (req, res) => {
+            if (res.locals.errs || Object.keys(res.locals.errs).length !== 0) {
+                res.render('client/pages/register', {user_account: req.body});
+                return;
+            }
+            res.redirect('/sign-in', {register_success: true});
+        });
+
+router.get('/sign-in', (req, res) => res.render('client/pages/sign-in'))
+    .post('/sign-in', accountController.getOne, accountController.comparePassword, credentialController.insertOne, (req, res) => {
+        if (res.locals.errs && Object.keys(res.locals.errs).length !== 0) {
+            res.render('client/pages/sign-in', {account: req.body});
+            return;
+        }
+        res.cookie('token', res.locals.credential.token);
+        res.cookie('username', res.locals.account.username);
+        res.redirect('/');
+    });
 module.exports = router;

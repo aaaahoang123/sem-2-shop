@@ -21,7 +21,7 @@ block content
         .header
             h2 #{title}
         .body
-            -if(!products && title === 'EDIT PRODUCTS')
+            -if(!product && title === 'EDIT PRODUCTS')
                 include 404
             -else
                 #alert-error
@@ -33,7 +33,7 @@ block content
                                 span.input-group-addon
                                     i.material-icons games
                                 .form-line
-                                    input.form-control.date(name='name' type='text' placeholder='Product Name' onkeyup="validateProductName(this)" value=(products && products.name)? products.name:'')
+                                    input.form-control.date(name='name' type='text' placeholder='Product Name' onkeyup="validateProductName(this)" value=(product && product.name)? product.name:'')
                                 label
                         .col-sm-6
                             b Product Price
@@ -41,7 +41,7 @@ block content
                                 span.input-group-addon
                                     i.material-icons attach_money
                                 .form-line
-                                    input.form-control.date(name='price' type='text' placeholder='Price' onkeyup="validateProductPrice(this)" value=(products && products.price)?products.price:'')
+                                    input.form-control.date(name='price' type='text' placeholder='Price' onkeyup="validateProductPrice(this)" value=(product && product.price)?product.price:'')
                                 label
 
                     .row.clearfix
@@ -51,7 +51,7 @@ block content
                                 span.input-group-addon
                                     i.material-icons code
                                 #code.form-line
-                                    input.form-control.date(name='code' type='text' placeholder='Code' onkeyup="validateProductCode(this)" value=(products && products.code)?products.code:'')
+                                    input.form-control.date(name='code' type='text' placeholder='Code' onkeyup="validateProductCode(this)" value=(product && product.code)?product.code:'')
                                 label
 
                         .col-sm-4
@@ -62,8 +62,8 @@ block content
                                 #category
                                     select.selectpicker.form-control.show-tick(name='category' multiple='' onchange="validateCategory(this)")
                                         -let pdCategories = [];
-                                        -if(products && products.categories.length !== 0)
-                                            -pdCategories = JSON.parse(JSON.stringify(products.categories))
+                                        -if(product && product.categories.length !== 0)
+                                            -pdCategories = JSON.parse(JSON.stringify(product.categories))
                                         -if(categories && categories.length !== 0)
                                             -for(let value of categories)
                                                 optgroup(label=value._id)
@@ -82,7 +82,7 @@ block content
                                         option(value='') -- Please select --
                                         - if(brands && brands.length !== 0)
                                             - for(var i=0; i < brands.length; i++)
-                                                option(value=brands[i]._id selected=(products && products.brand.toString()===brands[i]._id.toString())) #{brands[i].name}
+                                                option(value=brands[i]._id selected=(product && product.brand.toString()===brands[i]._id.toString())) #{brands[i].name}
 
                                 label
 
@@ -92,7 +92,7 @@ block content
                             .input-group
                                 .form-line
                                     textarea#ckeditor(name='description')
-                                        | #{(products && products.description)?products.description:""}
+                                        | #{(product && product.description)?product.description:""}
 
                                 label
 
@@ -116,8 +116,8 @@ block content
 
                     h2.card-inside-title Specification
                     #spec
-                        -if(products && products.specifications)
-                            -for(let key in products.specifications)
+                        -if(product && product.specifications)
+                            -for(let key in product.specifications)
                                 .row.clearfix
                                     .col-sm-5
                                         .input-group
@@ -130,7 +130,7 @@ block content
                                             span.input-group-addon
                                                 i.material-icons details
                                             .form-line
-                                                input.form-control.date.spec-value(type='text', placeholder='Details' value=products.specifications[key])
+                                                input.form-control.date.spec-value(type='text', placeholder='Details' value=product.specifications[key])
                                     .col-sm-1
                                     .col-sm-1
                                         button.btn.btn-danger.btn-circle.waves-effect.waves-circle.waves-float(type='button' onclick='removeSpecRow(this)')
@@ -144,9 +144,9 @@ block content
                                 span ADD PROPERTIES
 
                     #url-images(style="display: none;")
-                        -if(products && products.images.length !== 0)
-                            -for(var i=0; i< products.images.length; i++)
-                                input.urlImg.edit-img(type='hidden' name='lol-'+i value=products.images[i])
+                        -if(product && product.images.length !== 0)
+                            -for(var i=0; i< product.images.length; i++)
+                                input.urlImg.edit-img(type='hidden' name='lol-'+i value=product.images[i])
 
                     .row.clearfix
                         .col-sm-4

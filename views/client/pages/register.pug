@@ -1,0 +1,70 @@
+extends ../layout/master
+
+block title
+    title Register
+
+block append link
+    link(rel='stylesheet' type='text/css' href='client/styles/cart_styles.css')
+    link(rel='stylesheet' type='text/css' href='client/styles/cart_responsive.css')
+    style.
+        select {
+            margin-left: 0!important;
+        }
+        .form-control {
+            color: black;
+        }
+
+
+block content
+    .container.mt-2
+        h4 Register Form
+        form(method='POST' action='/register')
+            .form-row
+                .form-group.col-md-6
+                    label(for='input-full-name') Full Name
+                    input#input-full-name.form-control(type='text' placeholder='Full Name' name='full_name' required value=user_account?user_account.full_name:'')
+                    - if (errs && errs.full_name)
+                        span.text-danger #{errs.full_name}
+                .form-group.col-md-6
+                    label(for='input-address') Address
+                    input#input-address.form-control(type='text' placeholder='Address' name='address' required value=user_account?user_account.address:'')
+                    - if (errs && errs.address)
+                        span.text-danger #{errs.address}
+            .form-row
+                .form-group.col-md-6
+                    label(for='input-birthday') Birthday
+                    input#input-birthday.form-control(type='text' placeholder='Birthday' name='birthday' required value=user_account?user_account.birthday:'')
+                    - if (errs && errs.birthday)
+                        span.text-danger #{errs.birthday}
+                .form-group.col-md-6
+                    label(for='input-email') Email
+                    input#input-email.form-control(type='email' placeholder='Email' name='email' required value=user_account?user_account.email:'')
+                    - if (errs && errs.email)
+                        span.text-danger #{errs.email}
+            .form-row
+                .form-group.col-md-6
+                    label(for='select-gender') Gender
+                    select#select-gender.form-control(name='gender' required)
+                        option(value=0 selected=user_account&&user_account.gender===0) Female
+                        option(value=1 selected=user_account&&user_account.gender===1) Male
+                    - if (errs && errs.gender)
+                        span.text-danger #{errs.gender}
+                .form-group.col-md-6
+                    label(for='input-phone') Phone
+                    input#input-phone.form-control(type='text' placeholder='Phone' name='phone' required value=user_account?user_account.phone:'')
+                    - if (errs && errs.phone)
+                        span.text-danger #{errs.phone}
+
+            .form-row
+                .form-group.col-md-6
+                    label(for='input-username') Username
+                    input#input-username.form-control(type='text' placeholder='Username' name='username' required value=user_account?user_account.username:'')
+                    - if (errs && errs.username)
+                        span.text-danger #{errs.username}
+                .form-group.col-md-6
+                    label(for='input-password') Password
+                    input#input-password.form-control(type='password' placeholder='Password' name='password' required value=user_account?user_account.password:'')
+                    - if (errs && errs.password)
+                        span.text-danger #{errs.password}
+            button.btn.btn-primary(type='submit') Register
+            button.btn.btn-default.ml-2(type='reset') Reset
