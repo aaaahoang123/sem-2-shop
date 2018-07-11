@@ -238,5 +238,6 @@ module.exports = {
         if (res.locals.errs && Object.keys(res.locals.errs).length !== 0) return next();
         req.body.user_id = res.locals.result._id;
         req.body.type = 1;
+        next();
     }
 };

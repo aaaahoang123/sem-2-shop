@@ -86,16 +86,18 @@ router.get('/shop', categoryController.findAll, categoryController.getOne,
 
 router.get('/register', (req, res) => res.render('client/pages/register'))
     .post('/register', userController.validate,
+        (req,res,next) => {req.body.type = 1;next()},
         accountController.validate,
         userController.insertOne,
         accountController.setUserIdAfterInsertUser,
         accountController.insertOne,
         (req, res) => {
-            if (res.locals.errs || Object.keys(res.locals.errs).length !== 0) {
+            if (res.locals.errs && Object.keys(res.locals.errs).length !== 0) {
+                console.log(res.locals.errs);
                 res.render('client/pages/register', {user_account: req.body});
                 return;
             }
-            res.redirect('/sign-in', {register_success: true});
+            res.redirect('/sign-in', 200);
         });
 
 router.get('/sign-in', (req, res) => res.render('client/pages/sign-in'))
