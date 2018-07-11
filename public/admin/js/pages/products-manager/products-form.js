@@ -127,7 +127,6 @@ var createInput = function(icon, placeholder) {
     }
     ip.setAttribute("type", "text");
     ip.setAttribute("placeholder", placeholder);
-
     var formLine = document.createElement("div");
     formLine.className = "form-line";
 

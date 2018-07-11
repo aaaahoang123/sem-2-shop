@@ -1,11 +1,11 @@
 extends ../layout/master
 
 block title
-    title Cart
+    title Order
 
 block append link
-    link(rel='stylesheet' type='text/css' href='client/styles/cart_styles.css')
-    link(rel='stylesheet' type='text/css' href='client/styles/cart_responsive.css')
+    link(rel='stylesheet' type='text/css' href='/client/styles/cart_styles.css')
+    link(rel='stylesheet' type='text/css' href='/client/styles/cart_responsive.css')
 
 block content
     // Cart
@@ -19,7 +19,7 @@ block content
                             ul.cart_list
                                 li.cart_item.clearfix
                                     .cart_item_image
-                                        img(src='client/images/shopping_cart.jpg' alt='')
+                                        img(src='/client/images/shopping_cart.jpg' alt='')
                                     .cart_item_info.d-flex.flex-md-row.flex-column.justify-content-between
                                         .cart_item_name.cart_info_col
                                             .cart_item_title Name
@@ -43,12 +43,62 @@ block content
                             .order_total_content.text-md-right
                                 .order_total_title Order Total:
                                 .order_total_amount $2000
+                        p(style='height: 100px')
                         //Customer form
-
-
-                        .cart_buttons
-                            button.button.cart_button_checkout(type='button') Submit
-
+                        .container
+                            h3(style='font-size: 220%').text-center
+                                | Customer information
+                            p(style='height: 20px')
+                            form(action='/order' method='POST')
+                                .row.form-group
+                                    .col-sm-6
+                                        .input-group-btn
+                                            a.btn.btn-default
+                                                i.fa.fa-envelope.fa-lg
+                                            input.form-control(style='color: black' type='email' name='receiver_email' placeholder='Email' value=(customer&&customer.receiver_email)?customer.receiver_email:'')
+                                        - if (errs && errs.receiver_email)
+                                            p.text-danger.text-center.m-t-15 #{errs.receiver_email}
+                                    .col-sm-6
+                                        .input-group-btn
+                                            a.btn.btn-default
+                                                i.fa.fa-phone.fa-lg
+                                            input.form-control(style='color: black' type='text' name='receiver_phone' placeholder='Phone' value=(customer&&customer.receiver_phone)?customer.receiver_phone:'')
+                                        - if (errs && errs.receiver_phone)
+                                            p.text-danger.text-center.m-t-15 #{errs.receiver_phone}
+                                .row.form-group
+                                    .col-md-6
+                                        .input-group-btn
+                                            a.btn.btn-default
+                                                i.fa.fa-list.fa-lg
+                                            select.city-select.form-control(name='receiver_city' style='color: black; margin-left: 0px')
+                                                option(selected='' disabled='') -- Choose your city --
+                                                - if(cities && cities.length !== 0)
+                                                    - for (let city of cities)
+                                                        option(value=city.ID) #{city.Title}
+                                        - if (errs && errs.receiver_city)
+                                            p.text-danger.text-center.m-t-15 #{errs.receiver_city}
+                                    .col-md-6
+                                        .input-group-btn
+                                            a.btn.btn-default
+                                                i.fa.fa-list.fa-lg
+                                            select.district-select.form-control(name='receiver_district' style='color: black; margin-left: 0px' disabled='')
+                                                option(selected='' disabled='') -- Choose your district --
+                                        - if (errs && errs.receiver_district)
+                                            p.text-danger.text-center.m-t-15 #{errs.receiver_district}
+                                .form-group
+                                    .input-group-btn
+                                        a.btn.btn-default
+                                            i.fa.fa-address-card.fa-lg
+                                        input.form-control(style='color: black' type='text' name='receiver_address' placeholder='Address' value=(customer&&customer.receiver_address)?customer.receiver_address:'')
+                                    - if (errs && errs.receiver_address)
+                                        p.text-danger.text-center.m-t-15 #{errs.receiver_address}
+                                .row
+                                    .col-sm-4
+                                    .col-sm-2
+                                        button.btn-sub.btn.btn-block.btn-primary.waves-effect(style='cursor: pointer' type='submit') Submit
+                                    .col-sm-2
+                                        button.btn-re.btn.btn-block.btn-warning.waves-effect(style='cursor: pointer' type='reset') Reset
 block append script
-    script(src='client/js/cart_custom.js')
+    script(src='/client/js/cart_custom.js')
+    script(src='/client/js/order.js')
 

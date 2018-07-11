@@ -41,6 +41,7 @@ module.exports = {
         });
         set.delete('undefined');
         req.body.categories = [...set];
+        // console.log(req.body.categories);
         next();
     },
 
@@ -379,34 +380,41 @@ module.exports = {
         })
     },
 
-    recentlyViewed: function (req, res, next) {
-        //console.log(req.cookies.code); //cho nay dang la code treen server, thang server no doc cookie dc gui len tu trinh duyet
+    setProductCodeArrayFromCookie: (req, res, next) => {
+        if (req.cookies.code) req.productCodesArray = JSON.parse(req.cookies.code);
+        next();
+    },
+
+    getProductByCodesArray: function (req, res, next) {
+        //console.log(JSON.parse(req.cookies.code)); //cho nay dang la code treen server, thang server no doc cookie dc gui len tu trinh duyet
         // server co the set nguoc cookie ve client sau khi xu ly.
-        if (req.cookies.code === null || req.cookies.code === '' || req.cookies.code === undefined) {
-            next();
-            return;
-        }
-        var codes = JSON.parse(req.cookies.code);
-        var query = [
-            {
-                $match: {
-                    status: 1,
-                    code: {$in: codes}
+        if (req.productCodesArray) {
+            var query = [
+                {
+                    $match: {
+                        status: 1,
+                        code: {$in: req.productCodesArray}
+                    }
                 }
-            }
-        ];
-        model.aggregate(query, function (err, result) {
-            if (err) {
-                console.log(err);
-                if (!req.errs) req.errs = {};
-                req.errs.database = err.message;
+            ];
+            model.aggregate(query, function (err, result) {
+                if (err) {
+                    console.log(err);
+                    if (!req.errs) req.errs = {};
+                    req.errs.database = err.message;
+                    next();
+                    return;
+                }
+                console.log(result);
+                res.locals.rvProducts = result;
                 next();
-                return;
-            }
-            console.log(result);
-            res.locals.rvProducts = result;
-            next();
-        });
+            });
+        } else return next();
+    },
+
+    setProductCodeArrayFromCart: (req, res, next) => {
+        if (req.cookies.cart) req.productCodesArray = Object.keys(JSON.parse(req.cookies.cart));
+        next();
     }
 };
 

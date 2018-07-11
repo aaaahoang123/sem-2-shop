@@ -1,15 +1,14 @@
 extends ../../layouts/master
 
 block extra-css
-    link(rel='stylesheet' href='/admin/plugins/bootstrap-material-datetimepicker/css/bootstrap-material-datetimepicker.css')
     link(rel='stylesheet' href='https://use.fontawesome.com/releases/v5.0.13/css/all.css')
     link(rel='stylesheet' href='/admin/plugins/bootstrap-select/css/bootstrap-select.min.css')
     link(rel='stylesheet' href='/admin/plugins/waitme/waitMe.min.css')
 block extra-js
     script(type='text/javascript' src='/admin/plugins/autosize/autosize.min.js')
     script(type='text/javascript' src='/admin/plugins/momentjs/moment.min.js')
-    script(type='text/javascript' src='/admin/plugins/bootstrap-material-datetimepicker/js/bootstrap-material-datetimepicker.min.js')
     script(type='text/javascript' src='/admin/js/pages/forms/basic-form-elements.js')
+    script(type='text/javascript' src='/admin/js/pages/web-config/contact.js')
 
 block content
     .container-fluid
@@ -23,52 +22,59 @@ block content
                         h2
                             | CONTACT
                     .body
-                        .row.clearfix
-                            form(method='POST')
+                        -if(errs && errs.database)
+                            label.text-danger #{errs.database}
+                        form(action='/manager/dashboard/web-config/contact' method='POST' name='form-contact')
+                            .row
                                 .col-md-4
                                     b Email Address
                                     .input-group
                                         span.input-group-addon
                                             i.material-icons email
                                         .form-line
-                                            input.form-control.email(type='email' placeholder='Ex: example@example.com')
+                                            input.form-control.email(type='email' name='email' value=(contacts && contacts.email)?contacts.email:'')
                                 .col-md-4
                                     b Mobile Phone Number
                                     .input-group
                                         span.input-group-addon
                                             i.material-icons phone_iphone
                                         .form-line
-                                            input.form-control.mobile-phone-number(type='text' placeholder='Ex: +00000000000')
+                                            input.form-control.mobile-phone-number(type='text' name='phone' value=(contacts && contacts.phone)?contacts.phone:'')
                                 .col-md-4
                                     b Address
                                     .input-group
                                         span.input-group-addon
                                             i.material-icons store
                                         .form-line
-                                            input.form-control(type='text')
+                                            input.form-control(type='text' name='address' value=(contacts && contacts.address)?contacts.address:'')
+                            .row
                                 .col-md-4
                                     b Link Facebook
                                     .input-group
                                         span.input-group-addon
                                             i.fab.fa-facebook-square
                                         .form-line
-                                            input.form-control(type='text')
+                                            input.form-control(type='text' name='facebook' value=(contacts && contacts.facebook)?contacts.facebook:'')
                                 .col-md-4
                                     b Link Instagram
                                     .input-group
                                         span.input-group-addon
                                             i.fab.fa-instagram
                                         .form-line
-                                            input.form-control(type='text')
+                                            input.form-control(type='text' name='instagram' value=(contacts && contacts.instagram)?contacts.instagram:'')
                                 .col-md-4
                                     b Link Twitter
                                     .input-group
                                         span.input-group-addon
                                             i.fab.fa-twitter-square
                                         .form-line
-                                            input.form-control(type='text')
-                                .col-md-12
-                                    div.col-md-1
-                                        button.btn.btn-primary.waves-effect(type='button') SUBMIT
-                                    div.col-md-1
-                                        button.btn.btn-warning.waves-effect(type='reset') RESET
+                                            input.form-control(type='text' name='twitter' value=(contacts && contacts.twitter)?contacts.twitter:'')
+                            .row
+                                .col-sm-4
+                                .col-sm-2
+                                    button#btn-submit.btn.btn-block.btn-primary.waves-effect(type='submit') SUBMIT
+                                .col-sm-2
+                                    button.btn.btn-block.btn-warning.waves-effect(type='reset') RESET
+                                .col-sm-1
+                                    button#btn-clear.btn.btn-warning.waves-effect(type='button') CLEAR
+                                .col-sm-3
