@@ -4,49 +4,70 @@ block title
     title Cart
 
 block append link
+    link(rel='stylesheet', href='/admin/css/style.min.css')
     link(rel='stylesheet' type='text/css' href='client/styles/cart_styles.css')
     link(rel='stylesheet' type='text/css' href='client/styles/cart_responsive.css')
+    link(rel='stylesheet' href='/admin/plugins/bootstrap-select/css/bootstrap-select.min.css')
+    link(rel='stylesheet' href='/admin/plugins/sweetalert/sweetalert.min.css')
 
 block content
     // Cart
     .cart_section
         .container
             .row
-                .col-lg-10.offset-lg-1
-                    .cart_container
-                        .cart_title Shopping Cart
-                        .cart_items
-                            ul.cart_list
-                                li.cart_item.clearfix
-                                    .cart_item_image
-                                        img(src='client/images/shopping_cart.jpg' alt='')
-                                    .cart_item_info.d-flex.flex-md-row.flex-column.justify-content-between
-                                        .cart_item_name.cart_info_col
-                                            .cart_item_title Name
-                                            .cart_item_text MacBook Air 13
-                                        .cart_item_color.cart_info_col
-                                            .cart_item_title Color
-                                            .cart_item_text
-                                                span(style='background-color:#999999;')
-                                                | Silver
-                                        .cart_item_quantity.cart_info_col
-                                            .cart_item_title Quantity
-                                            .cart_item_text 1
-                                        .cart_item_price.cart_info_col
-                                            .cart_item_title Price
-                                            .cart_item_text $2000
-                                        .cart_item_total.cart_info_col
-                                            .cart_item_title Total
-                                            .cart_item_text $2000
-                        // Order Total
-                        .order_total
-                            .order_total_content.text-md-right
-                                .order_total_title Order Total:
-                                .order_total_amount $2000
-                        .cart_buttons
-                            a.button.cart_button_clear(href="/") Continue shopping
-                            a.button.cart_button_checkout(href="/order") Place order
+                - if (!rvProducts || rvProducts.length === 0)
+                    p no product
+                    .cart_buttons
+                        a.button.cart_button_clear(href="/") Continue shopping
+                - else
+                    .col-lg-12
+                        .cart_container
+                            .cart_title Shopping Cart
+                            .float-right
+                                .input-group
+                                    span.input-group-addon
+                                        input#check-all(type='checkbox')
+                                        label(for='check-all') Check All
+                            .cart_items
+                                table.table.table-bordered
+                                    thead
+                                        tr.text-center
+                                            th Check
+                                            th Image
+                                            th Name
+                                            th Quantity
+                                            th Price($)
+                                            th Total($)
+                                    tbody.text-center
+                                        - let a = 0;
+                                        - for (let i = 0; i < rvProducts.length; i ++)
+                                            - a += cart[rvProducts[i].code].quantity * rvProducts[i].price
+                                            tr
+                                                td
+                                                    input.item-checkbox(type='checkbox' id=rvProducts[i].code value=rvProducts[i]._id onchange='checkItem(this)' checked=cart[rvProducts[i].code].selected)
+                                                    label(for=rvProducts[i].code)
+                                                td(align="center")
+                                                    .cart_item_image
+                                                        img(src=rvProducts[i].images[0] alt='')
+                                                td
+                                                    a(href=/product/ + rvProducts[i].code)
+                                                        | #{rvProducts[i].name}
+                                                td
+                                                    input.form-control(class='inp-' + rvProducts[i]._id type='number', min='1', style='width: 80px; margin: auto' value=cart[rvProducts[i].code].quantity data-code=rvProducts[i].code onchange='countTotalPrice(this)')
+                                                td(class='price-' + rvProducts[i].code) #{rvProducts[i].price}
+                                                td(class=rvProducts[i].code) #{cart[rvProducts[i].code].quantity * rvProducts[i].price}
+                            // Order Total
+                            .order_total
+                                .order_total_content.text-md-right
+                                    .order_total_title Order Total($):
+                                    .order_total_amount 0
+                            .cart_buttons
+                                a.button.cart_button_clear(href="/") Continue shopping
+                                a.button.cart_button_checkout(href="/order") Place order
 
 block append script
-    script(src='client/js/cart_custom.js')
+    script(src='https://cdn.jsdelivr.net/npm/js-cookie@2/src/js.cookie.min.js')
+    script(src='/client/js/cart_custom.js')
+    script(src='/client/js/cart.js')
+
 

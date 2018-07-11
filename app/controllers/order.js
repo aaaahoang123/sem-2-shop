@@ -7,7 +7,7 @@ module.exports = {
     validate: (req, res, next) => {
         if (!res.locals.acceptCredential) return next();
 
-        //if (!req.cookies.cart) return next();
+        if (!req.cookies.cart) return next();
 
         if (!res.locals.errs) res.locals.errs = {};
 
@@ -24,15 +24,16 @@ module.exports = {
             next();
             return;
         }
-        // let cart = JSON.parse(req.cookies.cart);
-        // let products = res.locals.rvProducts.foreach(function (pr) {
-        //     pr = Object.assign(pr, cart[pr.code])
-        // }).filter(function (pr) {
-        //     return pr.selected;
-        // });
-        // req.body.products = products;
-        req.body.created_by = mongoose.Types.ObjectId(res.locals.credential.account_id);
-        req.body.updated_by = mongoose.Types.ObjectId(res.locals.credential.account_id);
+        let cart = JSON.parse(req.cookies.cart);
+        console.log(res.locals.rvProducts);
+        let products = res.locals.rvProducts;
+
+        products.forEach(function (pr) {
+            pr.quantity = cart[pr.code].quantity;
+        });
+        req.body.products = products;
+        req.body.created_by = res.locals.credential.account_id;
+        req.body.updated_by = res.locals.credential.account_id;
         let newOrder = new model(req.body);
         newOrder.save(function (err, result) {
             if (err) {
@@ -48,6 +49,7 @@ module.exports = {
                 result: result,
                 status: 201
             };
+            if (req.newCart) res.cookie('cart', JSON.stringify(req.newCart));
             next();
         })
     },

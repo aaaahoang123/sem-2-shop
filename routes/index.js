@@ -17,12 +17,16 @@ const renderer = require('../app/controllers/client'),
 router.use('/*', categoryController.findAll, (req, res, next) => {
     if (req.cookies.token) res.locals.logedIn = true;
     if (req.cookies.username) res.locals.username = req.cookies.username;
+    res.locals.cartLength = 0;
+    console.log(req.cookies.cart);
+    if (req.cookies.cart && req.cookies.cart !== []) {
+        res.locals.cartLength = Object.keys(JSON.parse(req.cookies.cart)).length;
+    }
     next();
 });
 /* GET home page. */
 
-router.get('/', webConfigController.getTopCategories,
-    productController.setProductCodeArrayFromCookie,
+router.get('/',webConfigController.getTopCategories, productController.setProductCodeArrayFromCookie,
     productController.getProductByCodesArray,
     brandController.getList,
     renderer.renderHomePage);
@@ -35,17 +39,24 @@ router.get('/blog_single', function(req, res, next) {
     res.render('client/pages/blog_single');
 });
 
-router.get('/cart', function(req, res, next) {
-    res.render('client/pages/cart');
+router.get('/cart',productController.setProductCodeArrayFromCart, productController.getProductByCodesArray, function(req, res, next) {
+    let cart = {};
+    if (req.cookies.cart) cart = JSON.parse(req.cookies.cart);
+    res.render('client/pages/cart', {cart: cart});
 });
 
-router.get('/order', cityNDistrict.getAllCities, function(req, res, next) {
-    res.render('client/pages/order');
+router.get('/order', credentialController.setTokenFromCookie, credentialController.checkCredential,
+    productController.setSelectedProductCodeArrayFromCart, productController.getProductByCodesArray,
+    cityNDistrict.getAllCities, function(req, res, next) {
+        let cart = {};
+        if (req.cookies.cart) cart = JSON.parse(req.cookies.cart);
+        res.render('client/pages/order', {cart: cart});
 });
 
 router.post('/order', credentialController.setTokenFromCookie, credentialController.checkCredential,
+    productController.setSelectedProductCodeArrayFromCart, productController.getProductByCodesArray,
     orderController.validate, orderController.insertOne,
-    cityNDistrict.getAllCities, orderController.responseInsertOneCustomerFormView);
+    orderController.responseInsertOneCustomerFormView);
 
 router.get('/contact', function(req, res, next) {
     res.render('client/pages/contact');
@@ -56,10 +67,10 @@ router.get('/product/:code',categoryController.findAll,
     productController.setProductCodeArrayFromCookie,
     productController.getProductByCodesArray,
     brandController.getList, function(req, res, next) {
-    res.render('client/pages/product', {products: req.products});
+    res.render('client/pages/product');
 });
 
-router.get('/regular', categoryController.findAll, function(req, res, next) {
+router.get('/regular', categoryController.findAll,function(req, res, next) {
     res.render('client/pages/regular');
 });
 
@@ -116,4 +127,5 @@ router.get('/sign-in', (req, res) => res.render('client/pages/sign-in'))
         res.cookie('username', res.locals.account.username);
         res.redirect('/');
     });
+
 module.exports = router;

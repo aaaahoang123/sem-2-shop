@@ -7,6 +7,7 @@ const mongoose = require('mongoose');
 module.exports = {
     getTopCategories: (req, res, next) => {
         let top_categories = [];
+        // console.log(web_config.top_categories);
         web_config.top_categories.forEach(c => {
             top_categories.push(mongoose.Types.ObjectId(c));
         });
@@ -67,6 +68,7 @@ module.exports = {
             if (err) {
                 console.log(err);
             }
+            console.log(result);
             res.locals.top_categories = result;
             next();
         });

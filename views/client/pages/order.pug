@@ -6,99 +6,125 @@ block title
 block append link
     link(rel='stylesheet' type='text/css' href='/client/styles/cart_styles.css')
     link(rel='stylesheet' type='text/css' href='/client/styles/cart_responsive.css')
-
-block content
-    // Cart
-    .cart_section
-        .container
-            .row
-                .col-lg-10.offset-lg-1
-                    .cart_container
-                        .cart_title Shopping Cart
-                        .cart_items
-                            ul.cart_list
-                                li.cart_item.clearfix
-                                    .cart_item_image
-                                        img(src='/client/images/shopping_cart.jpg' alt='')
-                                    .cart_item_info.d-flex.flex-md-row.flex-column.justify-content-between
-                                        .cart_item_name.cart_info_col
-                                            .cart_item_title Name
-                                            .cart_item_text MacBook Air 13
-                                        .cart_item_color.cart_info_col
-                                            .cart_item_title Color
-                                            .cart_item_text
-                                                span(style='background-color:#999999;')
-                                                | Silver
-                                        .cart_item_quantity.cart_info_col
-                                            .cart_item_title Quantity
-                                            .cart_item_text 1
-                                        .cart_item_price.cart_info_col
-                                            .cart_item_title Price
-                                            .cart_item_text $2000
-                                        .cart_item_total.cart_info_col
-                                            .cart_item_title Total
-                                            .cart_item_text $2000
-                        // Order Total
-                        .order_total
-                            .order_total_content.text-md-right
-                                .order_total_title Order Total:
-                                .order_total_amount $2000
-                        p(style='height: 100px')
-                        //Customer form
-                        .container
-                            h3(style='font-size: 220%').text-center
-                                | Customer information
-                            p(style='height: 20px')
-                            form(action='/order' method='POST')
-                                .row.form-group
-                                    .col-sm-6
-                                        .input-group-btn
-                                            a.btn.btn-default
-                                                i.fa.fa-envelope.fa-lg
-                                            input.form-control(style='color: black' type='email' name='receiver_email' placeholder='Email' value=(customer&&customer.receiver_email)?customer.receiver_email:'')
-                                        - if (errs && errs.receiver_email)
-                                            p.text-danger.text-center.m-t-15 #{errs.receiver_email}
-                                    .col-sm-6
-                                        .input-group-btn
-                                            a.btn.btn-default
-                                                i.fa.fa-phone.fa-lg
-                                            input.form-control(style='color: black' type='text' name='receiver_phone' placeholder='Phone' value=(customer&&customer.receiver_phone)?customer.receiver_phone:'')
-                                        - if (errs && errs.receiver_phone)
-                                            p.text-danger.text-center.m-t-15 #{errs.receiver_phone}
-                                .row.form-group
-                                    .col-md-6
-                                        .input-group-btn
-                                            a.btn.btn-default
-                                                i.fa.fa-list.fa-lg
-                                            select.city-select.form-control(name='receiver_city' style='color: black; margin-left: 0px')
-                                                option(selected='' disabled='') -- Choose your city --
-                                                - if(cities && cities.length !== 0)
-                                                    - for (let city of cities)
-                                                        option(value=city.ID) #{city.Title}
-                                        - if (errs && errs.receiver_city)
-                                            p.text-danger.text-center.m-t-15 #{errs.receiver_city}
-                                    .col-md-6
-                                        .input-group-btn
-                                            a.btn.btn-default
-                                                i.fa.fa-list.fa-lg
-                                            select.district-select.form-control(name='receiver_district' style='color: black; margin-left: 0px' disabled='')
-                                                option(selected='' disabled='') -- Choose your district --
-                                        - if (errs && errs.receiver_district)
-                                            p.text-danger.text-center.m-t-15 #{errs.receiver_district}
-                                .form-group
-                                    .input-group-btn
-                                        a.btn.btn-default
-                                            i.fa.fa-address-card.fa-lg
-                                        input.form-control(style='color: black' type='text' name='receiver_address' placeholder='Address' value=(customer&&customer.receiver_address)?customer.receiver_address:'')
-                                    - if (errs && errs.receiver_address)
-                                        p.text-danger.text-center.m-t-15 #{errs.receiver_address}
-                                .row
-                                    .col-sm-4
-                                    .col-sm-2
-                                        button.btn-sub.btn.btn-block.btn-primary.waves-effect(style='cursor: pointer' type='submit') Submit
-                                    .col-sm-2
-                                        button.btn-re.btn.btn-block.btn-warning.waves-effect(style='cursor: pointer' type='reset') Reset
+    
 block append script
     script(src='/client/js/cart_custom.js')
     script(src='/client/js/order.js')
+    script(type='text/javascript').
+        $(document).ready(function () {
+            let t = 0;
+            $('.total').each(function () {
+                t += Number($(this).text())
+            })
+            $('.order_total_amount').text(t);
+            $('.total_price').val(t);
+        })
+
+block content
+    - if(!rvProducts || rvProducts.length == 0)
+        include 404
+    - else
+        - if(!acceptCredential)
+            div(style='height: 500px')
+                .container
+                    div(style='height: 150px')
+                    h2.text-center
+                        | Please sign in to use this funtion!
+                    div(style='height: 50px')
+                    .button-place.text-center
+                        a.btn.btn-outline-secondary.btn-lg.waves-effect(href='/sign-in') Sign in
+        - else
+            // Cart
+            .cart_section
+                .container
+                    .row
+                        .col-lg-10.offset-lg-1
+                            .cart_container
+                                .cart_title Shopping Cart
+                                .cart_items
+                                    table.table.table-bordered
+                                        thead
+                                            tr.text-center
+                                                th Image
+                                                th Name
+                                                th Quantity
+                                                th Price($)
+                                                th Total($)
+                                        tbody.text-center
+                                            - let a = 0;
+                                            - for (let i = 0; i < rvProducts.length; i ++)
+                                                - a += cart[rvProducts[i].code].quantity * rvProducts[i].price
+                                                tr
+                                                    td(align="center")
+                                                        .cart_item_image
+                                                            img(src=rvProducts[i].images[0] alt='')
+                                                    td
+                                                        a(href=/product/ + rvProducts[i].code)
+                                                            | #{rvProducts[i].name}
+                                                    td #{cart[rvProducts[i].code].quantity}
+                                                    td #{rvProducts[i].price}
+                                                    td.total
+                                                        | #{cart[rvProducts[i].code].quantity * rvProducts[i].price}
+                                // Order Total
+                                .order_total
+                                    .order_total_content.text-md-right
+                                        .order_total_title Order Total($):
+                                        .order_total_amount 0
+
+                                p(style='height: 100px')
+                                //Customer form
+                                .container
+                                    h3(style='font-size: 220%').text-center
+                                        | Customer information
+                                    p(style='height: 20px')
+                                    form(action='/order' method='POST')
+                                        .row.form-group
+                                            .col-sm-6
+                                                .input-group-btn
+                                                    a.btn.btn-default
+                                                        i.fa.fa-envelope.fa-lg
+                                                    input.form-control(style='color: black' type='email' name='receiver_email' placeholder='Email' value=(customer&&customer.receiver_email)?customer.receiver_email:'')
+                                                - if (errs && errs.receiver_email)
+                                                    p.text-danger.text-center.m-t-15 #{errs.receiver_email}
+                                            .col-sm-6
+                                                .input-group-btn
+                                                    a.btn.btn-default
+                                                        i.fa.fa-phone.fa-lg
+                                                    input.form-control(style='color: black' type='text' name='receiver_phone' placeholder='Phone' value=(customer&&customer.receiver_phone)?customer.receiver_phone:'')
+                                                - if (errs && errs.receiver_phone)
+                                                    p.text-danger.text-center.m-t-15 #{errs.receiver_phone}
+                                        .row.form-group
+                                            .col-md-6
+                                                .input-group-btn
+                                                    a.btn.btn-default
+                                                        i.fa.fa-list.fa-lg
+                                                    select.city-select.form-control(name='receiver_city' style='color: black; margin-left: 0px')
+                                                        option(selected='' disabled='') -- Choose your city --
+                                                        - if(cities && cities.length !== 0)
+                                                            - for (let city of cities)
+                                                                option(value=city.ID) #{city.Title}
+                                                - if (errs && errs.receiver_city)
+                                                    p.text-danger.text-center.m-t-15 #{errs.receiver_city}
+                                            .col-md-6
+                                                .input-group-btn
+                                                    a.btn.btn-default
+                                                        i.fa.fa-list.fa-lg
+                                                    select.district-select.form-control(name='receiver_district' style='color: black; margin-left: 0px' disabled='')
+                                                        option(selected='' disabled='') -- Choose your district --
+                                                - if (errs && errs.receiver_district)
+                                                    p.text-danger.text-center.m-t-15 #{errs.receiver_district}
+                                        .form-group
+                                            .input-group-btn
+                                                a.btn.btn-default
+                                                    i.fa.fa-address-card.fa-lg
+                                                input.form-control(style='color: black' type='text' name='receiver_address' placeholder='Address' value=(customer&&customer.receiver_address)?customer.receiver_address:'')
+                                            - if (errs && errs.receiver_address)
+                                                p.text-danger.text-center.m-t-15 #{errs.receiver_address}
+                                        input.total_price(name='total' hidden='')
+                                        .row
+                                            .col-sm-4
+                                            .col-sm-2
+                                                button.btn-sub.btn.btn-block.btn-primary.waves-effect(style='cursor: pointer' type='submit') Submit
+                                            .col-sm-2
+                                                button.btn-re.btn.btn-block.btn-warning.waves-effect(style='cursor: pointer' type='reset') Reset
 
