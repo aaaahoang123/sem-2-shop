@@ -27,6 +27,10 @@ $('#check-all').change(function () {
     itemCheckbox.trigger('change');
 });
 
+$(itemCheckbox).change(function () {
+    if (!$(this).prop('checked')) $('#check-all').prop('checked', false);
+});
+
 function checkItem(e) {
     if (e.checked) {
         $('.inp-' + $(e).val()).prop("readonly", true);
@@ -78,4 +82,50 @@ function removeProduct(e) {
         );
     }
     $('.tr-' + $(e).data('code')).remove();
+}
+
+$(".cart_button_checkout").click(function () {
+    var token = Cookies.get("token");
+    console.log(token);
+    if (token === undefined) {
+        showNotification("alert-warning", "Please login to place an order", "bottom", "left", "animated bounceIn", "animated bounceOut");
+    }
+    if ($("input:checked").length === 0) {
+        showNotification("alert-warning", "You have not selected any products yet", "bottom", "left", "animated bounceIn", "animated bounceOut");
+    }
+    if (token && $("input:checked").length !== 0) location.href = "/order";
+});
+
+function showNotification(colorName, text, placementFrom, placementAlign, animateEnter, animateExit) {
+    if (colorName === null || colorName === '') { colorName = 'bg-black'; }
+    if (text === null || text === '') { text = 'Turning standard Bootstrap alerts'; }
+    if (animateEnter === null || animateEnter === '') { animateEnter = 'animated fadeInDown'; }
+    if (animateExit === null || animateExit === '') { animateExit = 'animated fadeOutUp'; }
+    var allowDismiss = true;
+
+    $.notify({
+            message: text
+        },
+        {
+            type: colorName,
+            allow_dismiss: allowDismiss,
+            newest_on_top: true,
+            timer: 1000,
+            placement: {
+                from: placementFrom,
+                align: placementAlign
+            },
+            animate: {
+                enter: animateEnter,
+                exit: animateExit
+            },
+            template: '<div data-notify="container" style="background-color: #2b982b; color: #fff" class="bootstrap-notify-container alert alert-dismissible {0} ' + (allowDismiss ? "p-r-35" : "") + '" role="alert">' +
+            '<span data-notify="title">{1}</span> ' +
+            '<span data-notify="message">{2}</span>' +
+            '<div class="progress" data-notify="progressbar">' +
+            '<div class="progress-bar progress-bar-{0}" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width: 0%;"></div>' +
+            '</div>' +
+            '<a href="{3}" target="{4}" data-notify="url"></a>' +
+            '</div>'
+        });
 }
