@@ -1,5 +1,6 @@
 $(document).ready(function () {
     var arrItemChecked = $("input:checked");
+    if ($(".toCountTotal").length === $(".item-checkbox").length)  $('#check-all').prop('checked', true);
     for (var i = 0; i < arrItemChecked.length; i++) {
         var total = document.createElement('input');
         total.id = "Total" + arrItemChecked[i].id;
@@ -33,6 +34,9 @@ $(itemCheckbox).change(function () {
 
 function checkItem(e) {
     if (e.checked) {
+        console.log($(".toCountTotal").length);
+        console.log($(".item-checkbox").length);
+        console.log($(".toCountTotal").length === $(".item-checkbox").length);
         $('.inp-' + $(e).val()).prop("readonly", true);
         $('.btn-' + e.id).prop("disabled", true);
         $('.btn-' + e.id).css("cursor", "");
@@ -44,6 +48,7 @@ function checkItem(e) {
             total.value = $('.' + e.id).html();
             $('.cart_items').append(total);
         }
+        if ($(".toCountTotal").length === $(".item-checkbox").length)  $('#check-all').prop('checked', true);
         cart[e.id].selected = true;
     }
     else {
