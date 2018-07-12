@@ -1,9 +1,10 @@
 const express = require('express');
 const router = express.Router();
 
-const cdController = require('../app/controllers/city-and-district');
-const productsController = require('../app/controllers/product');
-const brandController = require('../app/controllers/brand');
+const cdController = require('../app/controllers/city-and-district'),
+    credentialController = require('../app/controllers/credential'),
+    productController = require('../app/controllers/product'),
+    orderController = require('../app/controllers/order');
 const categoriesController = require('../app/controllers/category');
 const topCategoriesController = require('../app/controllers/top-categories');
 const contactController = require('../app/controllers/contact');
@@ -17,7 +18,22 @@ router.get('/', function (req, res, next) {
 }).get('/user', function (req, res, next) {
     res.render('admin/pages/user');
 })
-    .get('/orders', cdController.getAllCities, (req, res) => res.render('admin/pages/orders', {path: '/orders'}));
+    .get('/orders', cdController.getAllCities, (req, res) => res.render('admin/pages/orders', {path: '/orders'}))
+    .get('/orders/create', cdController.getAllCities, (req, res) => res.render('admin/pages/orders/order-form', {path: '/orders/create'}))
+    .post('/orders/create', productController.setSelectedProductCodeArrayFromCart,
+        productController.getProductByCodesArray,
+        orderController.validate, orderController.insertOne,
+        (req, res) => {
+            if (res.locals.errs && Object.keys(res.locals.errs).length !== 0) {
+                res.render('admin/pages/orders/order-form', {
+                    path: '/orders/create',
+                });
+            } else {
+                res.render('index', {
+                    link: '/manager/dashboard/orders/create'
+                });
+            }
+        });
 
 
 router

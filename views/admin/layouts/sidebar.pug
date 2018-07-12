@@ -87,10 +87,15 @@ section
                             a(href='/manager/dashboard/users-manager/users') Users
                         li(class={'active': path === '/users-manager/users/create'})
                             a(href='/manager/dashboard/users-manager/users/create') Add User
-                li(class={'active': path === '/orders'})
-                    a(href='/manager/dashboard/orders')
+                li(class={'active': path.includes('/orders')})
+                    a.menu-toggle(href='javascript:void(0)')
                         i.material-icons shopping_cart
                         span Orders
+                    ul.ml-menu
+                        li(class={'active': path === '/orders'})
+                            a(href='/manager/dashboard/orders') Orders
+                        li(class={'active': path === '/orders/create'})
+                            a(href='/manager/dashboard/orders/create') Add Orders
                 li(class={'active': path.includes('/warehouse-manager')})
                     a.menu-toggle(href='javascript:void(0);')
                         i.material-icons store

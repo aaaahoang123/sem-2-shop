@@ -56,10 +56,10 @@ module.exports = {
 
     responseInsertOneCustomerFormView: (req, res) => {
         if (res.locals.errs && Object.keys(res.locals.errs).length !== 0) {
-            console.log(res.locals.errs);
             res.render('client/pages/order', {
                 path: '/order',
-                customer: req.body
+                customer: req.body,
+                cart: JSON.parse(req.cookies.cart)
             });
         } else {
             res.render('index');
