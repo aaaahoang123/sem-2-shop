@@ -408,6 +408,21 @@ module.exports = {
     setProductCodeArrayFromCart: (req, res, next) => {
         if (req.cookies.cart) req.productCodesArray = Object.keys(JSON.parse(req.cookies.cart));
         next();
+    },
+
+    setSelectedProductCodeArrayFromCart: (req, res, next) =>{
+        if (req.cookies.cart) {
+            let cart = JSON.parse(req.cookies.cart);
+            req.productCodesArray = [];
+            for (let k in cart) {
+                if (cart[k].selected) {
+                    req.productCodesArray.push(k);
+                    delete cart[k]
+                }
+            }
+            req.newCart = cart;
+        }
+        next();
     }
 };
 

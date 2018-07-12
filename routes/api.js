@@ -1,9 +1,10 @@
 const express = require('express');
 const router = express.Router();
 
-const productsController = require('../app/controllers/product'),
-    categoriesController = require('../app/controllers/category'),
-    cdController = require('../app/controllers/city-and-district');
+const productsController = require('../app/controllers/product');
+const categoriesController = require('../app/controllers/category');
+const cdController = require('../app/controllers/city-and-district');
+
 router
     .get('/products', productsController.getList,
         (req, res) => {

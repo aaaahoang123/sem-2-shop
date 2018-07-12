@@ -4,7 +4,7 @@ block title
     title Product
 
 block extra-meta
-    meta(name='product-code' content=products[0].code)
+    meta(name='product-code' content=product.code)
 
 block append script
     script(type='text/javascript' src='/client/js/product_custom.js')
@@ -44,15 +44,15 @@ block append script
             code.unshift($('meta[name="product-code"]').attr("content"));
             Cookies.set('code', code, {expires: 3});
         });
+
 block append link
     link(rel='stylesheet' type='text/css' href='/client/styles/product_styles.css')
     link(rel='stylesheet' type='text/css' href='/client/styles/product_responsive.css')
 
 block content
-    - if (!products || products.length === 0)
+    - if (!product || product.length === 0)
         include 404
     - else
-        - product = products[0]
         .single_product
             .container
                 .row

@@ -38,14 +38,14 @@
                     .top_bar_user
                         - if (!logedIn)
                             .user_icon
-                                img(src='client/images/user.svg' alt='')
+                                img(src='/client/images/user.svg' alt='')
                             div
                                 a(href='/register') Register
                             div
                                 a(href='/sign-in') Sign in
                         - else
                             .user_icon
-                                img(src='client/images/user.svg' alt='')
+                                img(src='/client/images/user.svg' alt='')
                             div
                                 a(href='javascript:void(0)') #{username}
                             div

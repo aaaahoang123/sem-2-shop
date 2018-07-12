@@ -10,7 +10,9 @@ const brandController = require('../app/controllers/brand');
 const renderer = require('../app/controllers/client'),
     userController = require('../app/controllers/user'),
     accountController = require('../app/controllers/account'),
-    credentialController = require('../app/controllers/credential');
+    credentialController = require('../app/controllers/credential'),
+    cityNDistrict = require('../app/controllers/city-and-district'),
+    orderController = require('../app/controllers/order');
 
 router.use('/*', categoryController.findAll, (req, res, next) => {
     if (req.cookies.token) res.locals.logedIn = true;
@@ -18,7 +20,7 @@ router.use('/*', categoryController.findAll, (req, res, next) => {
     res.locals.webConfig = require('../app/resource/web-config');
     res.locals.cartLength = 0;
     console.log(req.cookies.cart);
-    if (req.cookies.cart) {
+    if (req.cookies.cart && req.cookies.cart !== []) {
         res.locals.cartLength = Object.keys(JSON.parse(req.cookies.cart)).length;
     }
     next();
@@ -45,6 +47,19 @@ router.get('/cart',productController.setProductCodeArrayFromCart, productControl
     res.render('client/pages/cart', {cart: cart});
 });
 
+router.get('/order', credentialController.setTokenFromCookie, credentialController.checkCredential,
+    productController.setSelectedProductCodeArrayFromCart, productController.getProductByCodesArray,
+    cityNDistrict.getAllCities, function(req, res, next) {
+        let cart = {};
+        if (req.cookies.cart) cart = JSON.parse(req.cookies.cart);
+        res.render('client/pages/order', {cart: cart});
+});
+
+router.post('/order', credentialController.setTokenFromCookie, credentialController.checkCredential,
+    productController.setSelectedProductCodeArrayFromCart, productController.getProductByCodesArray,
+    orderController.validate, orderController.insertOne,
+    orderController.responseInsertOneCustomerFormView);
+
 router.get('/contact', function(req, res, next) {
     res.render('client/pages/contact');
 });
@@ -54,7 +69,7 @@ router.get('/product/:code',categoryController.findAll,
     productController.setProductCodeArrayFromCookie,
     productController.getProductByCodesArray,
     brandController.getList, function(req, res, next) {
-    res.render('client/pages/product', {products: req.products});
+    res.render('client/pages/product');
 });
 
 router.get('/regular', categoryController.findAll,function(req, res, next) {
@@ -69,7 +84,7 @@ router.get('/shop', categoryController.findAll, categoryController.getOne,
     productController.getList,
     function(req, res, next) {
         res.locals.path = '/shop';
-        if (req.products.length === 0) {
+        if (res.locals.products.length === 0) {
             res.render('client/pages/shop', {
                 type: 0,
             });
@@ -77,14 +92,12 @@ router.get('/shop', categoryController.findAll, categoryController.getOne,
         else if (!req.meta) {
             res.render('client/pages/shop', {
                 type: 1,
-                products: req.products,
                 total: req.total
             });
         }
         else {
             res.render('client/pages/shop', {
                 type: 2,
-                products: req.products,
                 total: req.total,
                 meta: req.meta
             });
@@ -110,7 +123,7 @@ router.get('/register', (req, res) => res.render('client/pages/register'))
 
 router.get('/sign-in', (req, res) => res.render('client/pages/sign-in'))
     .post('/sign-in', accountController.getOne, accountController.comparePassword, credentialController.insertOne, (req, res) => {
-        if (res.locals.errs) {
+        if (res.locals.errs && Object.keys(res.locals.errs).length !== 0) {
             res.render('client/pages/sign-in', {account: req.body});
             return;
         }
@@ -118,4 +131,5 @@ router.get('/sign-in', (req, res) => res.render('client/pages/sign-in'))
         res.cookie('username', res.locals.account.username);
         res.redirect('/');
     });
+
 module.exports = router;
