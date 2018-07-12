@@ -4,9 +4,7 @@ $('.city-select').change(function () {
         url: '/api/districts?cid=' + id,
         type: 'GET',
         success: function (res) {
-            $('.district-select').attr('disabled', false);
-            $('.district-select').html('');
-            $('.district-select').append(`<option selected disabled>-- Choose your district --</option>`);
+            $('.district-select').attr('disabled', false).html('').append(`<option selected disabled>-- Choose your district --</option>`);
             res.forEach(function (district) {
                 $('.district-select').append(`<option value="${district.ID}">${district.Title}</option>`);
             })

@@ -5,6 +5,7 @@ block extra-css
 
 block extra-js
     script(type='text/javascript' src='/admin/plugins/autosize/autosize.min.js')
+    script(type='text/javascript' src='/admin/plugins/js-cookie/js.cookie.min.js')
     script(type='text/javascript' src='/admin/js/pages/orders/order-form.js')
 
 block content
@@ -13,6 +14,7 @@ block content
             h2
                 | Order Products
         .body
+            #alert-product.alert.bg-red(style='display:none') Please select some Product
             table.table.table-bordered
                 thead
                     tr
@@ -31,7 +33,7 @@ block content
                         th.text-center(scope='row') 1
                         td
                             select.select-product.form-control(data-live-search='true' data-index=0)
-                                option Search Product
+                                option(value='' data-price=0) Search Product
                         td
                             .form-group(style='margin-bottom: 0')
                                 .form-line
@@ -45,4 +47,58 @@ block content
             h2
                 | Order Information
         .body
-            | dkm
+            form(name='order-form' method='POST' action='/manager/dashboard/orders/create')
+                .row.clearfix
+                    .col-sm-6
+                        b Email
+                        .input-group
+                            span.input-group-addon
+                                i.material-icons contact_mail
+                            .form-line
+                                input.form-control(name='receiver_email' type='email' placeholder='Contact Email')
+                            label.text-danger
+                    .col-sm-6
+                        b Phone
+                        .input-group
+                            span.input-group-addon
+                                i.material-icons phone
+                            .form-line
+                                input.form-control(name='receiver_phone' type='text' placeholder='Contact Phone')
+                            label.text-danger
+
+                .row.clearfix
+                    .col-sm-4
+                        b City
+                        .input-group
+                            span.input-group-addon
+                                i.material-icons location_city
+                            .form-line
+                                select#select-city.form-control(data-live-search='true' name='receiver_city')
+                                    option(value='') Choose city
+                                    - if (cities)
+                                        - for (c of cities)
+                                            option(value=c.ID) #{c.Title}
+                            label.text-danger
+                    .col-sm-4
+                        b District
+                        .input-group
+                            span.input-group-addon
+                                i.material-icons location_searching
+                            .form-line
+                                select#select-district.form-control(data-live-search='true' disabled name='receiver_district')
+                                    option(value='') Choose district
+                            label.text-danger
+
+                    .col-sm-4
+                        b Address
+                        .input-group
+                            span.input-group-addon
+                                i.material-icons location_on
+                            .form-line
+                                input.form-control.date(name='receiver_address' type='text' placeholder='Address')
+                            label.text-danger
+                    input#total-price-input(type='hidden' name='total')
+                button#submit-btn.btn.btn-danger.waves-effect(type='submit')
+                    | Submit
+                button.btn.btn-warning.waves-effect.m-l-5(type='reset')
+                    | Reset
