@@ -8,6 +8,8 @@ $(document).ready(function () {
         total.value = $('.' + arrItemChecked[i].id).html();
         $('.cart_items').append(total);
         $('.inp-' + $(arrItemChecked[i]).val()).prop("readonly", true);
+        $('.btn-' + arrItemChecked[i].id).prop("disabled", true);
+        $('.btn-' + arrItemChecked[i].id).css("cursor", "");
     }
     countToTalAllProduct();
 });
@@ -28,6 +30,8 @@ $('#check-all').change(function () {
 function checkItem(e) {
     if (e.checked) {
         $('.inp-' + $(e).val()).prop("readonly", true);
+        $('.btn-' + e.id).prop("disabled", true);
+        $('.btn-' + e.id).css("cursor", "");
         if ($('#Total' + e.id).length === 0) {
             var total = document.createElement('input');
             total.id = "Total" + e.id;
@@ -40,6 +44,8 @@ function checkItem(e) {
     }
     else {
         $('.inp-' + $(e).val()).removeAttr("readonly");
+        $('.btn-' + e.id).removeAttr("disabled");
+        $('.btn-' + e.id).css("cursor", "pointer");
         $('#Total' + e.id).remove();
         delete cart[e.id].selected;
     }
@@ -54,4 +60,22 @@ function countToTalAllProduct() {
         sum += parseInt(arrPrice[i].value);
     }
     $('.order_total_amount').html(sum);
+}
+function removeProduct(e) {
+    delete cart[$(e).data('code')];
+    Cookies.set("cart", cart);
+    if ($('.tr').length === 1) {
+        $('#shoppingCart').remove();
+        $('.cart_section > .container').html(
+            "<div class='row text-center'>" +
+                "<div class='col-lg-12'>" +
+                    "<h1>No product in your cart</h1>" +
+                "</div>" +
+                "<div class='col-lg-12'>" +
+                    "<a class='button cart_button_clear' href='/' style='margin: 50px'>Continue shopping</a>" +
+                "</div>" +
+            "</div>"
+        );
+    }
+    $('.tr-' + $(e).data('code')).remove();
 }

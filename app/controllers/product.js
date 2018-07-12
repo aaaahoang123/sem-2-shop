@@ -6,24 +6,24 @@ const mongoose = require('mongoose');
 
 module.exports = {
     validate: function (req, res, next) {
-        if (!req.errs) req.errs = {};
+        if (!res.locals.errs) res.locals.errs = {};
 
-        if (!req.body.name || req.body.name === null || req.body.name === "") req.errs.name = "Product Name cant not null";
+        if (!req.body.name || req.body.name === null || req.body.name === "") res.locals.errs.name = "Product Name cant not null";
 
-        if (!req.body.code || req.body.code === null || req.body.code === "") req.errs.code = "Product Code cant not null";
+        if (!req.body.code || req.body.code === null || req.body.code === "") res.locals.errs.code = "Product Code cant not null";
 
-        if (!req.body.description || req.body.description === null || req.body.description === "") req.errs.description = "Product Description cant not null";
+        if (!req.body.description || req.body.description === null || req.body.description === "") res.locals.errs.description = "Product Description cant not null";
 
-        if (!req.body.categories || req.body.categories === null || req.body.categories === "" || req.body.categories.length === 0) req.errs.categories = "Product Categories cant not null";
+        if (!req.body.categories || req.body.categories === null || req.body.categories === "" || req.body.categories.length === 0) res.locals.errs.categories = "Product Categories cant not null";
 
-        if (!req.body.brand || req.body.brand === null || req.body.brand === "") req.errs.brand = "Product Brand cant not null";
+        if (!req.body.brand || req.body.brand === null || req.body.brand === "") res.locals.errs.brand = "Product Brand cant not null";
 
-        if (!req.body.price || req.body.price === null || req.body.price === "") req.errs.price = "Product Price cant not null";
+        if (!req.body.price || req.body.price === null || req.body.price === "") res.locals.errs.price = "Product Price cant not null";
 
-        if (!req.body.images || req.body.images === null || req.body.images === "") req.errs.images = "Product Images cant not null";
+        if (!req.body.images || req.body.images === null || req.body.images === "") res.locals.errs.images = "Product Images cant not null";
 
-        if (Object.keys(req.errs).length !== 0) {
-            req.errStatus = 400;
+        if (Object.keys(res.locals.errs).length !== 0) {
+            res.locals.errStatus = 400;
         }
         next();
     },
@@ -46,23 +46,23 @@ module.exports = {
     },
 
     insertOne: function (req, res, next) {
-        if (req.errs && Object.keys(req.errs).length !== 0) {
+        if (res.locals.errs && Object.keys(res.locals.errs).length !== 0) {
             next();
             return;
         }
         let newProduct = new model(req.body);
         newProduct.save(function (err, result) {
             if (err) {
-                if (!req.errs) req.errs = {};
+                if (!res.locals.errs) res.locals.errs = {};
                 if (err.code === 11000) {
-                    req.errStatus = 409;
-                    req.errs.name = "This product code has already existed";
+                    res.locals.errStatus = 409;
+                    res.locals.errs.name = "This product code has already existed";
                 }
-                req.errs.database = err.message;
+                res.locals.errs.database = err.message;
                 next();
                 return;
             }
-            req.successResponse = {
+            res.locals.successResponse = {
                 title: 'Success',
                 detail: 'Add Product successfully',
                 link: '/manager/dashboard/products-manager/add-brand',
@@ -106,30 +106,27 @@ module.exports = {
                 next();
                 return;
             }
-            req.products = result;
+            if (result.length!==0) res.locals.product = result[0];
             next();
         });
     },
 
     productView: function (req, res, next) {
-        let length = req.products.length;
+        let length = res.locals.products.length;
         res.locals.path = '/products-manager/products';
         if (length === 0) {
             res.render('admin/pages/products-manager/products', {
-                type: 0,
+                type: 0
             });
         }
         else if (!req.meta) {
             res.render('admin/pages/products-manager/products', {
-                type: 1,
-                products: req.products,
+                type: 1
             });
         }
         else {
             res.render('admin/pages/products-manager/products', {
-                type: 2,
-                products: req.products,
-                meta: req.meta
+                type: 2
             });
         }
     },
@@ -174,7 +171,7 @@ module.exports = {
                     data: [{$skip: skip}, {$limit: limit}] // add projection here wish you re-shape the docs
                 }
             }
-            ];
+        ];
 
         /**
          * Nếu có tìm kiếm, tạo match và đẩy vào đầu array query
@@ -189,6 +186,7 @@ module.exports = {
                 {name: pattern}
             ];
         }
+        if (req.query.noneLimitProduct) query[query.length-1].$facet.data.length = 1;
         if (res.locals.category || res.locals.brand || req.query.min || req.query.max || req.query.sort) {
             query[0].$match.$and = [];
             if (q) query[0].$match.$and.push({$or: q});
@@ -207,7 +205,6 @@ module.exports = {
                 let sortArr = req.query.sort.split('_');
                 let sortObj = {$sort: {}};
                 sortObj.$sort[sortArr[0]] = Number(sortArr[1]);
-
                 query.splice(1,0,sortObj)
             }
         }
@@ -216,24 +213,24 @@ module.exports = {
         model.aggregate(query, function (err, result) {
             if (err) {
                 console.log(err);
-                if (!req.errs) req.errs = {};
-                req.errs.database = err.message;
+                if (!res.locals.errs) res.locals.errs = {};
+                res.locals.errs.database = err.message;
                 next();
                 return;
             }
             // Kết quả trả về có dạng [{meta: [{}], data: [{}]}]. Trong trường hợp không tìm thấy thì đặt req.products = [] và next()
             if (result.length === 0 || result[0].meta.length === 0) {
-                req.products = [];
+                res.locals.products = [];
                 next();
                 return;
             }
             if (sort !== '') res.locals.sort = sort;
-            req.products = result[0].data;
-            req.total = result[0].meta[0].totalItems;
-            req.meta = {
-                totalItems: req.total,
-                total: Math.ceil(req.total / limit),
-                limit: limit,
+            res.locals.products = result[0].data;
+            let totalItems = result[0].meta[0].totalItems;
+            res.locals.meta = {
+                totalItems: totalItems,
+                total: Math.ceil(totalItems / limit),
+                limit: !req.lp?limit:'none',
                 offset: skip,
                 page: page,
                 q: req.query.q,
@@ -255,16 +252,17 @@ module.exports = {
         model.findOneAndUpdate({code: req.params.code}, {$set: product}, function (err, result) {
             if (err) {
                 console.log(err);
-                if (!req.errs) req.errs = {};
+                if (!res.locals.errs) res.locals.errs = {};
                 if (err.code === 11000){
-                    req.errStatus = 409;
-                    req.errs.name = "This Product code has already existed";
+                    res.locals.errStatus = 409;
+                    res.locals.errs.name = "This Product code has already existed";
                 }
-                req.errs.database = err.message;
+                res.locals.errs.database = err.message;
+                res.locals.product = req.body;
                 next();
                 return;
             }
-            req.successResponse = {
+            res.locals.successResponse = {
                 title: 'Success',
                 detail: 'Edit product successfully',
                 link: '/manager/dashboard/products-manager/products',
@@ -282,19 +280,19 @@ module.exports = {
         model.findOneAndUpdate(query, {$set: {status: -1, updated_at: Date.now()}}, {new: true}, function (err, result) {
             if(err){
                 console.log(err);
-                if (!req.errs) req.errs = {};
-                req.errs.database = err.message;
+                if (!req.errs) res.locals.errs = {};
+                res.locals.errs.database = err.message;
                 next();
                 return;
             }
             if(result === null) {
-                if (!req.errs) req.errs = {};
-                req.errStatus = 404;
-                req.errs["404"] = 'Product not found';
+                if (!req.errs) res.locals.errs = {};
+                res.locals.errStatus = 404;
+                res.locals.errs["404"] = 'Product not found';
                 next();
                 return;
             }
-            req.successResponse = {
+            res.locals.successResponse = {
                 title: 'Success',
                 detail: 'Delete product successfully',
                 link: '/manager/dashboard/products-manager/product',
@@ -306,36 +304,33 @@ module.exports = {
     },
 
     responseProductJson:  function (req, res, next) {
-        if(req.errs && Object.keys(req.errs).length !== 0){
-            res.status(req.errStatus);
-            if (req.errStatus === 400) {
+        if(res.locals.errs && Object.keys(res.locals.errs).length !== 0){
+            res.status(res.locals.errStatus);
+            if (res.locals.errStatus === 400) {
                 res.send({
                     code: 400,
                     message: "Product code, name, description, brand, images, category not null"
                 });
-            } else if (req.errStatus === 409) {
+            } else if (res.locals.errStatus === 409) {
                 res.send({
                     code: 409,
-                    message: req.errs.name
+                    message: res.locals.errs.name
                 })
-            }else if(req.errStatus === 404){
+            }else if(res.locals.errStatus === 404){
                 res.send({
                     code: 404,
-                    message: req.errs["404"]
+                    message: res.locals.errs["404"]
                 })
             }
             return;
         }
-        res.status(req.successResponse.status);
-        res.send(req.successResponse.result);
-
+        res.status(res.locals.successResponse.status);
+        res.send(res.locals.successResponse.result);
     },
 
     responseEditFormView: function(req, res, next){
         res.render('admin/pages/products-manager/products-form', {
             path: '/products-manager/products',
-            products: (req.products && req.products.length !== 0)?req.products[0]:undefined,
-            categories: (req.categories && req.categories.length !== 0)?req.categories:[],
             title: 'EDIT PRODUCTS',
             link: '/manager/dashboard/products-manager/products',
             extraJs: '/admin/js/pages/products-manager/edit-product.js',
@@ -344,11 +339,10 @@ module.exports = {
     },
 
     responseProductFormView: function (req, res, next) {
-        if((!req.errs || Object.keys(req.errs).length === 0) && (!req.successResponse || Object.keys(req.successResponse).length === 0)){
+        if((!res.locals.errs || Object.keys(res.locals.errs).length === 0) && (!res.locals.successResponse || Object.keys(res.locals.successResponse).length === 0)){
             res.render('admin/pages/products-manager/products-form', {
                 path: '/products-manager/add-product',
                 title: 'ADD PRODUCT',
-                categories: (req.categories && req.categories.length !== 0)?req.categories:[]
             });
         }
     },
@@ -413,7 +407,6 @@ module.exports = {
 
     setProductCodeArrayFromCart: (req, res, next) => {
         if (req.cookies.cart) req.productCodesArray = Object.keys(JSON.parse(req.cookies.cart));
-        // else req.productCodesArray = {};
         next();
     }
 };

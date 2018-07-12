@@ -1,0 +1,96 @@
+extends ../../layouts/master
+
+block extra-css
+    link(rel='stylesheet' href='/admin/plugins/bootstrap-select/css/bootstrap-select.min.css')
+
+block extra-js
+    script(type='text/javascript' src='/admin/plugins/autosize/autosize.min.js')
+    //script(type='text/javascript' src='/admin/plugins/bootstrap-suggest/bootstrap-suggest.js')
+    script(type='text/javascript').
+        $('#select-city').on('change', function () {
+            $.ajax({
+                url: '/api/districts?cid=' + $(this).val(),
+                method: 'GET',
+                success: function (res) {
+                    var s = $('#select-district');
+                    s.html('');
+                    res.forEach(function (d) {
+                        s.append($('<option>').val(d.ID).text(d.Title))
+                    });
+                    s.removeAttr('disabled');
+                    s.selectpicker('refresh');
+                },
+                error: function (err) {
+                    console.log(err);
+                }
+            });
+        })
+
+block content
+    .card.p-b-15
+        .header
+            h2
+                | Orders
+            ul.header-dropdown.m-r--5
+                li.dropdown
+                    a.dropdown-toggle(href='javascript:void(0);' data-toggle='dropdown' role='button' aria-haspopup='true' aria-expanded='false')
+                        i.material-icons more_vert
+                    ul.dropdown-menu.pull-right
+                        li
+                            a(href='javascript:void(0);') Action
+                        li
+                            a(href='javascript:void(0);') Another action
+                        li
+                            a(href='javascript:void(0);') Something else here
+        .body.table-responsive
+            .row
+                .col-sm-3.col-md-2
+                    .input-group
+                        span.input-group-addon
+                            | City
+                        .form-line
+                            select#select-city.form-control.show-tick.no-resize(data-live-search='true')
+                                option Choose city
+                                - if (cities&&cities.length !=0)
+                                    - for (city of cities)
+                                        option(value=city.ID)= city.Title
+                .col-sm-3.col-md-2
+                    .input-group
+                        span.input-group-addon
+                            | District
+                        .form-line
+                            select#select-district.form-control.show-tick.no-resize(data-live-search='true' disabled)
+
+            table.table.table-bordered
+                thead
+                    tr
+                        th CODE
+                        th FIRST NAME
+                        th LAST NAME
+                        th USERNAME
+                tbody
+                    tr
+                        th(scope='row') 1
+                        td Mark
+                        td Otto
+                        td @mdo
+                    tr
+                        th(scope='row') 2
+                        td Jacob
+                        td Thornton
+                        td @fat
+                    tr
+                        th(scope='row') 3
+                        td Larry
+                        td the Bird
+                        td @twitter
+                    tr
+                        th(scope='row') 4
+                        td Larry
+                        td Jellybean
+                        td @lajelly
+                    tr
+                        th(scope='row') 5
+                        td Larry
+                        td Kikat
+                        td @lakitkat

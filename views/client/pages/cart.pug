@@ -14,12 +14,14 @@ block content
     // Cart
     .cart_section
         .container
-            .row
-                - if (!rvProducts || rvProducts.length === 0)
-                    p no product
-                    .cart_buttons
-                        a.button.cart_button_clear(href="/") Continue shopping
-                - else
+            - if (!rvProducts || rvProducts.length === 0)
+                .row.text-center
+                    .col-lg-12
+                        h1 No product in your cart
+                    .col-lg-12
+                        a.button.cart_button_clear(href="/" style="margin: 50px") Continue shopping
+            - else
+                .row#shoppingCart
                     .col-lg-12
                         .cart_container
                             .cart_title Shopping Cart
@@ -29,7 +31,7 @@ block content
                                         input#check-all(type='checkbox')
                                         label(for='check-all') Check All
                             .cart_items
-                                table.table.table-bordered
+                                table.table
                                     thead
                                         tr.text-center
                                             th Check
@@ -38,11 +40,10 @@ block content
                                             th Quantity
                                             th Price($)
                                             th Total($)
+                                            th Remove
                                     tbody.text-center
-                                        - let a = 0;
                                         - for (let i = 0; i < rvProducts.length; i ++)
-                                            - a += cart[rvProducts[i].code].quantity * rvProducts[i].price
-                                            tr
+                                            tr.tr(class='tr-' + rvProducts[i].code)
                                                 td
                                                     input.item-checkbox(type='checkbox' id=rvProducts[i].code value=rvProducts[i]._id onchange='checkItem(this)' checked=cart[rvProducts[i].code].selected)
                                                     label(for=rvProducts[i].code)
@@ -56,6 +57,9 @@ block content
                                                     input.form-control(class='inp-' + rvProducts[i]._id type='number', min='1', style='width: 80px; margin: auto' value=cart[rvProducts[i].code].quantity data-code=rvProducts[i].code onchange='countTotalPrice(this)')
                                                 td(class='price-' + rvProducts[i].code) #{rvProducts[i].price}
                                                 td(class=rvProducts[i].code) #{cart[rvProducts[i].code].quantity * rvProducts[i].price}
+                                                td
+                                                    button(class='btn-' + rvProducts[i].code style="padding: 0px; background: 0 0; border: 0; cursor: pointer" data-code=rvProducts[i].code onclick="removeProduct(this)")
+                                                        i.material-icons remove_shopping_cart
                             // Order Total
                             .order_total
                                 .order_total_content.text-md-right

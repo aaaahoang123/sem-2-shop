@@ -1,6 +1,12 @@
 if (typeof jQuery === "undefined") {
     throw new Error("jQuery plugins need to be before this file");
 }
+// $(document).ready(function () {
+//     Cookies.set('abc', 'hoang');
+// });
+window.onbeforeunload = function() {
+    Cookies.remove('abc');
+};
 $.AdminBSB = {};
 $.AdminBSB.options = {
     colors: {

@@ -1,0 +1,29 @@
+extends ../layout/master
+
+block title
+    title Sign In
+
+block append link
+    link(rel='stylesheet' type='text/css' href='client/styles/cart_styles.css')
+    link(rel='stylesheet' type='text/css' href='client/styles/cart_responsive.css')
+    style.
+        select {
+            margin-left: 0!important;
+        }
+
+block content
+    .container.mt-2
+        h4 Register Form
+        form(method='POST' action='/sign-in')
+            .form-row
+                .form-group.col-md-6
+                    label(for='input-full-name') Username
+                    input#input-full-name.form-control(type='text' placeholder='Username' name='username' required value=account?account.username:'')
+                    - if (errs && errs.username)
+                        span.text-danger #{errs.username}
+                .form-group.col-md-6
+                    label(for='input-address') Password
+                    input#input-address.form-control(type='password' placeholder='Password' name='password' required value=account?account.password:'')
+                    - if (errs && errs.Password)
+                        span.text-danger #{errs.Password}
+            button.btn.btn-primary(type='submit') Sign in
