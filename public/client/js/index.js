@@ -9,7 +9,8 @@ function addToCart(el) {
     }
     else {
         cart[$(el).data('code')] = {
-            "quantity": 1
+            "quantity": 1,
+            "selected": true
         };
     }
     showNotification("alert-success", "Add to cart Success", "bottom", "left", "animated bounceIn", "animated bounceOut");
