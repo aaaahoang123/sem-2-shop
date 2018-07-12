@@ -4,29 +4,22 @@
             .footer_column.footer_contact
                 .logo_container
                     .logo
-                        a(href='#') OneTech
+                        a(href='/') #{webConfig.information.name}
                 .footer_title Got Question? Call Us 24/7
-                .footer_phone +38 068 005 3570
+                .footer_phone= webConfig.contact.phone
                 .footer_contact_text
-                    p 17 Princess Road, London
-                    p Grester London NW18JR, UK
+                    p= webConfig.contact.address
                 .footer_social
                     ul
                         li
-                            a(href='#')
+                            a(href=webConfig.contact.facebook)
                                 i.fab.fa-facebook-f
                         li
-                            a(href='#')
+                            a(href=webConfig.contact.twitter)
                                 i.fab.fa-twitter
                         li
-                            a(href='#')
-                                i.fab.fa-youtube
-                        li
-                            a(href='#')
-                                i.fab.fa-google
-                        li
-                            a(href='#')
-                                i.fab.fa-vimeo-v
+                            a(href=webConfig.contact.instagram)
+                                i.fab.fa-instagram
         .col-lg-2.offset-lg-2
             .footer_column
                 .footer_title Find it Fast

@@ -17,6 +17,7 @@ const renderer = require('../app/controllers/client'),
 router.use('/*', categoryController.findAll, (req, res, next) => {
     if (req.cookies.token) res.locals.logedIn = true;
     if (req.cookies.username) res.locals.username = req.cookies.username;
+    res.locals.webConfig = require('../app/resource/web-config');
     res.locals.cartLength = 0;
     console.log(req.cookies.cart);
     if (req.cookies.cart && req.cookies.cart !== []) {
@@ -26,7 +27,8 @@ router.use('/*', categoryController.findAll, (req, res, next) => {
 });
 /* GET home page. */
 
-router.get('/',webConfigController.getTopCategories, productController.setProductCodeArrayFromCookie,
+router.get('/', webConfigController.getTopCategories,
+    productController.setProductCodeArrayFromCookie,
     productController.getProductByCodesArray,
     brandController.getList,
     renderer.renderHomePage);
