@@ -20,14 +20,14 @@
   },
   "footer": [
     {
-      "title": "Chính sách 1111111111111111",
+      "name": "Chính sách 1111111111111111",
       "blogs": [
         "Dien thoai iphone 111111111111",
-        "xyz"
+        ""
       ]
     },
     {
-      "title": "Chính sách 2",
+      "name": "Chính sách 2",
       "blogs": [
         "Dien thoai iphone 11",
         ""
