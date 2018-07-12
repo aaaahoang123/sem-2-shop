@@ -11,18 +11,24 @@ block content
     .card.p-b-15
         .header
             h2
-                | Orders Form
+                | Order Products
         .body
             table.table.table-bordered
                 thead
                     tr
-                        th #
-                        th PRODUCT
-                        th QUANTITY
-                        th TOTAL PRICE
+                        th.text-center #
+                        th.text-center PRODUCT
+                        th.text-center QUANTITY
+                        th.text-center UNIT PRICE
+                        th.text-center TOTAL PRICE
+                tfoot
+                    tr
+                        th.text-center(rowspan='1' colspan='1') TOTAL
+                        th#order-total-price.text-center(rowspan='1' colspan='2') 0
+
                 tbody#product-table
                     tr(data-price=0 data-index=0)
-                        th(scope='row') 1
+                        th.text-center(scope='row') 1
                         td
                             select.select-product.form-control(data-live-search='true' data-index=0)
                                 option Search Product
@@ -30,6 +36,13 @@ block content
                             .form-group(style='margin-bottom: 0')
                                 .form-line
                                     input.input-quantity.form-control(placeholder='Quantity' type='number' value=1 data-index=0)
+                        td.unit-price(data-index=0)
                         td.total-price(data-index=0)
             button#add-product-btn.btn.btn-danger.waves-effect(type='button')
                 | Add Product
+    .card.p-b-15
+        .header
+            h2
+                | Order Information
+        .body
+            | dkm
