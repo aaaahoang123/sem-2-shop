@@ -8,6 +8,7 @@ const categoriesController = require('../app/controllers/category');
 const topCategoriesController = require('../app/controllers/top-categories');
 const contactController = require('../app/controllers/contact');
 const informationController = require('../app/controllers/information');
+
 /* GET users listing. */
 router.get('/', function (req, res, next) {
     res.render('admin/pages/index', {path: '/'});

@@ -4,11 +4,11 @@
             .col.d-flex.flex-row
                 .top_bar_contact_item
                     .top_bar_icon
-                        img(src='client/images/phone.png' alt='')
+                        img(src='/client/images/phone.png' alt='')
                     | +38 068 005 3570
                 .top_bar_contact_item
                     .top_bar_icon
-                        img(src='client/images/mail.png' alt='')
+                        img(src='/client/images/mail.png' alt='')
                     a(href='mailto:fastsales@gmail.com') fastsales@gmail.com
                 .top_bar_content.ml-auto
                     .top_bar_menu
@@ -38,14 +38,14 @@
                     .top_bar_user
                         - if (!logedIn)
                             .user_icon
-                                img(src='client/images/user.svg' alt='')
+                                img(src='/client/images/user.svg' alt='')
                             div
                                 a(href='/register') Register
                             div
                                 a(href='/sign-in') Sign in
                         - else
                             .user_icon
-                                img(src='client/images/user.svg' alt='')
+                                img(src='/client/images/user.svg' alt='')
                             div
                                 a(href='javascript:void(0)') #{username}
                             div
@@ -90,7 +90,7 @@
                 .wishlist_cart.d-flex.flex-row.align-items-center.justify-content-end
                     .wishlist.d-flex.flex-row.align-items-center.justify-content-end
                         .wishlist_icon
-                            img(src='client/images/heart.png' alt='')
+                            img(src='/client/images/heart.png' alt='')
                         .wishlist_content
                             .wishlist_text
                                 a(href='#') Wishlist
@@ -99,13 +99,12 @@
                     .cart
                         .cart_container.d-flex.flex-row.align-items-center.justify-content-end
                             .cart_icon
-                                img(src='client/images/cart.png' alt='')
+                                img(src='/client/images/cart.png' alt='')
                                 .cart_count
-                                    span 10
+                                    span #{cartLength}
                             .cart_content
                                 .cart_text
                                     a(href='/cart') Cart
-                                .cart_price $85
 // Main Navigation
 nav.main_nav
     .container

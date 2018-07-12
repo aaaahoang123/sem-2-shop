@@ -11,6 +11,10 @@ const schema = new mongoose.Schema({
         type: String,
         required: true
     },
+    receiver_city: {
+        type: Number,
+        required: true
+    },
     receiver_district: {
         type: Number,
         required: true
@@ -23,6 +27,7 @@ const schema = new mongoose.Schema({
         type: String,
         required: true
     },
+    total: Number,
     created_by: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'accounts'
