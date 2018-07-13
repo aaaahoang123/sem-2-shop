@@ -187,7 +187,7 @@ module.exports = {
             ];
         }
         if (req.query.noneLimitProduct) query[query.length-1].$facet.data.length = 1;
-        if (res.locals.category || res.locals.brand || req.query.min || req.query.max || req.query.sort) {
+        if (res.locals.category || res.locals.brand || req.query.min || req.query.max) {
             query[0].$match.$and = [];
             if (q) query[0].$match.$and.push({$or: q});
             if (res.locals.category) query[0].$match.$and.push({categories: res.locals.category._id});
@@ -200,13 +200,12 @@ module.exports = {
                 max=Number(req.query.max);
                 query[0].$match.$and.push({price: {$lt: max+1}});
             }
-            if (req.query.sort) {
-                sort = req.query.sort;
-                let sortArr = req.query.sort.split('_');
-                let sortObj = {$sort: {}};
-                sortObj.$sort[sortArr[0]] = Number(sortArr[1]);
-                query.splice(1,0,sortObj)
-            }
+        } else if (req.query.sort) {
+            sort = req.query.sort;
+            let sortArr = req.query.sort.split('_');
+            let sortObj = {$sort: {}};
+            sortObj.$sort[sortArr[0]] = Number(sortArr[1]);
+            query.splice(1,0,sortObj)
         }
         else if(q) query[0].$match.$or = q;
         // Thực thi aggregate query
