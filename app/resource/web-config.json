@@ -18,6 +18,24 @@
     "name": "Quan dai",
     "logo": "https://res.cloudinary.com/fpt-aptech/image/upload/v1531062065/dycuga4hz2a69euuimj9.png"
   },
+  "nav_bar": [
+    {
+      "name": "Home",
+      "href": "/"
+    },
+    {
+      "name": "Shop",
+      "href": "/shop"
+    },
+    {
+      "name": "Cart",
+      "href": "/cart"
+    },
+    {
+      "name": "Blog",
+      "href": "/blog"
+    }
+  ],
   "footer": [
     {
       "name": "Chính sách",

@@ -4,6 +4,7 @@ const router = express.Router();
 const productsController = require('../app/controllers/product');
 const categoriesController = require('../app/controllers/category');
 const cdController = require('../app/controllers/city-and-district');
+const navController = require('../app/controllers/nav-bar');
 const orderController = require('../app/controllers/order');
 
 router
@@ -59,6 +60,8 @@ router
         }
         res.json(res.locals.districts);
     })
+    .post('/nav-bar', navController.insert)
+
     .get('/charts', orderController.getAndGroupOrder, (req, res) => {
         if (res.locals.errs && Object.keys(res.locals.errs).length !== 0) {
             res.status(404);
@@ -70,6 +73,5 @@ router
         }
         res.json(res.locals.chart_data);
     });
-
 
 module.exports = router;
