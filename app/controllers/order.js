@@ -289,8 +289,8 @@ module.exports = {
             {
                 $match: {
                     status: {
-                        // $in: [1, 2]
-                        $in: [0]
+                        $in: [1, 2]
+                        // $in: [0]
                     }
                 }
             },
@@ -337,6 +337,11 @@ module.exports = {
                             quantity: {
                                 $sum: 1
                             }
+                        }
+                    },
+                    {
+                        $sort: {
+                            _id: 1
                         }
                     }
                 ];
