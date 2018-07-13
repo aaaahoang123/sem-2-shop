@@ -12,9 +12,10 @@ const renderer = require('../app/controllers/client'),
     accountController = require('../app/controllers/account'),
     credentialController = require('../app/controllers/credential'),
     cityNDistrict = require('../app/controllers/city-and-district'),
-    orderController = require('../app/controllers/order');
+    orderController = require('../app/controllers/order'),
+    navController = require('../app/controllers/nav-bar');
 
-router.use('/*', categoryController.findAll, (req, res, next) => {
+router.use('/*', categoryController.findAll, navController.getNavBar, (req, res, next) => {
     if (req.cookies.token) res.locals.logedIn = true;
     if (req.cookies.username) res.locals.username = req.cookies.username;
     res.locals.cartLength = 0;

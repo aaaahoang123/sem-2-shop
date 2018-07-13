@@ -4,6 +4,7 @@ const router = express.Router();
 const productsController = require('../app/controllers/product');
 const categoriesController = require('../app/controllers/category');
 const cdController = require('../app/controllers/city-and-district');
+const navController = require('../app/controllers/nav-bar');
 
 router
     .get('/products', productsController.getList,
@@ -57,5 +58,6 @@ router
             return;
         }
         res.json(res.locals.districts);
-    });
+    })
+    .post('/nav-bar', navController.insert);
 module.exports = router;
