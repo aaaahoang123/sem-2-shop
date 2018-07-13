@@ -9,12 +9,33 @@
 MyChart.prototype = {
 
     renderQuantity: function () {
+        var self= this;
         this.Promise.then(function (res) {
             var data = res[0].order_quantity;
             var keys = Object.keys(data[0]);
             $('#'+this.ORDER_QUANTITY_ELEM).html('');
             Morris.Bar({
-                element: ORDER_QUANTITY_ELEM,
+                element: self.ORDER_QUANTITY_ELEM,
+                data: data,
+                xkey: keys[0],
+                ykeys: [keys[1]],
+                barColors: ['rgb(0, 188, 212)'],
+                gridTextColor: ['rgb(233, 30, 99)'],
+                labels: ['Order']
+            });
+            return self.Promise;
+        });
+        return this;
+    },
+
+    renderRatio: function() {
+        var self = this;
+        this.Promise.then(function (res) {
+            var data = res[0].order_quantity;
+            var keys = Object.keys(data[0]);
+            $('#donut_chart').html('');
+            Morris.Bar({
+                element: 'donut_chart',
                 data: data,
                 xkey: keys[0],
                 ykeys: [keys[1]],
@@ -54,5 +75,5 @@ $(document).ready(function() {
         datatype: 'order_quantity',
         ofrom: start,
         oto: end
-    }).load().renderQuantity();
+    }).load().renderQuantity().renderRatio();
 });
