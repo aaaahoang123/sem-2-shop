@@ -4,10 +4,10 @@ const fs = require('fs');
 const rs = require('../resource/web-config');
 module.exports = {
     insert: function (req, res, next) {
-        rs.top_categries = [];
+        rs.top_categories = [];
         for(let key in req.body){
             if(req.body[key] === "" || req.body[key] === null) continue;
-            rs.top_categries.push(req.body[key]);
+            rs.top_categories.push(req.body[key]);
         }
         fs.writeFile('app/resource/web-config.json', JSON.stringify(rs, null, 2), 'utf8', (err) =>{
             if(err){
@@ -27,8 +27,8 @@ module.exports = {
     },
 
     getTopCategories: function(req, res ,next){
-        if(!rs.top_categries) rs.top_categries = [];
-        res.locals.topCategories = rs.top_categries;
+        if(!rs.top_categories) rs.top_categories = [];
+        res.locals.topCategories = rs.top_categories;
         next();
     },
 

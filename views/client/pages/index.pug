@@ -1435,7 +1435,7 @@ block content
                                                                     div
                                                                         a(href='/product/' + top_categories[i].products[j].code) #{top_categories[i].products[j].name}
                                                                 .product_extras
-                                                                    button.product_cart_button Add to Cart
+                                                                    button.product_cart_button.btn-add-to-cart(data-code=top_categories[i].products[j].code onclick='addToCart(this)') Add to Cart
                                             .arrivals_slider_dots_cover
 
     // Best Sellers
@@ -2635,3 +2635,5 @@ block content
 
 block append script
     script(src='client/js/custom.js')
+    script(src="https://cdn.jsdelivr.net/npm/js-cookie@2/src/js.cookie.min.js")
+    script(src="client/js/index.js")

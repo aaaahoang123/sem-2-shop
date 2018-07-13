@@ -4,11 +4,12 @@ block title
     title Product
 
 block extra-meta
-    meta(name='product-code' content=products[0].code)
+    meta(name='product-code' content=product.code)
 
 block append script
     script(type='text/javascript' src='/client/js/product_custom.js')
     script(src='https://cdn.jsdelivr.net/npm/js-cookie@2/src/js.cookie.min.js')
+    script(src='/client/js/productDetail.js')
     script(type='text/javascript').
         $(document).ready(function () {
             var showChar = 400;  // How many characters are shown by default
@@ -43,15 +44,15 @@ block append script
             code.unshift($('meta[name="product-code"]').attr("content"));
             Cookies.set('code', code, {expires: 3});
         });
+
 block append link
     link(rel='stylesheet' type='text/css' href='/client/styles/product_styles.css')
     link(rel='stylesheet' type='text/css' href='/client/styles/product_responsive.css')
 
 block content
-    - if (!products || products.length === 0)
+    - if (!product || product.length === 0)
         include 404
     - else
-        - product = products[0]
         .single_product
             .container
                 .row
@@ -128,7 +129,7 @@ block content
                                                         .color_mark(style='background: #000000;')
                                     .product_price Price: $ #{product.price}
                                     .button_container
-                                        button.button.cart_button(type='button') Add to Cart&nbsp;
+                                        button.button.cart_button.btn-add-to-cart(type='button' data-code=product.code) Add to Cart&nbsp;
                                             i.fas.fa-shopping-cart
     // Recently Viewed
     include revently_viewed

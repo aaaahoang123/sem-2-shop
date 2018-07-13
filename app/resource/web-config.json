@@ -17,5 +17,15 @@
     "slogan": "jkjkii",
     "name": "Quan dai",
     "logo": "https://res.cloudinary.com/fpt-aptech/image/upload/v1531062065/dycuga4hz2a69euuimj9.png"
-  }
+  },
+  "footer": [
+    {
+      "name": "Chính sách",
+      "blogs": ["Dien thoai iphone 11", ""]
+    },
+    {
+      "name": "Chính sách 2",
+      "blogs": ["Dien thoai iphone 11", ""]
+    }
+  ]
 }
