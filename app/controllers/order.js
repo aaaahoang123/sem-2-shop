@@ -276,6 +276,135 @@ module.exports = {
         } else {
             res.render('index');
         }
-    }
+    },
 
+    getAndGroupOrder: (req, res, next) => {
+        // req.query = {
+        //     ofrom: "2018-01-13",
+        //     oto: "2017-01-13",
+        //     group: ['$dayOfWeek', '$month', '$year'],
+        //     datatype: 'order_quantity-ratio-revenue'
+        // };
+        let pipeline = [
+            {
+                $match: {
+                    status: {
+                        // $in: [1, 2]
+                        $in: [0]
+                    }
+                }
+            },
+            {
+                $facet: {
+
+                }
+            }
+        ];
+
+        if (req.query.ofrom) {
+            if (!pipeline[0].$match.$and) pipeline[0].$match.$and = [];
+            pipeline[0].$match.$and.push({
+                created_at: {
+                    $gt: new Date(req.query.ofrom)
+                }
+            });
+        }
+
+        if (req.query.oto) {
+            if (!pipeline[0].$match.$and) pipeline[0].$match.$and = [];
+            pipeline[0].$match.$and.push({
+                created_at: {
+                    $lt: new Date(req.query.oto)
+                }
+            });
+        }
+
+        let dataTypes, group = '$dayOfWeek';
+        if (req.query.datatype) {
+            dataTypes = req.query.datatype.split('-');
+        } else dataTypes = ['order_quantity','ratio','revenue'];
+
+        if (req.query.group) {
+            group = req.query.group;
+        }
+
+        dataTypes.forEach((dataType) => {
+            if (dataType === 'order_quantity') {
+                pipeline[1].$facet[dataType] = [
+                    {
+                        $group: {
+                            _id: {},
+                            quantity: {
+                                $sum: 1
+                            }
+                        }
+                    }
+                ];
+                pipeline[1].$facet[dataType][0].$group._id[group] = "$created_at";
+            }
+
+            if (dataType === 'revenue') {
+                pipeline[1].$facet[dataType] = [
+                    {
+                        $group: {
+                            _id: {},
+                            revenue: {
+                                $sum: '$total'
+                            }
+                        }
+                    }
+                ];
+                pipeline[1].$facet[dataType][0].$group._id[group] = "$created_at";
+            }
+
+            if (dataType === 'ratio') {
+                pipeline[1].$facet.product_quantity = [
+                    {
+                        $unwind: '$products'
+                    },
+                    {
+                        $group: {
+                            _id: '$products._id',
+                            quantity: {$sum: '$products.quantity'}
+                        }
+                    },
+                    {
+                        $sort: {
+                            quantity: -1
+                        }
+                    },
+                    {
+                        $lookup: {
+                            from: 'products',
+                            localField: '_id',
+                            foreignField: '_id',
+                            as: 'content'
+                        }
+                    }
+                ];
+                pipeline[1].$facet.total_products_quantity = [
+                    {
+                        $unwind: '$products'
+                    },
+                    {
+                        $group: {
+                            _id: null,
+                            quantity: {$sum: '$products.quantity'}
+                        }
+                    }
+                ];
+            }
+        });
+
+        model.aggregate(pipeline, (err, result) => {
+            if (err) {
+                console.log(err);
+                if (!res.locals.errs) res.locals.errs = {};
+                res.locals.errs.database = err.message;
+                return next();
+            }
+            res.locals.chart_data = result;
+            next();
+        });
+    }
 };
