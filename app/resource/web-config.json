@@ -35,5 +35,15 @@
       "name": "Blog",
       "href": "/blog"
     }
+  ],
+  "footer": [
+    {
+      "name": "Chính sách",
+      "blogs": ["Dien thoai iphone 11", ""]
+    },
+    {
+      "name": "Chính sách 2",
+      "blogs": ["Dien thoai iphone 11", ""]
+    }
   ]
 }
