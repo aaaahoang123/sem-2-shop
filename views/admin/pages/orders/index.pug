@@ -1,10 +1,17 @@
 extends ../../layouts/master
 
 block extra-css
+    link(rel='stylesheet' href='/admin/plugins/bootstrap-material-datetimepicker/css/bootstrap-material-datetimepicker.css')
+    link(rel='stylesheet' href='/admin/plugins/waitme/waitMe.min.css')
     link(rel='stylesheet' href='/admin/plugins/bootstrap-select/css/bootstrap-select.min.css')
+    link(rel='stylesheet' href='/admin/plugins/sweetalert/sweetalert.min.css')
 
 block extra-js
+    script(type='text/javascript' src='/admin/plugins/sweetalert/sweetalert.min.js')
+    script(type='text/javascript' src='/admin/plugins/momentjs/moment.min.js')
+    script(type='text/javascript' src='/admin/plugins/bootstrap-material-datetimepicker/js/bootstrap-material-datetimepicker.js')
     script(type='text/javascript' src='/admin/plugins/autosize/autosize.min.js')
+    script(type='text/javascript' src='/admin/js/pages/orders/orders.js')
     //script(type='text/javascript' src='/admin/plugins/bootstrap-suggest/bootstrap-suggest.js')
     script(type='text/javascript').
         $('#select-city').on('change', function () {
@@ -24,7 +31,10 @@ block extra-js
                     console.log(err);
                 }
             });
-        })
+        });
+
+        $('.datepicker').bootstrapMaterialDatePicker({weekStart: 0, time: false});
+
 
 block content
     .card.p-b-15
@@ -44,53 +54,108 @@ block content
                             a(href='javascript:void(0);') Something else here
         .body.table-responsive
             .row
-                .col-sm-3.col-md-2
+                .col-sm-2
                     .input-group
-                        span.input-group-addon
-                            | City
                         .form-line
-                            select#select-city.form-control.show-tick.no-resize(data-live-search='true')
-                                option Choose city
-                                - if (cities&&cities.length !=0)
-                                    - for (city of cities)
-                                        option(value=city.ID)= city.Title
-                .col-sm-3.col-md-2
-                    .input-group
-                        span.input-group-addon
-                            | District
-                        .form-line
-                            select#select-district.form-control.show-tick.no-resize(data-live-search='true' disabled)
+                            input.query-input.datepicker.form-control.show-tick.no-resize(type='text' placeholder='--From Date--' data-query='ofrom')
 
-            table.table.table-bordered
-                thead
-                    tr
-                        th CODE
-                        th FIRST NAME
-                        th LAST NAME
-                        th USERNAME
-                tbody
-                    tr
-                        th(scope='row') 1
-                        td Mark
-                        td Otto
-                        td @mdo
-                    tr
-                        th(scope='row') 2
-                        td Jacob
-                        td Thornton
-                        td @fat
-                    tr
-                        th(scope='row') 3
-                        td Larry
-                        td the Bird
-                        td @twitter
-                    tr
-                        th(scope='row') 4
-                        td Larry
-                        td Jellybean
-                        td @lajelly
-                    tr
-                        th(scope='row') 5
-                        td Larry
-                        td Kikat
-                        td @lakitkat
+                .col-sm-2
+                    .input-group
+                        .form-line
+                            input.query-input.datepicker.form-control.show-tick.no-resize(type='text' placeholder='--To Date--' data-query='oto')
+
+                .col-sm-2
+                    .form-group
+                        .form-line
+                            input.query-input.form-control(type='text', placeholder='Search' value=meta && meta.q ? meta.q : '' data-query='oq')
+
+                .col-sm-2
+                    select.query-input.form-control.show-tick(data-query='os')
+                        option(value='') --Status Choose--
+                        option(value=0) Unpaid
+                        option(value=2) Accept
+                        option(value=1) Done
+                        option(value=-1) Reject
+
+                .col-sm-2
+                    select#select-city.query-input.form-control.show-tick(data-live-search='true' data-query='oc')
+                        option(value='') --City Choose--
+                        - if (cities&&cities.length !=0)
+                            - for (city of cities)
+                                option(value=city.ID)= city.Title
+
+                .col-sm-2
+                    select#select-district.query-input.form-control.show-tick(data-live-search='true' disabled data-query='od')
+
+            .row
+                .col-sm-2
+                    button#search-btn.btn.btn-danger.waves-effect.waves-float(type='button') Filter Orders
+
+            .row
+                .col-sm-12
+                    table.table.table-bordered.table-hover
+                        thead
+                            tr
+                                th #
+                                th DATE
+                                th PRICE
+                                th PRODUCT
+                                th STATUS
+                                th ACTION
+                        tbody.text-center
+                            - let length = orders.length;
+                            - for (let i = 0; i < length; i ++)
+                                tr
+                                    th(scope='row') #{i + 1}
+                                    td
+                                         -if(orders[i].created_at)
+                                             | #{new Date(orders[i].created_at).toLocaleDateString()}
+                                    td #{orders[i].total}
+                                    td
+                                        - for(p of orders[i].products)
+                                            p
+                                                | #{p.name + ' - ' + p.price + ' - ' + p.quantity}
+                                    td #{orders[i].status}
+                                    td
+                                        button.btn.btn-link.waves-effect(type='button', data-type="ajax-loader" data-t='2' data-b=orders[i]._id)
+                                            i.material-icons eject
+                                        button.btn.btn-link.waves-effect(type='button', data-type="ajax-loader" data-t='1' data-b=orders[i]._id)
+                                            i.material-icons check_circle
+                                        button.btn.btn-link.waves-effect(type='button', data-type="ajax-loader" data-t='-1' data-b=orders[i]._id)
+                                            i.material-icons delete
+
+            - if (meta)
+                - let limit = ''
+                - let q = ''
+                - if (meta.limit !== 10)
+                    - limit += '&limit=' + meta.limit
+                -if (meta.q)
+                    - q = '&q=' + meta.q
+                .row.text-right
+                     ul.pagination(style='margin-right: 1%')
+                        - if (meta.page === 1)
+                            li.paginate_button.disabled
+                                a First
+                        - else
+                            li.paginate_button
+                                a(data-page='1' href='javascript:void(0)') First
+                        - let i = meta.cpage > 5 ? meta.cpage - 4 : 1
+                        - if (i !== 1)
+                            li.paginate_button.disabled
+                                a ...
+                        - for (; i <= meta.cpage + 4 && i <= meta.total; i ++)
+                            - if (i === meta.cpage)
+                                li.paginate_button.active
+                                    a= i
+                            - else
+                                li.paginate_button
+                                    a(data-page=i href='javascript:void(0)')= i
+                            - if (i === meta.page + 4 && i < meta.total)
+                                li.paginate_button.disabled
+                                    a ...
+                        - if (meta.cpage === meta.total)
+                            li.paginate_button.disabled
+                                a Last
+                        - else
+                            li.paginate_button
+                                a(data-page=meta.total href='javascript:void(0)') Last

@@ -4,37 +4,13 @@
             .col.d-flex.flex-row
                 .top_bar_contact_item
                     .top_bar_icon
-                        img(src='client/images/phone.png' alt='')
+                        img(src='/client/images/phone.png' alt='')
                     | #{webConfig.contact.phone}
                 .top_bar_contact_item
                     .top_bar_icon
-                        img(src='client/images/mail.png' alt='')
+                        img(src='/client/images/mail.png' alt='')
                     | #{webConfig.contact.email}
                 .top_bar_content.ml-auto
-                    .top_bar_menu
-                        ul.standard_dropdown.top_bar_dropdown
-                            li
-                                a(href='#')
-                                    | English
-                                    i.fas.fa-chevron-down
-                                ul
-                                    li
-                                        a(href='#') Italian
-                                    li
-                                        a(href='#') Spanish
-                                    li
-                                        a(href='#') Japanese
-                            li
-                                a(href='#')
-                                    | $ US dollar
-                                    i.fas.fa-chevron-down
-                                ul
-                                    li
-                                        a(href='#') EUR Euro
-                                    li
-                                        a(href='#') GBP British Pound
-                                    li
-                                        a(href='#') JPY Japanese Yen
                     .top_bar_user
                         - if (!logedIn)
                             .user_icon
@@ -115,17 +91,17 @@ nav.main_nav
                             - for (let lv1 of categories)
                                 - if (lv1.level === 1)
                                     li
-                                        a(href='#') #{lv1.name}
+                                        a(href='/shop?category=' + lv1.name) #{lv1.name}
                                         - if (lv1.children.length !== 0)
                                             ul
-                                                - for (let lv2 of lv1.childrenObj)
+                                                - for (lv2 of lv1.childrenObj)
                                                     li
-                                                        a(href='#') #{lv2.name}
+                                                        a(href='/shop?category=' + lv2.name) #{lv2.name}
                                                         - if (lv2.children.length !== 0)
                                                             ul
-                                                                - for (let lv3 of lv2.childrenObj)
+                                                                - for (lv3 of lv2.childrenObj)
                                                                     li
-                                                                        a(href='#') #{lv3.name}
+                                                                        a(href='/shop?category=' + lv3.name) #{lv3.name}
 
                     // Main Nav Menu
                     .main_nav_menu.ml-auto

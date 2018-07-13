@@ -9,6 +9,7 @@ const categoriesController = require('../app/controllers/category');
 const topCategoriesController = require('../app/controllers/top-categories');
 const contactController = require('../app/controllers/contact');
 const informationController = require('../app/controllers/information');
+const ordersController = require('../app/controllers/order');
 
 /* GET users listing. */
 router.get('/', function (req, res, next) {
@@ -18,7 +19,9 @@ router.get('/', function (req, res, next) {
 }).get('/user', function (req, res, next) {
     res.render('admin/pages/user');
 })
-    .get('/orders', cdController.getAllCities, (req, res) => res.render('admin/pages/orders', {path: '/orders'}))
+
+    .get('/orders', cdController.getAllCities, ordersController.getList, ordersController.responseOrdersTable)
+    .put('/orders/:type/:_id', ordersController.editOne, ordersController.responseJson)
     .get('/orders/create', cdController.getAllCities, (req, res) => res.render('admin/pages/orders/order-form', {path: '/orders/create'}))
     .post('/orders/create', productController.setSelectedProductCodeArrayFromCart,
         productController.getProductByCodesArray,
@@ -34,7 +37,6 @@ router.get('/', function (req, res, next) {
                 });
             }
         });
-
 
 router
     .use('/web-config', require('./web-config'))
