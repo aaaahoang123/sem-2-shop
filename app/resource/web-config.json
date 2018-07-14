@@ -1,7 +1,7 @@
 {
   "top_categories": [
-    "5b33b642bb75c6097016da4c",
-    "5b33b5f2bb75c6097016da4a",
+    "5b33b3ffbb75c6097016da46",
+    "5b33b579bb75c6097016da47",
     "5b33b59cbb75c6097016da48"
   ],
   "contact": {
@@ -34,6 +34,22 @@
     {
       "name": "Blog",
       "href": "/blog"
+    }
+  ],
+  "footer": [
+    {
+      "name": "Chính sách",
+      "blogs": [
+        "Dien thoai iphone 11",
+        ""
+      ]
+    },
+    {
+      "name": "Chính sách 2",
+      "blogs": [
+        "Dien thoai iphone 11",
+        ""
+      ]
     }
   ]
 }

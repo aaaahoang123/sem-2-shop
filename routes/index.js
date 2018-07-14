@@ -18,6 +18,7 @@ const renderer = require('../app/controllers/client'),
 router.use('/*', categoryController.findAll, navController.getNavBar, (req, res, next) => {
     if (req.cookies.token) res.locals.logedIn = true;
     if (req.cookies.username) res.locals.username = req.cookies.username;
+    res.locals.webConfig = require('../app/resource/web-config');
     res.locals.cartLength = 0;
     console.log(req.cookies.cart);
     if (req.cookies.cart && req.cookies.cart !== []) {
@@ -27,9 +28,10 @@ router.use('/*', categoryController.findAll, navController.getNavBar, (req, res,
 });
 /* GET home page. */
 
-router.get('/',webConfigController.getTopCategories, productController.setProductCodeArrayFromCookie,
+router.get('/', webConfigController.getTopCategories,
+    productController.setProductCodeArrayFromCookie,
     productController.getProductByCodesArray,
-    brandController.getList,
+    brandController.getList, orderController.getBestSellers,
     renderer.renderHomePage);
 
 router.get('/blog', function(req, res, next) {
@@ -88,17 +90,14 @@ router.get('/shop', categoryController.findAll, categoryController.getOne,
                 type: 0,
             });
         }
-        else if (!req.meta) {
+        else if (!res.locals.meta) {
             res.render('client/pages/shop', {
-                type: 1,
-                total: req.total
+                type: 1
             });
         }
         else {
             res.render('client/pages/shop', {
-                type: 2,
-                total: req.total,
-                meta: req.meta
+                type: 2
             });
         }
     }

@@ -79,7 +79,7 @@ block content
                         .shop_content
                             .shop_bar.clearfix
                                 .shop_product_count
-                                    span #{total}
+                                    span #{meta.totalItems}
                                     |  products found
                                 .shop_sorting
                                     span Sort by:
@@ -99,17 +99,18 @@ block content
                                 .product_grid_border
                                 // Product Item
                                 - for (let product of products)
-                                    .product_item
-                                        .product_border
-                                        .product_image.d-flex.flex-column.align-items-center.justify-content-center
-                                            img(src=product.images[0] alt='')
-                                        .product_content
-                                            .product_price $ #{product.price}
-                                            .product_name
-                                                div
-                                                    a.product_code(href='/product/'+product.code tabindex='0' name=product.code) #{product.name}
-                                        .product_fav
-                                            i.fas.fa-heart
+                                    a(href='/product/'+product.code)
+                                        .product_item
+                                            .product_border
+                                            .product_image.d-flex.flex-column.align-items-center.justify-content-center
+                                                img(src=product.images[0] alt='')
+                                            .product_content
+                                                .product_price $ #{product.price}
+                                                .product_name
+                                                    div
+                                                        a.product_code(href='/product/'+product.code tabindex='0' name=product.code) #{product.name}
+                                            .product_fav
+                                                i.fas.fa-heart
                             // Shop Page Navigation
                             - if (type === 2)
                                 -let categoryP = '', brandP = '', minP = '', maxP = '', search = '', sortP = '', price
@@ -153,64 +154,8 @@ block content
                                                 - search = '&' + search
                                             li
                                                 a(href='/shop?page=' + meta.total + search) Last
-    // Recently Viewed
-    - if (rvProducts && rvProducts.length !== 0)
-        .viewed
-            .container
-                .row
-                    .col
-                        .viewed_title_container
-                            h3.viewed_title Recently Viewed
-                            .viewed_nav_container
-                                .viewed_nav.viewed_prev
-                                    i.fas.fa-chevron-left
-                                .viewed_nav.viewed_next
-                                    i.fas.fa-chevron-right
-                        - if (rvProducts.length>6)
-                            .viewed_slider_container
-                                // Recently Viewed Slider
-                                .owl-carousel.owl-theme.viewed_slider
-                                    // Recently Viewed Item
-                                    - for (let i=0; i<rvProducts.length; i++)
-                                        .owl-item
-                                            .viewed_item.discount.d-flex.flex-column.align-items-center.justify-content-center.text-center
-                                                .viewed_image
-                                                    img(src=rvProducts[i].images[0] alt='')
-                                                .viewed_content.text-center
-                                                    .viewed_price $ #{rvProducts[i].price}
-                                                    .viewed_name
-                                                        a.product_code(href='/product/'+rvProducts[i].code) #{rvProducts[i].name}
-                        - if (rvProducts.length<=6)
-                            .viewed_slider_container
-                                .row
-                                    - for (let i=0; i<rvProducts.length; i++)
-                                        .col-sm-2
-                                            .row
-                                                .owl-item.col-sm-11
-                                                    .viewed_item.discount.d-flex.flex-column.align-items-center.justify-content-center.text-center
-                                                        .viewed_image
-                                                            img(src=rvProducts[i].images[0] alt='')
-                                                        .viewed_content.text-center
-                                                            .viewed_price $ #{rvProducts[i].price}
-                                                            .viewed_name
-                                                                a.product_code(href='/product/' + rvProducts[i].code) #{rvProducts[i].name}
-    // Brands
-    .brands
-        .container
-            .row
-                .col
-                    .brands_slider_container
-                        // Brands Slider
-                        .owl-carousel.owl-theme.brands_slider
-                            - for (let b of brands)
-                                .owl-item
-                                    .brands_item.d-flex.flex-column.justify-content-center
-                                        img(src=b.logo alt='' style='width: 10%')
-                        // Brands Slider Navigation
-                        .brands_nav.brands_prev
-                            i.fas.fa-chevron-left
-                        .brands_nav.brands_next
-                            i.fas.fa-chevron-right
+    ///Recently Viewed
+    include recently_viewed
 
 block append script
     script(src='/client/plugins/Isotope/isotope.pkgd.min.js')

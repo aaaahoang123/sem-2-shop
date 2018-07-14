@@ -56,13 +56,60 @@ module.exports = {
 
     responseInsertOneCustomerFormView: (req, res) => {
         if (res.locals.errs && Object.keys(res.locals.errs).length !== 0) {
-            console.log(res.locals.errs);
             res.render('client/pages/order', {
                 path: '/order',
-                customer: req.body
+                customer: req.body,
+                cart: JSON.parse(req.cookies.cart)
             });
         } else {
             res.render('index');
         }
     },
+
+    getBestSellers: function (req, res, next) {
+        let query = [
+            {
+                $match: {
+                    status: {$in: [0,1,2]}
+                }
+            },
+            {
+                "$unwind" : "$products"
+            },
+            {
+                "$group" : {
+                    "_id" : "$products._id",
+                    "quantity" : {
+                        "$sum" : "$products.quantity"
+                    }
+                }
+            },
+            {
+                "$sort" : {
+                    "quantity" : -1.0
+                }
+            },
+            {
+                "$limit" : 12.0
+            },
+            {
+                "$lookup" : {
+                    "from" : "products",
+                    "localField" : "_id",
+                    "foreignField" : "_id",
+                    "as" : "products"
+                }
+            }
+        ];
+        model.aggregate(query, function (err, result) {
+            if (err) {
+                if (!res.locals.errs) res.locals.errs = {};
+                res.locals.errs.database = err.message;
+                next();
+                return;
+            }
+            res.locals.bProducts = result;
+            next();
+        });
+    }
 };
