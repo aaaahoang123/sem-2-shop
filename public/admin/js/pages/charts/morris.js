@@ -1,23 +1,26 @@
 $(function () {
-    getMorris('line', 'line_chart');
-    getMorris('bar', 'bar_chart');
-    getMorris('donut', 'donut_chart');
+    var today = new Date().toJSON().slice(0,10);
+    var monDay = getMonday(today);
+    $.ajax({
+        url: '/api/charts?ofrom='+ monDay + '&oto=' + today,
+        type: "GET",
+        success: function(res){
+            getMorris('line', 'line_chart', generateDataLineChart(res[0].revenue));
+            getMorris('bar', 'bar_chart');
+            getMorris('donut', 'donut_chart');
+        },
+        error: function(res, message){
+            console.log(res);
+        },
+    });
+
 });
 
-
-function getMorris(type, element) {
+function getMorris(type, element, dt) {
     if (type === 'line') {
         Morris.Line({
             element: 'line_chart',
-            data: [
-                {d: '2012-10-11', value: 10},
-                {d: '2012-10-12', value: 2},
-                {d: '2012-10-13', value: 5},
-                {d: '2012-10-14', value: 7},
-                {d: '2012-10-15', value: 8},
-                {d: '2012-10-16', value: 20},
-                {d: '2012-10-17', value: 14},
-            ],
+            data: dt,
             xkey: 'd',
             parseTime: false,
             ykeys: ['value'],
@@ -66,3 +69,21 @@ function getMorris(type, element) {
         });
     }
 }
+
+var generateDataLineChart = function(dt) {
+    var data = [];
+    for(v of dt){
+        data.push({
+            d: v._id.year + '-' + v._id.month + '-' + v._id.day,
+            value: v.revenue
+        });
+    }
+    return data;
+};
+
+var getMonday = function (d) {
+    d = new Date(d);
+    var day = d.getDay(),
+        diff = d.getDate() - day + (day == 0 ? -6:1); // adjust when day is sunday
+    return new Date(d.setDate(diff)).toJSON().slice(0,10);
+};

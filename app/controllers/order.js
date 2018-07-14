@@ -77,8 +77,7 @@ module.exports = {
             {
                 $match: {
                     status: {
-                        // $in: [1, 2]
-                        $in: [0]
+                        $in: [1, 2]
                     }
                 }
             },
@@ -140,9 +139,18 @@ module.exports = {
                                 $sum: '$total'
                             }
                         }
-                    }
+                    },
+                    {
+                        $sort: {
+                            _id: 1
+                        }
+                    },
                 ];
-                pipeline[1].$facet[dataType][0].$group._id[group] = "$created_at";
+                pipeline[1].$facet[dataType][0].$group._id = {
+                    day: {$dayOfMonth : "$created_at"},
+                    month: {$month: "$created_at"},
+                    year: {$year: "$created_at"}
+                }
             }
 
             if (dataType === 'ratio') {
