@@ -71,9 +71,7 @@ module.exports = {
         let query = [
                 {
                     "$match" : {
-                        "status" : {
-                            "$in": [0,1,2]
-                        }
+                        "status" : 0,
                     }
                 },
                 {
@@ -188,7 +186,7 @@ module.exports = {
         }
 
         if(req.query.oc) {
-            query[0].$match.receiver_city = Number(req.query.oc);
+            query[0].$match.receive_city = Number(req.query.oc);
         }
 
         if(req.query.od) {
@@ -324,14 +322,14 @@ module.exports = {
         let dataTypes, group = '$dayOfWeek';
         if (req.query.datatype) {
             dataTypes = req.query.datatype.split('-');
-        } else dataTypes = ['order_quantity','ratio','revenue'];
+        } else dataTypes = ['order_quantity','ratio','revenue', 'city_revenue_ratio', 'order_quantity_in_hour'];
 
         if (req.query.group) {
             group = req.query.group;
         }
 
         dataTypes.forEach((dataType) => {
-            if (dataType === 'order_quantity') {
+            if (['order_quantity', 'order_quantity_in_hour'].includes(dataType)) {
                 pipeline[1].$facet[dataType] = [
                     {
                         $group: {
@@ -347,7 +345,8 @@ module.exports = {
                         }
                     }
                 ];
-                pipeline[1].$facet[dataType][0].$group._id[group] = "$created_at";
+                if (dataType === 'order_quantity') pipeline[1].$facet[dataType][0].$group._id[group] = '$created_at';
+                else if (dataType === 'order_quantity_in_hour') pipeline[1].$facet.order_quantity_in_hour[0].$group._id.$hour = '$created_at';
             }
 
             if (dataType === 'revenue') {

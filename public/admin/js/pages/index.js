@@ -1,12 +1,13 @@
 ﻿function MyChart(option) {
-    this.datatype = option.datatype || 'order_quantity-revenue-ratio-city_revenue_ratio';
+    this.datatype = option.datatype || 'order_quantity-revenue-ratio-city_revenue_ratio-order_quantity_in_hour';
     this.group = option.group || '$dayOfWeek';
     this.ofrom = option.ofrom || '';
     this.oto = option.oto || '';
     this.ORDER_QUANTITY_ELEM = 'bar_chart';
     this.RATIO_ELEM = 'donut_chart';
     this.REVENUE_ELEM = 'line_chart';
-    this.CITY_RATIO_ELEM = 'city_ratio_chart'
+    this.CITY_RATIO_ELEM = 'city_ratio_chart';
+    this.ORDER_QUANTITY_HOUR_ELEM = 'order_quantity_in_hour';
 }
 
 MyChart.prototype = {
@@ -158,7 +159,7 @@ MyChart.prototype = {
                     Morris.Donut({
                         element: self.CITY_RATIO_ELEM,
                         data: data,
-                        colors: ['rgb(233, 30, 99)', 'rgb(0, 188, 212)', 'rgb(255, 152, 0)', 'rgb(0, 150, 136)'],
+                        colors: ['#077a1e', '#ff4300', 'rgb(255, 152, 0)', 'rgb(0, 150, 136)'],
                         formatter: function (y) {
                             return y + '%'
                         }
@@ -171,6 +172,37 @@ MyChart.prototype = {
             .catch(function(err) {
                 console.log(err);
                 $('#'+self.CITY_RATIO_ELEM).html('Server error, please check logs and contact with us!');
+                return self.Promise;
+            });
+        return this;
+    },
+
+    order_quantity_in_hour: function() {
+        var self = this;
+        this.Promise
+            .then(function (res) {
+                if(res[0].order_quantity_in_hour.length !== 0) {
+                    var data = res[0].order_quantity_in_hour;
+                    var keys = Object.keys(data[0]);
+                    $('#' + self.ORDER_QUANTITY_HOUR_ELEM).html('');
+                    Morris.Line({
+                        element: self.ORDER_QUANTITY_HOUR_ELEM,
+                        data: data,
+                        xkey: keys[0],
+                        parseTime: false,
+                        ykeys: [keys[1]],
+                        labels: ['Total'],
+                        xLabelAngle: 30,
+                        lineColors: ['#ff6600'],
+                    });
+                } else {
+                    $('#'+self.ORDER_QUANTITY_HOUR_ELEM).html('Can not found any data');
+                }
+                return self.Promise;
+            })
+            .catch(function (err) {
+                console.log(err);
+                $('#'+self.REVENUE_ELEM).html('Server error, please check logs and contact with us!');
                 return self.Promise;
             });
         return this;
@@ -202,10 +234,9 @@ $(document).ready(function() {
     lastWeekStart = new Date(new Date().setDate(first-7)).toISOString().split('T')[0];
     lastMonthStart = new Date(new Date(thisMonthStart).setMonth(now.getMonth() - 1)).toISOString().split('T')[0];
     new MyChart({
-        datatype: 'order_quantity-ratio-revenue-city_revenue_ratio',
         ofrom: thisWeekStart,
         oto: toDay
-    }).load().order_quantity().ratio().city_revenue_ratio().revenue();
+    }).load().order_quantity().ratio().city_revenue_ratio().revenue().order_quantity_in_hour();
 
     $('.load-chart-btn').on('click', renderNewChart);
 });
