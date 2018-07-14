@@ -225,14 +225,14 @@ MyChart.prototype = {
 var toDay, thisWeekStart, thisMonthStart, lastWeekStart, lastMonthStart;
 
 $(document).ready(function() {
-    var now = new Date();
-    var first = now.getDate() - now.getDay();
     //console.log(new Date(now.setDate(first)).toISOString());
-    toDay = new Date().toISOString().split('T')[0];
-    thisWeekStart = new Date(new Date().setDate(first)).toISOString().split('T')[0];
-    thisMonthStart = new Date(new Date().setDate(1)).toISOString().split('T')[0];
-    lastWeekStart = new Date(new Date().setDate(first-7)).toISOString().split('T')[0];
-    lastMonthStart = new Date(new Date(thisMonthStart).setMonth(now.getMonth() - 1)).toISOString().split('T')[0];
+    toDay = new Date()*1;
+    var offset = new Date().getTimezoneOffset();
+    var temp = moment().millisecond(0).second(0).minute(0).hour(0);
+    thisWeekStart = temp.clone().weekday(0).subtract(offset, 'm').format('x');
+    thisMonthStart = temp.clone().date(1).subtract(offset, 'm').format('x');
+    lastWeekStart = temp.clone().weekday(-7).subtract(offset, 'm').format('x');
+    lastMonthStart = temp.clone().date(1).subtract(1, 'month').subtract(offset, 'm').format('x');
     new MyChart({
         ofrom: thisWeekStart,
         oto: toDay

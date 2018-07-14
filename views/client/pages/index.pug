@@ -17,12 +17,6 @@ block append link
             overflow: hidden;
             max-width: 15ch;
         }
-        .char-25 {
-            white-space: nowrap;
-            text-overflow: ellipsis;
-            overflow: hidden;
-            max-width: 25ch;
-        }
 
 block content
     //banner
@@ -1441,7 +1435,7 @@ block content
                                                         img(src=bp.products[0].images[0] alt='')
                                                     .bestsellers_content
                                                         .bestsellers_name
-                                                            p.char-25 #{bp.products[0].name}
+                                                            a(href='/product/' + bp.products[0].code) #{bp.products[0].name}
                                                         .bestsellers-price
                                                             h1
                                                             span(style='color: red') $ #{bp.products[0].price}
