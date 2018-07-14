@@ -1,0 +1,71 @@
+extends ../../layouts/master
+
+block extra-css
+    link(rel='stylesheet' href='https://use.fontawesome.com/releases/v5.0.13/css/all.css')
+
+block extra-js
+    script(type='text/javascript' src='/admin/plugins/autosize/autosize.min.js')
+    script(type='text/javascript' src='/admin/js/pages/web-config/nav-bar.js')
+
+block content
+    .container-fluid
+        .block-header
+            h2 CONFIG WEBSITE
+        .alert.alert-success.text-center(role='alert' style='border-radius: 5px', hidden='')
+            big Config nav_bar successfully!
+
+        // Input
+        .row.clearfix
+            .col-lg-12.col-md-12.col-sm-12.col-xs-12
+                .card
+                    .header
+                        h2
+                            | NAV_BAR
+                    .body
+                        -if(errs && errs.database)
+                            label.text-danger #{errs.database}
+                        #spec
+                            .row.clearfix.ahi
+                                .col-sm-5.contain-name
+                                    .input-group
+                                        span.input-group-addon
+                                            i.material-icons book
+                                        .form-line
+                                            input.form-control.date.spec-name(type='text', placeholder='Name' value=(nav_bar)?nav_bar[0].name:'')
+                                .col-sm-5.contain-value
+                                    .input-group
+                                        span.input-group-addon
+                                            i.material-icons link
+                                        .form-line
+                                            input.form-control.date.spec-value(type='text', placeholder='Href' value=(nav_bar)?nav_bar[0].href:'')
+                            - if (nav_bar)
+                                - for (let i=1; i<nav_bar.length; i++)
+                                    .row.clearfix.ahi
+                                        .col-sm-5.contain-name
+                                            .input-group
+                                                span.input-group-addon
+                                                    i.material-icons book
+                                                .form-line
+                                                    input.form-control.date.spec-name(type='text', placeholder='Name' value=nav_bar[i].name)
+                                        .col-sm-5.contain-value
+                                            .input-group
+                                                span.input-group-addon
+                                                    i.material-icons link
+                                                .form-line
+                                                    input.form-control.date.spec-value(type='text', placeholder='Href' value=nav_bar[i].href)
+                                        .col-sm-1
+                                        .col-sm-1
+                                            button.btn-remove.btn.btn-danger.btn-circle.waves-effect.waves-circle.waves-float(type='button')
+                                                i.material-icons remove
+
+                        .row
+                            .col-sm-3
+                                button#add-spec-btn.btn.btn-danger.waves-effect.waves-float(type='button')
+                                    i.material-icons add
+                                    span ADD PROPERTIES
+                        .row
+                            .col-sm-4
+                            .col-sm-2
+                                button.btn-sub.btn.btn-block.btn-primary.waves-effect(style='cursor: pointer' type='button') Submit
+                            .col-sm-2
+                                button.btn-reset.btn.btn-block.btn-warning.waves-effect(style='cursor: pointer' type='button') Reset
