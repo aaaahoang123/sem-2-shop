@@ -71,7 +71,9 @@ module.exports = {
         let query = [
                 {
                     "$match" : {
-                        "status" : 0,
+                        "status" : {
+                            "$in": [0,1,2]
+                        }
                     }
                 },
                 {
@@ -186,7 +188,7 @@ module.exports = {
         }
 
         if(req.query.oc) {
-            query[0].$match.receive_city = Number(req.query.oc);
+            query[0].$match.receiver_city = Number(req.query.oc);
         }
 
         if(req.query.od) {
