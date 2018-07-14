@@ -24,11 +24,13 @@ block content
                                     i.material-icons more_vert
                                 ul.dropdown-menu.pull-right
                                     li
-                                        a(href='javascript:void(0);') Action
+                                        a.load-chart-btn(href='javascript:void(0);' data-time='thisWeek' data-type='ratio' data-message='RATIO OF PRODUCTS IN THIS WEEK') This Week
                                     li
-                                        a(href='javascript:void(0);') Another action
+                                        a.load-chart-btn(href='javascript:void(0);' data-time='lastWeek' data-type='ratio' data-message='RATIO OF PRODUCTS IN LAST WEEK') Last Week
                                     li
-                                        a(href='javascript:void(0);') Something else here
+                                        a.load-chart-btn(href='javascript:void(0);' data-time='thisMonth' data-type='ratio' data-message='RATIO OF PRODUCTS IN THIS MONTH') This Month
+                                    li
+                                        a.load-chart-btn(href='javascript:void(0);' data-time='lastMonth' data-type='ratio' data-message='RATIO OF PRODUCTS IN LAST MONTH') Last Month
                     .body
                         #donut_chart.graph
             .col-lg-8.col-md-8.col-sm-12.col-xs-12
@@ -41,11 +43,13 @@ block content
                                     i.material-icons more_vert
                                 ul.dropdown-menu.pull-right
                                     li
-                                        a.load-chart-btn(href='javascript:void(0);' data-time='thisMonth' data-type='order_quantity' data-message='QUANTITY OF ORDER IN MONTH') This Month
+                                        a.load-chart-btn(href='javascript:void(0);' data-time='thisWeek' data-type='order_quantity' data-message='QUANTITY OF ORDER IN THIS WEEK') This Week
                                     li
-                                        a(href='javascript:void(0);') Another action
+                                        a.load-chart-btn(href='javascript:void(0);' data-time='lastWeek' data-type='order_quantity' data-message='QUANTITY OF ORDER IN LAST WEEK') Last Week
                                     li
-                                        a(href='javascript:void(0);') Something else here
+                                        a.load-chart-btn(href='javascript:void(0);' data-time='thisMonth' data-type='order_quantity' data-message='QUANTITY OF ORDER IN THIS MONTH') This Month
+                                    li
+                                        a.load-chart-btn(href='javascript:void(0);' data-time='lastMonth' data-type='order_quantity' data-message='QUANTITY OF ORDER IN LAST MONTH') Last Month
                     .body
                         #bar_chart.graph
             .col-lg-12.col-md-12.col-sm-12.col-xs-12
