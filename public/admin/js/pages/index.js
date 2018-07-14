@@ -1,20 +1,20 @@
 ﻿function MyChart(option) {
-    this.datatype = option.datatype || 'order_quantity-revenue-ratio';
+    this.datatype = option.datatype || 'order_quantity-revenue-ratio-city_revenue_ratio';
     this.group = option.group || '$dayOfWeek';
     this.ofrom = option.ofrom || '';
     this.oto = option.oto || '';
     this.ORDER_QUANTITY_ELEM = 'bar_chart';
     this.RATIO_ELEM = 'donut_chart';
     this.REVENUE_ELEM = 'line_chart';
+    this.CITY_RATIO_ELEM = 'city_ratio_chart'
 }
 
 MyChart.prototype = {
 
     order_quantity: function () {
-        var self= this;
+        var self = this;
         this.Promise
             .then(function (res) {
-                console.log(res);
                 if (res[0].order_quantity.length !== 0) {
                     var data = res[0].order_quantity;
                     if (self.group === '$dayOfWeek') {
@@ -52,7 +52,6 @@ MyChart.prototype = {
         var self = this;
         this.Promise
             .then(function (res) {
-                console.log(res);
                 if (res[0].total_products_quantity.length !== 0) {
                     var total = res[0].total_products_quantity[0].quantity;
                     var data = [];
@@ -98,6 +97,50 @@ MyChart.prototype = {
         return this;
     },
 
+    city_revenue_ratio: function() {
+        var self = this;
+        this.Promise
+            .then(function(res) {
+                console.log(res);
+                if (res[0].city_revenue.length !== 0) {
+                    var total = res[0].total_revenue[0].revenue;
+                    var data = [], totalPercent = 0;
+                    res[0].city_revenue.forEach(function (cr) {
+                        var percent = ((cr.revenue/total)*100).toFixed(2);
+                        data.push({
+                            label: cr.city[0].Title,
+                            value: percent
+                        });
+                        totalPercent += percent;
+                    });
+                    if (totalPercent < 100) {
+                        data.push({
+                            label: 'Others',
+                            value: 100 - totalPercent
+                        })
+                    }
+                    $('#'+self.CITY_RATIO_ELEM).html('');
+                    Morris.Donut({
+                        element: self.CITY_RATIO_ELEM,
+                        data: data,
+                        colors: ['rgb(233, 30, 99)', 'rgb(0, 188, 212)', 'rgb(255, 152, 0)', 'rgb(0, 150, 136)'],
+                        formatter: function (y) {
+                            return y + '%'
+                        }
+                    });
+                } else {
+                    $('#'+self.CITY_RATIO_ELEM).html('Can not found any data');
+                }
+                return self.Promise;
+            })
+            .catch(function(err) {
+                console.log(err);
+                $('#'+self.CITY_RATIO_ELEM).html('Server error, please check logs and contact with us!');
+                return self.Promise;
+            });
+        return this;
+    },
+
     load: function () {
         var self = this;
         this.Promise = new Promise(function (resolve, reject) {
@@ -126,7 +169,7 @@ $(document).ready(function() {
     new MyChart({
         ofrom: thisWeekStart,
         oto: toDay
-    }).load().order_quantity().ratio();
+    }).load().order_quantity().ratio().city_revenue_ratio();
 
     $('.load-chart-btn').on('click', renderNewChart);
 });

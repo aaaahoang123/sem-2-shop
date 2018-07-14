@@ -410,6 +410,49 @@ module.exports = {
                     }
                 ];
             }
+
+            if (dataType === 'city_revenue_ratio') {
+                pipeline[1].$facet.city_revenue = [
+                    {
+                        $group: {
+                            _id: '$receiver_city',
+                            revenue: {
+                                $sum: '$total'
+                            }
+                        }
+                    },
+                    {
+                        $lookup: {
+                            from: 'cities',
+                            localField: '_id',
+                            foreignField: 'ID',
+                            as: 'city'
+                        }
+                    },
+                    {
+                        $sort: {
+                            revenue: -1
+                        }
+                    },
+                    {
+                        $limit: 10
+                    },
+                    {
+                        $skip: 0
+                    }
+                ];
+
+                pipeline[1].$facet.total_revenue = [
+                    {
+                        $group: {
+                            _id: null,
+                            revenue: {
+                                $sum: '$total'
+                            }
+                        }
+                    }
+                ];
+            }
         });
 
         model.aggregate(pipeline, (err, result) => {
