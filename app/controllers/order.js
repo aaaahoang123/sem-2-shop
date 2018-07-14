@@ -291,8 +291,8 @@ module.exports = {
             {
                 $match: {
                     status: {
-                        // $in: [1, 2]
-                        $in: [0]
+                        $in: [1, 2]
+                        // $in: [0]
                     }
                 }
             },
@@ -340,6 +340,11 @@ module.exports = {
                                 $sum: 1
                             }
                         }
+                    },
+                    {
+                        $sort: {
+                            _id: 1
+                        }
                     }
                 ];
                 pipeline[1].$facet[dataType][0].$group._id[group] = "$created_at";
@@ -353,6 +358,11 @@ module.exports = {
                             revenue: {
                                 $sum: '$total'
                             }
+                        }
+                    },
+                    {
+                        $sort: {
+                            _id: 1
                         }
                     }
                 ];
@@ -376,6 +386,12 @@ module.exports = {
                         }
                     },
                     {
+                        $limit: 10,
+                    },
+                    {
+                        $skip: 0
+                    },
+                    {
                         $lookup: {
                             from: 'products',
                             localField: '_id',
@@ -392,6 +408,49 @@ module.exports = {
                         $group: {
                             _id: null,
                             quantity: {$sum: '$products.quantity'}
+                        }
+                    }
+                ];
+            }
+
+            if (dataType === 'city_revenue_ratio') {
+                pipeline[1].$facet.city_revenue = [
+                    {
+                        $group: {
+                            _id: '$receiver_city',
+                            revenue: {
+                                $sum: '$total'
+                            }
+                        }
+                    },
+                    {
+                        $lookup: {
+                            from: 'cities',
+                            localField: '_id',
+                            foreignField: 'ID',
+                            as: 'city'
+                        }
+                    },
+                    {
+                        $sort: {
+                            revenue: -1
+                        }
+                    },
+                    {
+                        $limit: 10
+                    },
+                    {
+                        $skip: 0
+                    }
+                ];
+
+                pipeline[1].$facet.total_revenue = [
+                    {
+                        $group: {
+                            _id: null,
+                            revenue: {
+                                $sum: '$total'
+                            }
                         }
                     }
                 ];
