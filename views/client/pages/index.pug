@@ -4,9 +4,25 @@ block title
     title Home page
 
 block append link
-    link(rel='stylesheet' type='text/css' href='client/plugins/slick-1.8.0/slick.css')
-    link(rel='stylesheet' type='text/css' href='client/styles/main_styles.css')
-    link(rel='stylesheet' type='text/css' href='client/styles/responsive.css')
+    link(rel='stylesheet' type='text/css' href='/client/plugins/slick-1.8.0/slick.css')
+    link(rel='stylesheet' type='text/css' href='/client/styles/main_styles.css')
+    link(rel='stylesheet' type='text/css' href='/client/styles/responsive.css')
+    style.
+        .product_image > a > img {
+            max-width: 150px !important;
+        }
+        .char-15 {
+            white-space: nowrap;
+            text-overflow: ellipsis;
+            overflow: hidden;
+            max-width: 15ch;
+        }
+        .char-25 {
+            white-space: nowrap;
+            text-overflow: ellipsis;
+            overflow: hidden;
+            max-width: 25ch;
+        }
 
 block content
     //banner
@@ -1376,8 +1392,7 @@ block content
                             .tabs_line
                                 span
                         .row
-                            .col-lg-1
-                            .col-lg-10(style='z-index:1;')
+                            .col-lg-12
                                 - if (top_categories)
                                     - for (var i = 0; i < top_categories.length; i ++)
                                         .product_panel.panel(class=(i===0?"active":""))
@@ -1394,7 +1409,7 @@ block content
                                                                     | #{"$" + top_categories[i].products[j].price}
                                                                 .product_name
                                                                     div
-                                                                        a(href='/product/' + top_categories[i].products[j].code) #{top_categories[i].products[j].name}
+                                                                        a(href='/product/' + top_categories[i].products[j].code title=top_categories[i].products[j].name): p.mx-auto.char-15 #{top_categories[i].products[j].name}
                                                                 .product_extras
                                                                     button.product_cart_button.btn-add-to-cart(data-code=top_categories[i].products[j].code onclick='addToCart(this)') Add to Cart
                                             .arrivals_slider_dots_cover
@@ -1426,7 +1441,7 @@ block content
                                                         img(src=bp.products[0].images[0] alt='')
                                                     .bestsellers_content
                                                         .bestsellers_name
-                                                            a(href='/product/' + bp.products[0].code) #{bp.products[0].name}
+                                                            p.char-25 #{bp.products[0].name}
                                                         .bestsellers-price
                                                             h1
                                                             span(style='color: red') $ #{bp.products[0].price}
@@ -1724,6 +1739,6 @@ block content
     include recently_viewed
 
 block append script
-    script(src='client/js/custom.js')
+    script(src='/client/js/custom.js')
     script(src="https://cdn.jsdelivr.net/npm/js-cookie@2/src/js.cookie.min.js")
-    script(src="client/js/index.js")
+    script(src="/client/js/index.js")
