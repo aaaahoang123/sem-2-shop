@@ -62,15 +62,15 @@ module.exports = {
                         }
                     }
                 }
-            ]
-        ;
+            ];
         model.aggregate(pipeline, (err, result) => {
             if (err) {
                 console.log(err);
+                next();
             }
             console.log(result);
             res.locals.top_categories = result;
             next();
         });
-    }
+    },
 };

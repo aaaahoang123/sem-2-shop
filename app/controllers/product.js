@@ -101,8 +101,8 @@ module.exports = {
         model.aggregate(query, function (err, result) {
             if (err) {
                 console.log(err);
-                if (!req.errs) req.errs = {};
-                req.errs.database = err.message;
+                if (!res.locals.errs) res.locals.errs = {};
+                res.locals.errs.database = err.message;
                 next();
                 return;
             }
@@ -119,7 +119,7 @@ module.exports = {
                 type: 0
             });
         }
-        else if (!req.meta) {
+        else if (!res.locals.meta) {
             res.render('admin/pages/products-manager/products', {
                 type: 1
             });
@@ -328,6 +328,7 @@ module.exports = {
     },
 
     responseEditFormView: function(req, res, next){
+        console.log(res.locals.product);
         res.render('admin/pages/products-manager/products-form', {
             path: '/products-manager/products',
             title: 'EDIT PRODUCTS',

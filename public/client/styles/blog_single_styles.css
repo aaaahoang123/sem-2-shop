@@ -1235,8 +1235,8 @@ select option
 }
 .single_post_title
 {
-	font-size: 30px;
-	font-weight: 500;
+	font-size: 40px;
+	font-weight: normal;
 }
 .single_post_text
 {
@@ -1245,8 +1245,6 @@ select option
 .single_post_text p
 {
 	font-size: 18px;
-	font-weight: 300;
-	color: rgba(0,0,0,0.7);
 	line-height: 2;
 }
 .single_post_text p:not(:first-of-type)

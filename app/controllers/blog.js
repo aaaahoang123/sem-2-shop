@@ -51,6 +51,11 @@ module.exports = {
         });
     },
 
+    setLimit: function(req, res, next) {
+        req.query.limit = '9';
+        next();
+    },
+
     getList: function (req, res, next) {
         let limit = 10, skip = 0, page = 1;
         if (req.query.limit && /^\d+$/.test(req.query.limit)) limit = Math.abs(Number(req.query.limit));

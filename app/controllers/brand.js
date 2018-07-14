@@ -158,6 +158,20 @@ module.exports = {
         });
     },
 
+    getAll: function(req, res, next) {
+        model.find({status: 1}, function (err, result) {
+            if (err) {
+                console.log(err);
+                if (!res.locals.errs) res.locals.errs = {};
+                res.locals.errs.database = err.message;
+                next();
+                return;
+            }
+            res.locals.brands = result;
+            next();
+        })
+    },
+
     editOne: function(req, res, next) {
         if (res.locals.errs && Object.keys(res.locals.errs).length !== 0) return next();
 

@@ -132,21 +132,4 @@ block content
                                         button.button.cart_button.btn-add-to-cart(type='button' data-code=product.code) Add to Cart&nbsp;
                                             i.fas.fa-shopping-cart
     // Recently Viewed
-    include revently_viewed
-    // Brands
-    .brands
-        .container
-            .row
-                .col
-                    .brands_slider_container
-                        // Brands Slider
-                        .owl-carousel.owl-theme.brands_slider
-                            - for (let brand of brands)
-                                .owl-item
-                                    .brands_item.d-flex.flex-column.justify-content-center
-                                        img(src=brand.logo alt='' style='width: 10%')
-                        // Brands Slider Navigation
-                        .brands_nav.brands_prev
-                            i.fas.fa-chevron-left
-                        .brands_nav.brands_next
-                            i.fas.fa-chevron-right
+    include recently_viewed

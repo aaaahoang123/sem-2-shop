@@ -1,114 +1,274 @@
-﻿$(function () {
-    //Widgets count
-    $('.count-to').countTo();
+﻿function MyChart(option) {
+    this.datatype = option.datatype || 'order_quantity-revenue-ratio-city_revenue_ratio-order_quantity_in_hour';
+    this.group = option.group || '$dayOfWeek';
+    this.ofrom = option.ofrom || '';
+    this.oto = option.oto || '';
+    this.ORDER_QUANTITY_ELEM = 'bar_chart';
+    this.RATIO_ELEM = 'donut_chart';
+    this.REVENUE_ELEM = 'line_chart';
+    this.CITY_RATIO_ELEM = 'city_ratio_chart';
+    this.ORDER_QUANTITY_HOUR_ELEM = 'order_quantity_in_hour';
+}
 
-    //Sales count to
-    $('.sales-count-to').countTo({
-        formatter: function (value, options) {
-            return '$' + value.toFixed(2).replace(/(\d)(?=(\d\d\d)+(?!\d))/g, ' ').replace('.', ',');
-        }
-    });
+MyChart.prototype = {
 
-    initRealTimeChart();
-    initDonutChart();
-    initSparkline();
+    order_quantity: function () {
+        var self = this;
+        this.Promise
+            .then(function (res) {
+                if (res[0].order_quantity.length !== 0) {
+                    var data = res[0].order_quantity;
+                    if (self.group === '$dayOfWeek') {
+                        var dayNames = ['', 'Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+                        data = data.map(function (d) {
+                            d._id = dayNames[d._id];
+                            return d;
+                        });
+                    }
+                    var keys = Object.keys(data[0]);
+                    $('#'+self.ORDER_QUANTITY_ELEM).html('');
+                    Morris.Bar({
+                        element: self.ORDER_QUANTITY_ELEM,
+                        data: data,
+                        xkey: keys[0],
+                        ykeys: [keys[1]],
+                        barColors: ['rgb(0, 188, 212)'],
+                        gridTextColor: ['rgb(233, 30, 99)'],
+                        labels: ['Orders']
+                    });
+                } else {
+                    $('#'+self.ORDER_QUANTITY_ELEM).html('Can not found any data');
+                }
+                return self.Promise;
+            })
+            .catch(function (err) {
+                console.log(err);
+                $('#'+self.ORDER_QUANTITY_ELEM).html('Server error, please check logs and contact with us!');
+                return self.Promise;
+            });
+        return this;
+    },
+
+    ratio: function() {
+        var self = this;
+        this.Promise
+            .then(function (res) {
+                if (res[0].total_products_quantity.length !== 0) {
+                    var total = res[0].total_products_quantity[0].quantity;
+                    var data = [];
+                    var totalPercent = 0;
+                    res[0].product_quantity.forEach(function (pr) {
+                        var percent =((pr.quantity/total)*100).toFixed(2);
+                        totalPercent += percent;
+                        data.push({
+                            label: pr.content[0].name,
+                            value: percent
+                        });
+                    });
+                    if (totalPercent < 100) {
+                        data.push({
+                            label: 'Others',
+                            value: 100 - totalPercent
+                        })
+                    }
+
+                    $('#'+self.RATIO_ELEM).html('');
+                    Morris.Donut({
+                        element: self.RATIO_ELEM,
+                        data: data,
+                        colors: ['rgb(233, 30, 99)', 'rgb(0, 188, 212)', 'rgb(255, 152, 0)', 'rgb(0, 150, 136)'],
+                        formatter: function (y) {
+                            return y + '%'
+                        }
+                    });
+                } else {
+                    $('#'+self.RATIO_ELEM).html('Can not found any data');
+                }
+                return self.Promise;
+            })
+            .catch(function (err) {
+                console.log(err);
+                $('#'+self.RATIO_ELEM).html('Server error, please check logs and contact with us!');
+                return self.Promise;
+            });
+        return this;
+    },
+
+    revenue: function() {
+        var self = this;
+        this.Promise
+            .then(function (res) {
+                if(res[0].revenue.length !== 0) {
+                    var data = res[0].revenue;
+                    console.log(data);
+                    if (self.group === '$dayOfWeek') {
+                        var dayNames = ['', 'Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+                        data = data.map(function (d) {
+                            d._id = dayNames[d._id];
+                            return d;
+                        });
+                    }
+                    var keys = Object.keys(data[0]);
+                    $('#' + self.REVENUE_ELEM).html('');
+                    Morris.Line({
+                        element: self.REVENUE_ELEM,
+                        data: data,
+                        xkey: keys[0],
+                        parseTime: false,
+                        ykeys: [keys[1]],
+                        labels: ['Total'],
+                        xLabelAngle: 59,
+                        lineColors: ['#167f39'],
+                    });
+                }else {
+                    $('#'+self.REVENUE_ELEM).html('Can not found any data');
+                }
+                return self.Promise;
+            })
+            .catch(function (err) {
+                console.log(err);
+                $('#'+self.REVENUE_ELEM).html('Server error, please check logs and contact with us!');
+                return self.Promise;
+            });
+        return this;
+    },
+
+    city_revenue_ratio: function() {
+        var self = this;
+        this.Promise
+            .then(function(res) {
+                console.log(res);
+                if (res[0].city_revenue.length !== 0) {
+                    var total = res[0].total_revenue[0].revenue;
+                    var data = [], totalPercent = 0;
+                    res[0].city_revenue.forEach(function (cr) {
+                        var percent = ((cr.revenue/total)*100).toFixed(2);
+                        data.push({
+                            label: cr.city[0].Title,
+                            value: percent
+                        });
+                        totalPercent += percent;
+                    });
+                    if (totalPercent < 100) {
+                        data.push({
+                            label: 'Others',
+                            value: 100 - totalPercent
+                        })
+                    }
+                    $('#'+self.CITY_RATIO_ELEM).html('');
+                    Morris.Donut({
+                        element: self.CITY_RATIO_ELEM,
+                        data: data,
+                        colors: ['#077a1e', '#ff4300', 'rgb(255, 152, 0)', 'rgb(0, 150, 136)'],
+                        formatter: function (y) {
+                            return y + '%'
+                        }
+                    });
+                } else {
+                    $('#'+self.CITY_RATIO_ELEM).html('Can not found any data');
+                }
+                return self.Promise;
+            })
+            .catch(function(err) {
+                console.log(err);
+                $('#'+self.CITY_RATIO_ELEM).html('Server error, please check logs and contact with us!');
+                return self.Promise;
+            });
+        return this;
+    },
+
+    order_quantity_in_hour: function() {
+        var self = this;
+        this.Promise
+            .then(function (res) {
+                if(res[0].order_quantity_in_hour.length !== 0) {
+                    var data = res[0].order_quantity_in_hour;
+                    var keys = Object.keys(data[0]);
+                    $('#' + self.ORDER_QUANTITY_HOUR_ELEM).html('');
+                    Morris.Line({
+                        element: self.ORDER_QUANTITY_HOUR_ELEM,
+                        data: data,
+                        xkey: keys[0],
+                        parseTime: false,
+                        ykeys: [keys[1]],
+                        labels: ['Total'],
+                        xLabelAngle: 30,
+                        lineColors: ['#ff6600'],
+                    });
+                } else {
+                    $('#'+self.ORDER_QUANTITY_HOUR_ELEM).html('Can not found any data');
+                }
+                return self.Promise;
+            })
+            .catch(function (err) {
+                console.log(err);
+                $('#'+self.REVENUE_ELEM).html('Server error, please check logs and contact with us!');
+                return self.Promise;
+            });
+        return this;
+    },
+
+    load: function () {
+        var self = this;
+        this.Promise = new Promise(function (resolve, reject) {
+            $.ajax({
+                url: '/api/charts?datatype=' + self.datatype + '&group=' + self.group + '&ofrom=' + self.ofrom + '&oto=' + self.oto,
+                method: 'GET',
+                success: resolve,
+                error: reject
+            });
+        });
+        return this;
+    }
+};
+
+var toDay, thisWeekStart, thisMonthStart, lastWeekStart, lastMonthStart;
+
+$(document).ready(function() {
+    var now = new Date();
+    var first = now.getDate() - now.getDay();
+    //console.log(new Date(now.setDate(first)).toISOString());
+    toDay = new Date().toISOString().split('T')[0];
+    thisWeekStart = new Date(new Date().setDate(first)).toISOString().split('T')[0];
+    thisMonthStart = new Date(new Date().setDate(1)).toISOString().split('T')[0];
+    lastWeekStart = new Date(new Date().setDate(first-7)).toISOString().split('T')[0];
+    lastMonthStart = new Date(new Date(thisMonthStart).setMonth(now.getMonth() - 1)).toISOString().split('T')[0];
+    new MyChart({
+        ofrom: thisWeekStart,
+        oto: toDay
+    }).load().order_quantity().ratio().city_revenue_ratio().revenue().order_quantity_in_hour();
+
+    $('.load-chart-btn').on('click', renderNewChart);
 });
-var realtime = 'on';
-function initRealTimeChart() {
-    //Real time ==========================================================================================
-    var plot = $.plot('#real_time_chart', [getRandomData()], {
-        series: {
-            shadowSize: 0,
-            color: 'rgb(0, 188, 212)'
-        },
-        grid: {
-            borderColor: '#f3f3f3',
-            borderWidth: 1,
-            tickColor: '#f3f3f3'
-        },
-        lines: {
-            fill: true
-        },
-        yaxis: {
-            min: 0,
-            max: 100
-        },
-        xaxis: {
-            min: 0,
-            max: 100
-        }
-    });
 
-    function updateRealTime() {
-        plot.setData([getRandomData()]);
-        plot.draw();
-
-        var timeout;
-        if (realtime === 'on') {
-            timeout = setTimeout(updateRealTime, 320);
-        } else {
-            clearTimeout(timeout);
-        }
+function renderNewChart() {
+    var dataType = $(this).attr('data-type');
+    var from = '', to = '', group = '$dayOfWeek';
+    if ($(this).attr('data-time') === 'thisWeek') {
+        from = thisWeekStart;
+        to = toDay;
+    }
+    if ($(this).attr('data-time') === 'lastWeek') {
+        from = lastWeekStart;
+        to = thisWeekStart;
+    }
+    if ($(this).attr('data-time') === 'thisMonth') {
+        from = thisMonthStart;
+        to = toDay;
+        group = '$week';
+    }
+    if ($(this).attr('data-time') === 'lastMonth') {
+        from = lastMonthStart;
+        to = thisMonthStart;
+        group = '$week';
     }
 
-    updateRealTime();
+    new MyChart({
+        datatype: dataType,
+        ofrom: from,
+        oto: to,
+        group: group
+    }).load()[dataType]();
 
-    $('#realtime').on('change', function () {
-        realtime = this.checked ? 'on' : 'off';
-        updateRealTime();
-    });
-    //====================================================================================================
-}
-
-function initSparkline() {
-    $(".sparkline").each(function () {
-        var $this = $(this);
-        $this.sparkline('html', $this.data());
-    });
-}
-
-function initDonutChart() {
-    Morris.Donut({
-        element: 'donut_chart',
-        data: [{
-            label: 'Chrome',
-            value: 37
-        }, {
-            label: 'Firefox',
-            value: 30
-        }, {
-            label: 'Safari',
-            value: 18
-        }, {
-            label: 'Opera',
-            value: 12
-        },
-        {
-            label: 'Other',
-            value: 3
-        }],
-        colors: ['rgb(233, 30, 99)', 'rgb(0, 188, 212)', 'rgb(255, 152, 0)', 'rgb(0, 150, 136)', 'rgb(96, 125, 139)'],
-        formatter: function (y) {
-            return y + '%'
-        }
-    });
-}
-
-function getRandomData() {
-    let data = [], totalPoints = 110;
-    if (data.length > 0) data = data.slice(1);
-
-    while (data.length < totalPoints) {
-        var prev = data.length > 0 ? data[data.length - 1] : 50, y = prev + Math.random() * 10 - 5;
-        if (y < 0) { y = 0; } else if (y > 100) { y = 100; }
-
-        data.push(y);
-    }
-
-    var res = [];
-    for (var i = 0; i < data.length; ++i) {
-        res.push([i, data[i]]);
-    }
-
-    return res;
+    $(this).closest('.header').find('h2').html($(this).attr('data-message'));
 }
