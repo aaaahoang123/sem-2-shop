@@ -6,7 +6,7 @@ block extra-js
     script(type='text/javascript' src='/admin/plugins/jquery-countto/jquery.countTo.min.js')
     script(type='text/javascript' src='/admin/plugins/raphael/raphael.min.js')
     script(type='text/javascript' src='/admin/plugins/morrisjs/morris.min.js')
-    script(type='text/javascript' src='/admin/js/pages/charts/morris.js')
+    //script(type='text/javascript' src='/admin/js/pages/charts/morris.js')
     script(type='text/javascript' src='/admin/js/pages/index.js')
 
 block content
@@ -58,10 +58,12 @@ block content
                                     i.material-icons more_vert
                                 ul.dropdown-menu.pull-right
                                     li
-                                        a(href='javascript:void(0);') Action
+                                        a.load-chart-btn(href='javascript:void(0);' data-time='thisWeek' data-type='revenue' data-message='REVENUE IN WEEK') This Week
                                     li
-                                        a(href='javascript:void(0);') Another action
+                                        a.load-chart-btn(href='javascript:void(0);' data-time='thisMonth' data-type='revenue' data-message='REVENUE IN MONTH') This Month
                                     li
-                                        a(href='javascript:void(0);') Something else here
+                                        a.load-chart-btn(href='javascript:void(0);' data-time='lastWeek' data-type='revenue' data-message='REVENUE IN LAST WEEK') Last Week
+                                    li
+                                        a.load-chart-btn(href='javascript:void(0);' data-time='lastMonth' data-type='revenue' data-message='REVENUE IN LAST MONTH') Last Month
                     .body
                         #line_chart.graph

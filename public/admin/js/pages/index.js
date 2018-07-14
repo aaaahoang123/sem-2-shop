@@ -1,5 +1,5 @@
 ﻿function MyChart(option) {
-    this.datatype = (typeof option.datatype === 'undefined')?'order_quantity':option.datatype;
+    this.datatype = (typeof option.datatype === 'undefined')?'order_quantity-ratio-revenue':option.datatype;
     this.group = (typeof option.group === 'undefined')?'$dayOfWeek':option.group;
     this.ofrom = (typeof option.ofrom === 'undefined')?'':option.ofrom;
     this.oto = (typeof option.oto === 'undefined')?'':option.oto;
@@ -67,6 +67,25 @@ MyChart.prototype = {
     },
 
     revenue: function() {
+        var self = this;
+        this.Promise.then(function (res) {
+            var data = res[0].revenue;
+            console.log('dkmm');
+            console.log(data);
+            var keys = Object.keys(data[0]);
+            $('#'+self.REVENUE_ELEM).html('');
+            Morris.Line({
+                element: self.REVENUE_ELEM,
+                data: data,
+                xkey: keys[0],
+                parseTime: false,
+                ykeys: [keys[1]],
+                labels: ['Total'],
+                xLabelAngle: 59,
+                lineColors: ['#167f39'],
+            });
+            return self.Promise;
+        });
         return this;
     },
 
@@ -101,10 +120,10 @@ $(document).ready(function() {
     lastMonthStart = new Date(new Date().setMonth(now.getMonth() - 1)).toISOString().split('T')[0];
 
     new MyChart({
-        datatype: 'order_quantity-ratio',
+        datatype: 'order_quantity-ratio-revenue',
         ofrom: thisWeekStart,
         oto: toDay
-    }).load().order_quantity().ratio();
+    }).load().order_quantity().ratio().revenue();
 
     $('.load-chart-btn').on('click', renderNewChart);
 });
