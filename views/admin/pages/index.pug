@@ -14,6 +14,26 @@ block content
         .block-header
             h2 DASHBOARD
         .row.clearfix
+            .col-lg-12.col-md-12.col-sm-12.col-xs-12
+                .card
+                    .header
+                        h2 REVENUE IN WEEK
+                        ul.header-dropdown.m-r--5
+                            li.dropdown
+                                a.dropdown-toggle(href='javascript:void(0);' data-toggle='dropdown' role='button' aria-haspopup='true' aria-expanded='false')
+                                    i.material-icons more_vert
+                                ul.dropdown-menu.pull-right
+                                    li
+                                        a.load-chart-btn(href='javascript:void(0);' data-time='thisWeek' data-type='revenue' data-message='REVENUE IN WEEK') This Week
+                                    li
+                                        a.load-chart-btn(href='javascript:void(0);' data-time='lastWeek' data-type='revenue' data-message='REVENUE IN LAST WEEK') Last Week
+                                    li
+                                        a.load-chart-btn(href='javascript:void(0);' data-time='thisMonth' data-type='revenue' data-message='REVENUE IN MONTH') This Month
+                                    li
+                                        a.load-chart-btn(href='javascript:void(0);' data-time='lastMonth' data-type='revenue' data-message='REVENUE IN LAST MONTH') Last Month
+                    .body
+                        #line_chart.graph
+                        
             .col-lg-4.col-md-4.col-sm-12.col-xs-12
                 .card
                     .header
@@ -72,23 +92,3 @@ block content
                                         a.load-chart-btn(href='javascript:void(0);' data-time='lastMonth' data-type='city_revenue_ratio' data-message='RATIO REVENUE BY CITIES LAST MONTH') Last Month
                     .body
                         #city_ratio_chart.graph
-
-            .col-lg-12.col-md-12.col-sm-12.col-xs-12
-                .card
-                    .header
-                        h2 REVENUE IN WEEK
-                        ul.header-dropdown.m-r--5
-                            li.dropdown
-                                a.dropdown-toggle(href='javascript:void(0);' data-toggle='dropdown' role='button' aria-haspopup='true' aria-expanded='false')
-                                    i.material-icons more_vert
-                                ul.dropdown-menu.pull-right
-                                    li
-                                        a.load-chart-btn(href='javascript:void(0);' data-time='thisWeek' data-type='revenue' data-message='REVENUE IN WEEK') This Week
-                                    li
-                                        a.load-chart-btn(href='javascript:void(0);' data-time='lastWeek' data-type='revenue' data-message='REVENUE IN LAST WEEK') Last Week
-                                    li
-                                        a.load-chart-btn(href='javascript:void(0);' data-time='thisMonth' data-type='revenue' data-message='REVENUE IN MONTH') This Month
-                                    li
-                                        a.load-chart-btn(href='javascript:void(0);' data-time='lastMonth' data-type='revenue' data-message='REVENUE IN LAST MONTH') Last Month
-                    .body
-                        #line_chart.graph

@@ -202,7 +202,7 @@ $(document).ready(function() {
     lastWeekStart = new Date(new Date().setDate(first-7)).toISOString().split('T')[0];
     lastMonthStart = new Date(new Date(thisMonthStart).setMonth(now.getMonth() - 1)).toISOString().split('T')[0];
     new MyChart({
-        datatype: 'order_quantity-ratio-revenue',
+        datatype: 'order_quantity-ratio-revenue-city_revenue_ratio',
         ofrom: thisWeekStart,
         oto: toDay
     }).load().order_quantity().ratio().city_revenue_ratio().revenue();
