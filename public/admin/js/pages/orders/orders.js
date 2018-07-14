@@ -46,6 +46,7 @@ $('#search-btn').click(function () {
     });
 
     if(search !== '') location.search = search.slice(0, search.length-1);
+    else location.search = '';
 });
 
 var searchArray = location.search.replace('?', '').split('&');

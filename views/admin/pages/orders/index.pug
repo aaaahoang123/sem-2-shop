@@ -96,12 +96,12 @@ block content
                     table.table.table-bordered.table-hover
                         thead
                             tr
-                                th #
-                                th DATE
-                                th PRICE
-                                th PRODUCT
-                                th STATUS
-                                th ACTION
+                                th.text-center #
+                                th.text-center DATE
+                                th.text-center PRICE
+                                th.text-center PRODUCT
+                                th.text-center STATUS
+                                th.text-center ACTION
                         tbody.text-center
                             - let length = orders.length;
                             - for (let i = 0; i < length; i ++)
@@ -133,7 +133,7 @@ block content
                     - q = '&q=' + meta.q
                 .row.text-right
                      ul.pagination(style='margin-right: 1%')
-                        - if (meta.page === 1)
+                        - if (meta.cpage === 1)
                             li.paginate_button.disabled
                                 a First
                         - else
@@ -150,7 +150,7 @@ block content
                             - else
                                 li.paginate_button
                                     a(data-page=i href='javascript:void(0)')= i
-                            - if (i === meta.page + 4 && i < meta.total)
+                            - if (i === meta.cpage + 4 && i < meta.total)
                                 li.paginate_button.disabled
                                     a ...
                         - if (meta.cpage === meta.total)
