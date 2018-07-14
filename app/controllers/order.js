@@ -357,6 +357,11 @@ module.exports = {
                                 $sum: '$total'
                             }
                         }
+                    },
+                    {
+                        $sort: {
+                            _id: 1
+                        }
                     }
                 ];
                 pipeline[1].$facet[dataType][0].$group._id[group] = "$created_at";

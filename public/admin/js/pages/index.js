@@ -66,6 +66,10 @@ MyChart.prototype = {
         return this;
     },
 
+    revenue: function() {
+        return this;
+    },
+
     load: function () {
         var self = this;
         this.Promise = new Promise(function (resolve, reject) {
