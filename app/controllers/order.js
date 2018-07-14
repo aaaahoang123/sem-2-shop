@@ -379,6 +379,12 @@ module.exports = {
                         }
                     },
                     {
+                        $limit: 10,
+                    },
+                    {
+                        $skip: 0
+                    },
+                    {
                         $lookup: {
                             from: 'products',
                             localField: '_id',
