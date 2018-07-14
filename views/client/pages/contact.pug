@@ -42,13 +42,24 @@ block content
                 .col-lg-10.offset-lg-1
                     .contact_form_container
                         .contact_form_title Get in Touch
-                        form#contact_form(action='#')
+                        -if(errs && errs.send)
+                            p.text-danger.m-t-15 #{errs.send}
+                        form#contact_form(action='/contact' method='post')
                             .contact_form_inputs.d-flex.flex-md-row.flex-column.justify-content-between.align-items-between
-                                input#contact_form_name.contact_form_name.input_field(type='text' placeholder='Your name' required='required' data-error='Name is required.')
-                                input#contact_form_email.contact_form_email.input_field(type='text' placeholder='Your email' required='required' data-error='Email is required.')
-                                input#contact_form_phone.contact_form_phone.input_field(type='text' placeholder='Your phone number')
+                                input#contact_form_name.contact_form_name.input_field(type='text' placeholder='Your name' name='name' required='required' data-error='Name is required.'  value=(contact && contact.name)?contact.name:'')
+                                -if(errs && errs.name)
+                                    p.text-danger.m-t-15 #{errs.name}
+
+                                input#contact_form_email.contact_form_email.input_field(type='text' placeholder='Your email' required='required' data-error='Email is required.' name='email' value=(contact && contact.email)?contact.email:'')
+                                -if(errs && errs.email)
+                                    p.text-danger.m-t-15 #{errs.email}
+
+                                input#contact_form_phone.contact_form_phone.input_field(type='text' placeholder='Your phone number' name='phone' value=(contact && contact.phone)?contact.phone:'')
                             .contact_form_text
                                 textarea#contact_form_message.text_field.contact_form_message(name='message' rows='4' placeholder='Message' required='required' data-error='Please, write us a message.')
+                                    | #{(contact && contact.message)?contact.message:""}
+                            -if(errs && errs.message)
+                                p.text-danger.m-t-15 #{errs.message}
                             .contact_form_button
                                 button.button.contact_submit_button(type='submit') Send Message
         .panel
