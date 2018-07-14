@@ -1,0 +1,58 @@
+extends ../../layouts/master
+
+block extra-css
+    link(rel='stylesheet' href='https://use.fontawesome.com/releases/v5.0.13/css/all.css')
+    link(rel='stylesheet' href='/admin/plugins/bootstrap-select/css/bootstrap-select.min.css')
+    link(rel='stylesheet' href='/admin/plugins/waitme/waitMe.min.css')
+
+block extra-js
+    script(type='text/javascript' src='/admin/plugins/autosize/autosize.min.js')
+    script(type="text/javascript" src="/admin/plugins/multi-select/js/jquery.multi-select.min.js")
+
+
+block content
+    .container-fluid
+        .block-header
+            h2 CONFIG WEBSITE
+        // Input
+        .row.clearfix
+            .col-lg-12.col-md-12.col-sm-12.col-xs-12
+                .card
+                    .header
+                        h2
+                            | FOOTER
+                    .body
+                        form(name="footer-form")
+                            .row
+                                .col-md-4
+                                    b Footer title 1
+                                    .input-group
+                                        span.input-group-addon
+                                            i.material-icons title
+                                        .form-line
+                                            input.form-control.title1(type='text' name='title1' value=(footer[0] && footer[0].title) ? footer[0].title: '')
+                                .col-md-4
+                                    b Footer title 2
+                                    .input-group
+                                        span.input-group-addon
+                                            i.material-icons title
+                                        .form-line
+                                            input.form-control.title2(type='text' name='title2' value=(footer[1] && footer[1].title) ? footer[1].title: '')
+                                .col-md-4
+                                    b Footer title 3
+                                    .input-group
+                                        span.input-group-addon
+                                            i.material-icons title
+                                        .form-line
+                                            input.form-control.title3(type='text' name='title3' value=(footer[2] && footer[2].title) ? footer[2].title: '')
+                            .row.clearfix
+                                .col-sm-4
+                                    .input-group
+                                        span.input-group-addon
+                                            i.material-icons view_list
+                                        .select-clear
+                                            select.form-control.show-tick(name='blog1')
+                                                option(value='') -- Please select --
+                                                -if(footer && footer[0].blogs && footer[0].blogs.length !== 0)
+                                                    -for(let blog of footer[0].blogs)
+                                                        option(value=blog) #{blog}

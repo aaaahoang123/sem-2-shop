@@ -47,7 +47,7 @@ block content
                                                 td
                                                     input.form-control(class='inp-' + rvProducts[i]._id type='number', min='1', style='width: 80px; margin: auto' value=cart[rvProducts[i].code].quantity data-code=rvProducts[i].code onchange='countTotalPrice(this)')
                                                 td(class='price-' + rvProducts[i].code) #{rvProducts[i].price}
-                                                td(class=rvProducts[i].code) #{cart[rvProducts[i].code].quantity * rvProducts[i].price}
+                                                td.total-price(class=rvProducts[i].code) #{cart[rvProducts[i].code].quantity * rvProducts[i].price}
                                                 td
                                                     button(class='btn-' + rvProducts[i].code style="padding: 0px; background: 0 0; border: 0; cursor: pointer" data-code=rvProducts[i].code onclick="removeProduct(this)")
                                                         i.material-icons remove_shopping_cart

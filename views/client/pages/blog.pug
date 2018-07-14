@@ -6,6 +6,8 @@ block title
 block append link
     link(rel='stylesheet' type='text/css' href='client/styles/blog_styles.css')
     link(rel='stylesheet' type='text/css' href='client/styles/blog_responsive.css')
+    link(rel='stylesheet' type='text/css' href='client/styles/blog.css')
+    //link(rel=stylesheet type='text/css' href='/admin/plugins/bootstrap-select/js/bootstrap-select.min.js')
 
 block content
     // Home
@@ -17,65 +19,52 @@ block content
     // Blog
     .blog
         .container
-            .row
-                .col
-                    .blog_posts.d-flex.flex-row.align-items-start.justify-content-between
-                        // Blog post
-                        .blog_post
-                            .blog_image(style='background-image:url(client/images/blog_1.jpg)')
-                            .blog_text Vivamus sed nunc in arcu cursus mollis quis et orci. Interdum et malesuada.
-                            .blog_button
-                                a(href='/blog_single') Continue Reading
-                        // Blog post
-                        .blog_post
-                            .blog_image(style='background-image:url(images/blog_2.jpg)')
-                            .blog_text Cras lobortis nisl nec libero pulvinar lacinia. Nunc sed ullamcorper massa.
-                            .blog_button
-                                a(href='/blog_single') Continue Reading
-                        // Blog post
-                        .blog_post
-                            .blog_image(style='background-image:url(images/blog_3.jpg)')
-                            .blog_text
-                                | Fusce tincidunt nulla magna, ac euismod quam viverra id. Fusce eget metus feugiat
-                            .blog_button
-                                a(href='/blog_single') Continue Reading
-                        // Blog post
-                        .blog_post
-                            .blog_image(style='background-image:url(images/blog_4.jpg)')
-                            .blog_text Etiam leo nibh, consectetur nec orci et, tempus tempus ex
-                            .blog_button
-                                a(href='/blog_single') Continue Reading
-                        // Blog post
-                        .blog_post
-                            .blog_image(style='background-image:url(images/blog_5.jpg)')
-                            .blog_text Sed viverra pellentesque dictum. Aenean ligula justo, viverra in lacus porttitor
-                            .blog_button
-                                a(href='/blog_single') Continue Reading
-                        // Blog post
-                        .blog_post
-                            .blog_image(style='background-image:url(images/blog_6.jpg)')
-                            .blog_text In nisl tortor, tempus nec ex vitae, bibendum rutrum mi. Integer tempus nisi
-                            .blog_button
-                                a(href='/blog_single') Continue Reading
-                        // Blog post
-                        .blog_post
-                            .blog_image(style='background-image:url(images/blog_7.jpg)')
-                            .blog_text
-                                | Make Life Easier on Yourself by Accepting &ldquo;Good Enough.&rdquo; Don&rsquo;t Pursue Perfection.
-                            .blog_button
-                                a(href='/blog_single') Continue Reading
-                        // Blog post
-                        .blog_post
-                            .blog_image(style='background-image:url(images/blog_8.jpg)')
-                            .blog_text 13 Reasons You Are Failing At Life And Becoming A Bum
-                            .blog_button
-                                a(href='blog_single.html') Continue Reading
-                        // Blog post
-                        .blog_post
-                            .blog_image(style='background-image:url(images/blog_9.jpg)')
-                            .blog_text 4 Steps to Getting Anything You Want In Life
-                            .blog_button
-                                a(href='blog_single.html') Continue Reading
+            - if (!blogs || blogs.length === 0)
+                .row.text-center
+                    .col-lg-12
+                        h1 There are no posts
+            - else
+                .row
+                    .col
+                        .blog_posts.d-flex.flex-row.align-items-start.justify-content-between
+                            - for (var i = 0; i < blogs.length; i ++)
+                                .blog_post
+                                    .blog_text(style='font-weight: normal;')
+                                        | #{blogs[i].title}
+                                    .blog_button
+                                        a(href='/blog/' + blogs[i].uri_title) Continue Reading
+                - if (meta)
+                    - let limit = ''
+                    - if (meta.limit !== 9)
+                        - limit += '&limit=' + meta.limit
+                    .row.text-right
+                        ul.pagination(style='margin-right: 1%')
+                            - if (meta.page === 1)
+                                li.paginate_button.disabled
+                                    a(style='border: none') First
+                            - else
+                                li.paginate_button
+                                    a(href='/blog?' + limit.substring(1) style='border: none') First
+                            - let i = meta.page > 5 ? meta.page - 4 : 1
+                            - if (i !== 1)
+                                li.paginate_button.disabled
+                                    a(style='border: none') ...
+                            - for (; i <= meta.page + 4 && i <= meta.total; i ++)
+                                - if (i === meta.page)
+                                    li.paginate_button.active
+                                        a(style='border: none')= i
+                                - else
+                                    li.paginate_button
+                                        a(href='/blog?page=' + i + limit style='border: none')= i
+                                - if (i === meta.page + 4 && i < meta.total)
+                                    li.paginate_button.disabled
+                                        a(style='border: none') ...
+                            - if (meta.page === meta.total)
+                                li.paginate_button.disabled
+                                    a(style='border: none') Last
+                            - else
+                                li.paginate_button
+                                    a(href='/blog?page=' + meta.total + limit style='border: none') Last
 
 block append script
     script(src='client/js/blog_custom.js')
