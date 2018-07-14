@@ -12,9 +12,11 @@ const renderer = require('../app/controllers/client'),
     accountController = require('../app/controllers/account'),
     credentialController = require('../app/controllers/credential'),
     cityNDistrict = require('../app/controllers/city-and-district'),
-    orderController = require('../app/controllers/order');
+    orderController = require('../app/controllers/order'),
+    navController = require('../app/controllers/nav-bar'),
+    blogController = require('../app/controllers/blog');
 
-router.use('/*', categoryController.findAll, (req, res, next) => {
+router.use('/*', categoryController.findAll, navController.getNavBar, (req, res, next) => {
     if (req.cookies.token) res.locals.logedIn = true;
     if (req.cookies.username) res.locals.username = req.cookies.username;
     res.locals.webConfig = require('../app/resource/web-config');
@@ -33,11 +35,14 @@ router.get('/', webConfigController.getTopCategories,
     brandController.getList,
     renderer.renderHomePage);
 
-router.get('/blog', function(req, res, next) {
+router.get('/blog',blogController.setLimit, blogController.getList, function(req, res, next) {
     res.render('client/pages/blog');
 });
 
 router.get('/blog_single', function(req, res, next) {
+    res.render('client/pages/blog_single')
+});
+router.get('/blog/:uri_title',blogController.getOne, function(req, res, next) {
     res.render('client/pages/blog_single');
 });
 
