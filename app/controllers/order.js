@@ -349,19 +349,21 @@ module.exports = {
         ];
 
         if (req.query.ofrom) {
+            console.log(new Date(Number(req.query.ofrom)));
             if (!pipeline[0].$match.$and) pipeline[0].$match.$and = [];
             pipeline[0].$match.$and.push({
                 created_at: {
-                    $gt: new Date(req.query.ofrom)
+                    $gt: new Date(Number(req.query.ofrom))
                 }
             });
         }
 
         if (req.query.oto) {
+            console.log(new Date(Number(req.query.oto)));
             if (!pipeline[0].$match.$and) pipeline[0].$match.$and = [];
             pipeline[0].$match.$and.push({
                 created_at: {
-                    $lt: new Date(req.query.oto)
+                    $lt: new Date(Number(req.query.oto))
                 }
             });
         }
