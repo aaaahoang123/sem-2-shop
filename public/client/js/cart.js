@@ -1,75 +1,15 @@
 $(document).ready(function () {
-    var arrItemChecked = $("input:checked");
-    if ($(".toCountTotal").length === $(".item-checkbox").length)  $('#check-all').prop('checked', true);
-    for (var i = 0; i < arrItemChecked.length; i++) {
-        var total = document.createElement('input');
-        total.id = "Total" + arrItemChecked[i].id;
-        total.className = "toCountTotal";
-        total.type = "hidden";
-        total.value = $('.' + arrItemChecked[i].id).html();
-        $('.cart_items').append(total);
-        $('.inp-' + $(arrItemChecked[i]).val()).prop("readonly", true);
-        $('.btn-' + arrItemChecked[i].id).prop("disabled", true);
-        $('.btn-' + arrItemChecked[i].id).css("cursor", "");
-    }
-    countToTalAllProduct();
+    allTotalPrice();
 });
 var cart = JSON.parse(Cookies.get("cart"));
 
 function countTotalPrice(e) {
     cart[$(e).data('code')].quantity = parseInt(e.value);
     $('.' + $(e).data('code')).html(e.value * parseInt($('.price-' + $(e).data('code')).html()));
+    allTotalPrice();
     Cookies.set('cart', cart);
 }
 
-var itemCheckbox = $('.item-checkbox');
-$('#check-all').change(function () {
-    itemCheckbox.prop('checked', $(this).prop('checked'));
-    itemCheckbox.trigger('change');
-});
-
-$(itemCheckbox).change(function () {
-    if (!$(this).prop('checked')) $('#check-all').prop('checked', false);
-});
-
-function checkItem(e) {
-    if (e.checked) {
-        console.log($(".toCountTotal").length);
-        console.log($(".item-checkbox").length);
-        console.log($(".toCountTotal").length === $(".item-checkbox").length);
-        $('.inp-' + $(e).val()).prop("readonly", true);
-        $('.btn-' + e.id).prop("disabled", true);
-        $('.btn-' + e.id).css("cursor", "");
-        if ($('#Total' + e.id).length === 0) {
-            var total = document.createElement('input');
-            total.id = "Total" + e.id;
-            total.className = "toCountTotal";
-            total.type = "hidden";
-            total.value = $('.' + e.id).html();
-            $('.cart_items').append(total);
-        }
-        if ($(".toCountTotal").length === $(".item-checkbox").length)  $('#check-all').prop('checked', true);
-        cart[e.id].selected = true;
-    }
-    else {
-        $('.inp-' + $(e).val()).removeAttr("readonly");
-        $('.btn-' + e.id).removeAttr("disabled");
-        $('.btn-' + e.id).css("cursor", "pointer");
-        $('#Total' + e.id).remove();
-        delete cart[e.id].selected;
-    }
-    Cookies.set('cart', cart);
-    countToTalAllProduct();
-}
-
-function countToTalAllProduct() {
-    var arrPrice = $(".toCountTotal");
-    var sum = 0;
-    for (var i = 0; i < arrPrice.length; i++) {
-        sum += parseInt(arrPrice[i].value);
-    }
-    $('.order_total_amount').html(sum);
-}
 function removeProduct(e) {
     delete cart[$(e).data('code')];
     Cookies.set("cart", cart);
@@ -87,18 +27,23 @@ function removeProduct(e) {
         );
     }
     $('.tr-' + $(e).data('code')).remove();
+    allTotalPrice();
+}
+
+function allTotalPrice() {
+    var total = 0;
+    $('.total-price').get().forEach(function (el) {
+        total += parseInt($(el).html());
+    });
+    $('.order_total_amount').html(total);
 }
 
 $(".cart_button_checkout").click(function () {
     var token = Cookies.get("token");
-    console.log(token);
     if (token === undefined) {
         showNotification("alert-warning", "Please login to place an order", "bottom", "left", "animated bounceIn", "animated bounceOut");
     }
-    if ($("input:checked").length === 0) {
-        showNotification("alert-warning", "You have not selected any products yet", "bottom", "left", "animated bounceIn", "animated bounceOut");
-    }
-    if (token && $("input:checked").length !== 0) location.href = "/order";
+    else location.href = "/order";
 });
 
 function showNotification(colorName, text, placementFrom, placementAlign, animateEnter, animateExit) {

@@ -1,7 +1,7 @@
 {
   "top_categories": [
-    "5b33b3ffbb75c6097016da46",
-    "5b33b579bb75c6097016da47",
+    "5b33b642bb75c6097016da4c",
+    "5b33b5f2bb75c6097016da4a",
     "5b33b59cbb75c6097016da48"
   ],
   "contact": {
@@ -18,34 +18,16 @@
     "name": "Quan dai",
     "logo": "https://res.cloudinary.com/fpt-aptech/image/upload/v1531062065/dycuga4hz2a69euuimj9.png"
   },
-  "nav_bar": [
-    {
-      "name": "Home",
-      "href": "/"
-    },
-    {
-      "name": "Shop",
-      "href": "/shop"
-    },
-    {
-      "name": "Cart",
-      "href": "/cart"
-    },
-    {
-      "name": "Blog",
-      "href": "/blog"
-    }
-  ],
   "footer": [
     {
-      "title": "Chính sách 1111111111111111",
+      "name": "Chính sách 1111111111111111",
       "blogs": [
         "Dien thoai iphone 111111111111",
-        "xyz"
+        ""
       ]
     },
     {
-      "title": "Chính sách 2",
+      "name": "Chính sách 2",
       "blogs": [
         "Dien thoai iphone 11",
         ""

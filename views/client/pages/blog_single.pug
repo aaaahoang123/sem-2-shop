@@ -4,57 +4,18 @@ block title
     title Blog post
 
 block append link
-    link(rel='stylesheet' type='text/css' href='client/styles/blog_single_styles.css')
-    link(rel='stylesheet' type='text/css' href='client/styles/blog_single_responsive.css')
+    link(rel='stylesheet' type='text/css' href='/client/styles/blog_single_styles.css')
+    link(rel='stylesheet' type='text/css' href='/client/styles/blog_single_responsive.css')
 
 block content
-    // Home
-    .home
-        .home_background.parallax-window(data-parallax='scroll' data-image-src='http://localhost:3000/client/images/blog_single_background.jpg' data-speed='0.8')
-    // Single Blog Post
     .single_post
         .container
             .row
                 .col-lg-8.offset-lg-2
-                    .single_post_title Vivamus sed nunc in arcu cursus mollis quis et orci. Interdum et malesuada
-                    .single_post_text
-                        p
-                            | Mauris viverra cursus ante laoreet eleifend. Donec vel fringilla ante. Aenean finibus velit id urna vehicula, nec maximus est sollicitudin. Praesent at tempus lectus, eleifend blandit felis. Fusce augue arcu, consequat a nisl aliquet, consectetur elementum turpis. Donec iaculis lobortis nisl, et viverra risus imperdiet eu. Etiam mollis posuere elit non sagittis. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc quis arcu a magna sodales venenatis. Integer non diam sit amet magna luctus mollis ac eu nisi. In accumsan tellus ut dapibus blandit.
-                        .single_post_quote.text-center
-                            .quote_image
-                                img(src='client/images/quote.png' alt='')
-                            .quote_text
-                                | Quisque sagittis non ex eget vestibulum. Sed nec ultrices dui. Cras et sagittis erat. Maecenas pulvinar, turpis in dictum tincidunt, dolor nibh lacinia lacus.
-                            .quote_name Liam Neeson
-                        p
-                            | Praesent ac magna sed massa euismod congue vitae vitae risus. Nulla lorem augue, mollis non est et, eleifend elementum ante. Nunc id pharetra magna.  Praesent vel orci ornare, blandit mi sed, aliquet nisi. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos.
-    // Blog Posts
-    .blog
-        .container
-            .row
-                .col
-                    .blog_posts.d-flex.flex-row.align-items-start.justify-content-between
-                        // Blog post
-                        .blog_post
-                            .blog_image(style='background-image:url(client/images/blog_4.jpg)')
-                            .blog_text Etiam leo nibh, consectetur nec orci et, tempus tempus ex
-                            .blog_button
-                                a(href='/blog_single') Continue Reading
-                        // Blog post
-                        .blog_post
-                            .blog_image(style='background-image:url(client/images/blog_5.jpg)')
-                            .blog_text Sed viverra pellentesque dictum. Aenean ligula justo, viverra in lacus porttitor
-                            .blog_button
-                                a(href='/blog_single') Continue Reading
-                        // Blog post
-                        .blog_post
-                            .blog_image(style='background-image:url(client/images/blog_6.jpg)')
-                            .blog_text In nisl tortor, tempus nec ex vitae, bibendum rutrum mi. Integer tempus nisi
-                            .blog_button
-                                a(href='/blog_single') Continue Reading
-
+                    .single_post_title #{blog.title}
+                    .single_post_text !{blog.content}
 block append script
-    script(src='client/js/blog_single_custom.js')
-    script(src='client/plugins/parallax-js-master/parallax.min.js')
+    script(src='/client/js/blog_single_custom.js')
+    script(src='/client/plugins/parallax-js-master/parallax.min.js')
 
 

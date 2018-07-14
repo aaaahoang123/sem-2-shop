@@ -9,7 +9,8 @@ function addToCart() {
     }
     else {
         cart[$(this).data('code')] = {
-            "quantity": parseInt($('#quantity_input').val())
+            "quantity": parseInt($('#quantity_input').val()),
+            "selected": true
         };
     }
     showNotification("alert-success", "Add to cart Success", "bottom", "left", "animated bounceIn", "animated bounceOut");

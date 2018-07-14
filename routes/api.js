@@ -4,7 +4,10 @@ const router = express.Router();
 const productsController = require('../app/controllers/product');
 const categoriesController = require('../app/controllers/category');
 const cdController = require('../app/controllers/city-and-district');
+const fs = require('fs');
+const webConfig = require('../app/resource/web-config');
 const navController = require('../app/controllers/nav-bar');
+const orderController = require('../app/controllers/order');
 
 router
     .get('/products', productsController.getList,
@@ -15,7 +18,7 @@ router
                     "errors": [
                         {
                             "status": "404",
-                            "title":  "Not found",
+                            "title": "Not found",
                             "detail": "Not found any products"
                         }
                     ]
@@ -59,5 +62,31 @@ router
         }
         res.json(res.locals.districts);
     })
-    .post('/nav-bar', navController.insert);
+
+    .post('/footer', (req, res) => {
+        webConfig.footer = req.body;
+        fs.writeFile('app/resource/web-config.json', JSON.stringify(webConfig, null, 2), 'utf8', (err) => {
+            if (err) {
+                console.log(err);
+                res.send(err.message);
+            }
+            console.log('write success');
+            res.send("thanh cong");
+        });
+    })
+
+    .post('/nav-bar', navController.insert)
+
+    .get('/charts', orderController.getAndGroupOrder, (req, res) => {
+        if (res.locals.errs && Object.keys(res.locals.errs).length !== 0) {
+            res.status(404);
+            res.json({
+                error: 404,
+                detail: 'Cannot find any thing!'
+            });
+            return;
+        }
+        res.json(res.locals.chart_data);
+    });
+
 module.exports = router;
