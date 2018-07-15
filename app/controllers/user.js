@@ -36,15 +36,15 @@ module.exports = {
             if (err) {
                 if (!res.locals.errs) res.locals.errs = {};
                 res.locals.errs.database = err.message;
-                console.log(err);
-                next();
+                console.log(err.code);
+                return next();
             }
-            res.locals = {
+            res.locals = Object.assign(res.locals, {
                 title: 'Success',
                 detail: 'Add user successfully',
                 link: '/manager/dashboard/users-manager/users/create',
                 result: result
-            };
+            });
             next();
         });
     },
