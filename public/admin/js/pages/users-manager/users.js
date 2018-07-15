@@ -44,7 +44,7 @@ $(document).ready(function () {
         }, function () {
             console.log(chosen);
             $.ajax({
-                url: '/manager/dashboard/users-manager/users/',
+                url: '/manager/users-manager/users/',
                 type: 'DELETE',
                 data: {chosen: chosen},
                 success: function (res) {
@@ -77,7 +77,7 @@ function showAjaxLoaderMessage() {
         showLoaderOnConfirm: true,
     }, function () {
         $.ajax({
-            url: '/manager/dashboard/users-manager/users/' + mid,
+            url: '/manager/users-manager/users/' + mid,
             type: 'DELETE',
             success: function (res) {
                 console.log(res);

@@ -24,7 +24,7 @@ block content
                     .body
                         -if(errs && errs.database)
                             label.text-danger #{errs.database}
-                        form(action='/manager/dashboard/web-config/contact' method='POST' name='form-contact')
+                        form(action='/manager/web-config/contact' method='POST' name='form-contact')
                             .row
                                 .col-md-4
                                     b Email Address

@@ -63,7 +63,7 @@ block content
                                 button#search-btn.btn.btn-danger.btn-circle.waves-effect.waves-circle.waves-float(type='button')
                                     i.material-icons search
                     - if (!categories || categories.length === 0)
-                        - link = '/manager/dashboard/products-manager/categories/create'
+                        - link = '/manager/products-manager/categories/create'
                         include 404
                     - else
                         .body.table-responsive
@@ -110,7 +110,7 @@ block content
                                                              -for (m = 0; m < lengthP; m ++)
                                                                 p #{categories[i].parent[m].name}
                                                     td
-                                                        a.btn.btn-link(href='/manager/dashboard/products-manager/categories/' + categories[i].name + '/edit')
+                                                        a.btn.btn-link(href='/manager/products-manager/categories/' + categories[i].name + '/edit')
                                                             i.material-icons edit
                                                         button.btn.btn-link.waves-effect(type='button', data-type="ajax-loader" data-b=categories[i].name)
                                                             i.material-icons delete
@@ -131,7 +131,7 @@ block content
                                                 a First
                                         - else
                                             li.paginate_button
-                                                a(href='/manager/dashboard/products-manager/categories?' + limit.substring(1) + q + level) First
+                                                a(href='/manager/products-manager/categories?' + limit.substring(1) + q + level) First
                                         - let i = cmeta.page > 5 ? cmeta.page - 4 : 1
                                         - if (i !== 1)
                                             li.paginate_button.disabled
@@ -142,7 +142,7 @@ block content
                                                     a= i
                                             - else
                                                 li.paginate_button
-                                                    a(href='/manager/dashboard/products-manager/categories?cpage=' + i + limit + q + level)= i
+                                                    a(href='/manager/products-manager/categories?cpage=' + i + limit + q + level)= i
                                             - if (i === cmeta.page + 4 && i < cmeta.total)
                                                 li.paginate_button.disabled
                                                     a ...
@@ -151,4 +151,4 @@ block content
                                                 a Last
                                         - else
                                             li.paginate_button
-                                                a(href='/manager/dashboard/products-manager/categories?cpage=' + cmeta.total + limit + q + level) Last
+                                                a(href='/manager/products-manager/categories?cpage=' + cmeta.total + limit + q + level) Last

@@ -181,7 +181,7 @@ module.exports = {
             res.locals = {
                 title: 'Success',
                 detail: 'Add category successfully',
-                link: '/manager/dashboard/products-manager/categories/create',
+                link: '/manager/products-manager/categories/create',
                 result: result,
                 status: 201
             };
@@ -248,7 +248,7 @@ module.exports = {
             res.locals = {
                 title: 'Success',
                 detail: 'Edit category successfully',
-                link: '/manager/dashboard/products-manager/categories',
+                link: '/manager/products-manager/categories',
                 result: result
             };
             next();
@@ -333,7 +333,7 @@ module.exports = {
             res.locals = {
                 title: 'Success',
                 detail: 'Delete category successfully',
-                link: '/manager/dashboard/products-manager/categories',
+                link: '/manager/products-manager/categories',
                 result: result
             };
             next();
@@ -356,7 +356,7 @@ module.exports = {
                 method: 'PUT',
                 title: 'EDIT CATEGORY',
                 path: '/products-manager/categories',
-                action: '/manager/dashboard/products-manager/categories/' + req.params.name + '?_method=PUT',
+                action: '/manager/products-manager/categories/' + req.params.name + '?_method=PUT',
                 level: req.body.level,
                 category: req.body
             });
@@ -370,7 +370,7 @@ module.exports = {
             method: 'PUT',
             title: 'EDIT CATEGORY',
             path: '/products-manager/categories',
-            action: '/manager/dashboard/products-manager/categories/' + req.params.name + '?_method=PUT',
+            action: '/manager/products-manager/categories/' + req.params.name + '?_method=PUT',
             level: res.locals.category?res.locals.category.level:undefined
         })
     },

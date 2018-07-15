@@ -78,7 +78,7 @@ block content
                                             td.text-center.js-sweetalert.js-modal-buttons
                                                 button.btn.btn-link.waves-effect.btn-detail(data-p=products[i])
                                                     i.material-icons details
-                                                a.btn.btn-link.waves-effect(href='/manager/dashboard/products-manager/products/'+products[i].code+'/edit')
+                                                a.btn.btn-link.waves-effect(href='/manager/products-manager/products/'+products[i].code+'/edit')
                                                     i.material-icons mode_edit
                                                 button.btn.btn-link.waves-effect(type='button', data-type="ajax-loader" data-p=products[i])
                                                     i.material-icons delete
@@ -96,7 +96,7 @@ block content
                                         a First
                                 - else
                                     li.paginate_button
-                                        a(href='/manager/dashboard/products-manager/products?' + limit.substring(1) + q) First
+                                        a(href='/manager/products-manager/products?' + limit.substring(1) + q) First
                                 - let i = meta.page > 5 ? meta.page - 4 : 1
                                 - if (i !== 1)
                                     li.paginate_button.disabled
@@ -107,7 +107,7 @@ block content
                                             a= i
                                     - else
                                         li.paginate_button
-                                            a(href='/manager/dashboard/products-manager/products?page=' + i + limit + q)= i
+                                            a(href='/manager/products-manager/products?page=' + i + limit + q)= i
                                     - if (i === meta.page + 4 && i < meta.total)
                                         li.paginate_button.disabled
                                             a ...
@@ -116,7 +116,7 @@ block content
                                         a Last
                                 - else
                                     li.paginate_button
-                                        a(href='/manager/dashboard/products-manager/products?page=' + meta.total + limit + q) Last
+                                        a(href='/manager/products-manager/products?page=' + meta.total + limit + q) Last
 
     #largeModal.modal.fade(tabindex='-1' role='dialog')
         .modal-dialog.modal-lg(role='document')

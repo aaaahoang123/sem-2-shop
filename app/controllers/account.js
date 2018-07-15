@@ -55,7 +55,7 @@ module.exports = {
                 result: result,
                 title: 'Success',
                 detail: 'Add account successfully',
-                link: '/manager/dashboard/users-manager/users/' + req.params.mid,
+                link: '/manager/users-manager/users/' + req.params.mid,
             });
             next();
         });
@@ -111,7 +111,7 @@ module.exports = {
             res.locals = Object.assign(res.locals, {
                 title: 'Success',
                 detail: 'Update account successfully',
-                link: '/manager/dashboard/users-manager/users/',
+                link: '/manager/users-manager/users/',
                 result: result
             });
             next();
@@ -142,7 +142,7 @@ module.exports = {
             req.accountSuccessResponse = {
                 title: 'Success',
                 detail: 'Delete User and Account successfully',
-                link: '/manager/dashboard/users-manager/users',
+                link: '/manager/users-manager/users',
                 result: result
             };
             req.rollBack = false;
@@ -192,7 +192,7 @@ module.exports = {
             req.accountSuccessResponse = {
                 title: 'Success',
                 detail: 'Delete Users and Accounts successfully',
-                link: '/manager/dashboard/users-manager/users',
+                link: '/manager/users-manager/users',
                 result: result
             };
             req.rollBack = false;

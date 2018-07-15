@@ -3,7 +3,7 @@ $(document).ready(function () {
     console.log($('#level-selector').val())
 });
 $('#level-selector').change(function () {
-    location.href = '/manager/dashboard/products-manager/categories/create?level=' + (Number($(this).val()));
+    location.href = '/manager/products-manager/categories/create?level=' + (Number($(this).val()));
 });
 $('#parent-selector').change(function () {
     $(this).find('option[value=""]').attr('disabled', true);

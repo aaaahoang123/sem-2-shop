@@ -25,7 +25,7 @@ module.exports = {
             res.locals = {
                 title: 'Success',
                 detail: 'Add blog successfully',
-                link: '/manager/dashboard/web-config/blogs/create',
+                link: '/manager/web-config/blogs/create',
                 result: result
             };
             next();
@@ -137,7 +137,7 @@ module.exports = {
             res.locals = {
                 title: 'Success',
                 detail: 'Edit blog successfully',
-                link: '/manager/dashboard/web-config/blogs',
+                link: '/manager/web-config/blogs',
                 result: result
             };
             next();
@@ -163,7 +163,7 @@ module.exports = {
             res.locals = {
                 title: 'Success',
                 detail: 'Delete blog successfully',
-                link: '/manager/dashboard/web-config/blogs',
+                link: '/manager/web-config/blogs',
                 result: result
             };
             next();
