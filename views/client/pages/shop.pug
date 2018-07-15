@@ -5,9 +5,9 @@ block title
 
 block extra-meta
     meta(name='max-price' content=maxPrice)
-    -if (meta.min)
+    -if (meta && meta.min)
         meta(name='min-value' content=meta.min)
-    -if (meta.max)
+    -if (meta && meta.max)
         meta(name='max-value' content=meta.max)
 
 block append link

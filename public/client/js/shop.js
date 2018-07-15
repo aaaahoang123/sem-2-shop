@@ -28,8 +28,15 @@ $('.btn.btn-outline-primary.waves-effect').click(function () {
      changeSearchByInput(category, brand, minValue, maxValue, sort);
 });
 
+var searchArray = location.search.replace('?', '').split('&');
+
 function changeSearchByInput(category, brand, minValue, maxValue, sort) {
     var search = '';
+    for(s of searchArray){
+        if(s.includes('q=')){
+            search += s + '&';
+        }
+    }
     if (category !== undefined) {
         search += 'category=' + category.replace("&","%26") + '&'
     }
