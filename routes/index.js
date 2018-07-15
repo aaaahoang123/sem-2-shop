@@ -3,7 +3,7 @@
 const express = require('express');
 const router = express.Router({});
 const webConfigController = require('../app/controllers/web-config');
-
+const sendMail = require('../app/controllers/send-mail');
 const categoryController = require('../app/controllers/category');
 const productController = require('../app/controllers/product');
 const brandController = require('../app/controllers/brand');
@@ -65,9 +65,9 @@ router.post('/order', credentialController.setTokenFromCookie, credentialControl
     orderController.validate, orderController.insertOne,
     orderController.responseInsertOneCustomerFormView);
 
-router.get('/contact', function(req, res, next) {
-    res.render('client/pages/contact');
-});
+router
+    .get('/contact', function(req, res, next) {res.render('client/pages/contact');})
+    .post('/contact', sendMail.validate, sendMail.sendMail, sendMail.responseContactFormView);
 
 router.get('/product/:code',categoryController.findAll,
     productController.getOne,
