@@ -1,9 +1,8 @@
 $(function () {
     getMorris('line', 'line_chart');
-    //getMorris('bar', 'bar_chart');
-    //getMorris('donut', 'donut_chart');
+    getMorris('bar', 'bar_chart');
+    getMorris('donut', 'donut_chart');
 });
-
 
 function getMorris(type, element) {
     if (type === 'line') {
