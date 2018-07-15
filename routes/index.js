@@ -82,7 +82,7 @@ router.get('/regular', categoryController.findAll,function(req, res, next) {
 });
 
 router.get('/shop', categoryController.findAll, categoryController.getOne,
-    brandController.getList, brandController.getOne,
+    brandController.getAll, brandController.getOne,
     productController.getMaxPrice,
     productController.setProductCodeArrayFromCookie,
     productController.getProductByCodesArray,

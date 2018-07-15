@@ -40,27 +40,17 @@
                 .header_search
                     .header_search_content
                         .header_search_form_container
-                            form.header_search_form.clearfix(action='#')
-                                input.header_search_input(type='search' required='required' placeholder='Search for products...')
-                                .custom_dropdown
-                                    .custom_dropdown_list
-                                        span.custom_dropdown_placeholder.clc All Categories
-                                        i.fas.fa-chevron-down
-                                        ul.custom_list.clc
+                            input.header_search_input(required='required' placeholder='Search for products...')
+                            .custom_dropdown
+                                .custom_dropdown_list
+                                    span.custom_dropdown_placeholder.clc All Categories
+                                    i.fas.fa-chevron-down
+                                    ul.custom_list.clc
+                                        - for (let c of categories)
                                             li
                                                 a.clc(href='#') All Categories
-                                            li
-                                                a.clc(href='#') Computers
-                                            li
-                                                a.clc(href='#') Laptops
-                                            li
-                                                a.clc(href='#') Cameras
-                                            li
-                                                a.clc(href='#') Hardware
-                                            li
-                                                a.clc(href='#') Smartphones
-                                button.header_search_button.trans_300(type='submit' value='Submit')
-                                    img(src='/client/images/search.png' alt='')
+                            button.header_search_button.trans_300
+                                img(src='/client/images/search.png' alt='')
             .col-lg-4.col-9.order-lg-3.order-2.text-lg-left.text-right
                 .wishlist_cart.d-flex.flex-row.align-items-center.justify-content-end
                     // Cart
