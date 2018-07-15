@@ -40,7 +40,8 @@
                 .header_search
                     .header_search_content
                         .header_search_form_container
-                            form.header_search_form.clearfix(action='#')
+                            -var g ='kkk';
+                            form.header_search_form.clearfix(action='/shop?q='+g)
                                 input.header_search_input(type='search' required='required' placeholder='Search for products...')
                                 .custom_dropdown
                                     .custom_dropdown_list
@@ -49,16 +50,10 @@
                                         ul.custom_list.clc
                                             li
                                                 a.clc(href='#') All Categories
-                                            li
-                                                a.clc(href='#') Computers
-                                            li
-                                                a.clc(href='#') Laptops
-                                            li
-                                                a.clc(href='#') Cameras
-                                            li
-                                                a.clc(href='#') Hardware
-                                            li
-                                                a.clc(href='#') Smartphones
+                                            - for (let lv1 of categories)
+                                                - if (lv1.level === 1)
+                                                    li
+                                                        a.clc(href='#') #{lv1.name}
                                 button.header_search_button.trans_300(type='submit' value='Submit')
                                     img(src='/client/images/search.png' alt='')
             .col-lg-4.col-9.order-lg-3.order-2.text-lg-left.text-right
