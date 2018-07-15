@@ -85,18 +85,18 @@ block content
                                             input(id=b.name type='checkbox' name='brand' value=b.name checked=(brand&&b.name===brand.name)).chk-col-blue
                                             label(for=b.name) #{b.name}
                             .sidebar_section
-                                .sidebar_subtitle.brands_subtitle Sort by
+                                .sidebar_subtitle.brands_subtitle Sort by price
                                 ul.brands_list
                                     .row
                                         input(id='priceDown' type='checkbox' name='sort' value='priceDown' checked=(sort && sort === 'price_-1')).chk-col-blue
-                                        label(for='priceDown') priceDown
+                                        label(for='priceDown') Descending
                                     .row
                                         input(id='priceUp' type='checkbox' name='sort' value='priceUp' checked=(sort && sort === 'price_1')).chk-col-blue
-                                        label(for='priceUp') priceUp
+                                        label(for='priceUp') Ascending
                             .sidebar_section
                                 .sidebar_subtitle.brands_subtitle
                                     .button-place
-                                        button.btn.btn-outline-primary.waves-effect Search
+                                        button.btn.btn-outline-primary.waves-effect(style='cursor: pointer') Search
                     .col-lg-9
                         // Shop Content
                         .shop_content
@@ -107,7 +107,7 @@ block content
                             .product_grid
                                 .product_grid_border
                                 // Product Item
-                                - for (let product of products)
+                                - for (let product of nProducts)
                                     .border_active
                                     .product_item.is_new.d-flex.flex-column.align-items-center.justify-content-center.text-center
                                         .product_border
@@ -143,7 +143,7 @@ block content
                                         - if (i !== 1)
                                             li.disabled
                                                 a ...
-                                        - for (; i <= meta.page + 4 && i <= meta.total; i ++)
+                                        - for (; i <= meta.page + 4 && i <= meta.ntotal; i ++)
                                             - if (i === meta.page)
                                                 li.active
                                                     a= i
@@ -151,18 +151,18 @@ block content
                                                 -if(search !== '')
                                                     - search = '&' + search
                                                 li
-                                                    a(href='/shop?page=' + i + search)= i
-                                            - if (i === meta.page + 4 && i < meta.total)
+                                                    a(href='/shop?npage=' + i + search)= i
+                                            - if (i === meta.page + 4 && i < meta.ntotal)
                                                 li.disabled
                                                     a ...
-                                        - if (meta.page === meta.total)
+                                        - if (meta.page === meta.ntotal)
                                             li.disabled
                                                 a Last
                                         - else
-                                            -if(search !== '')
-                                                - search = '&' + search
+                                            // -if(search !== '')
+                                            //     - search = '&' + search
                                             li
-                                                a(href='/shop?page=' + meta.total + search) Last
+                                                a(href='/shop?npage=' + meta.ntotal + search) Last
     ///Recently Viewed
     include recently_viewed
 

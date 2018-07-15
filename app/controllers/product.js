@@ -132,11 +132,15 @@ module.exports = {
     },
 
     getList: function (req, res, next) {
-        let limit = 10, skip = 0, page = 1, min = 0, max = res.locals.maxPrice, sort = '';
+        let limit = 10, skip = 0, page = 1, min = 0, max = res.locals.maxPrice, sort = '', nlimit = 20;
         if (req.query.limit && /^\d+$/.test(req.query.limit)) limit = Math.abs(Number(req.query.limit));
         if (req.query.page && !['-1', '1'].includes(req.query.page) && /^\d+$/.test(req.query.page)) {
             page = Math.abs(Number(req.query.page));
             skip = (page - 1) * limit;
+        }
+        if (req.query.npage && !['-1', '1'].includes(req.query.npage) && /^\d+$/.test(req.query.npage)) {
+            page = Math.abs(Number(req.query.npage));
+            skip = (page - 1) * nlimit;
         }
         /**
          * Sử dụng mongodb aggregate, $facet
@@ -168,7 +172,8 @@ module.exports = {
             {
                 '$facet': {
                     meta: [{$count: "totalItems"}],
-                    data: [{$skip: skip}, {$limit: limit}] // add projection here wish you re-shape the docs
+                    data: [{$skip: skip}, {$limit: limit}], // add projection here wish you re-shape the docs
+                    nProducts: [{$skip: skip},{$limit: nlimit}]
                 }
             }
         ];
@@ -187,8 +192,10 @@ module.exports = {
             ];
         }
         if (req.query.noneLimitProduct) query[query.length-1].$facet.data.length = 1;
-        if (res.locals.category || res.locals.brand || req.query.min || req.query.max) {
-            query[0].$match.$and = [];
+        if (res.locals.category || res.locals.brand || req.query.min || req.query.max || req.query.sort) {
+            if (q || res.locals.category || res.locals.brand || req.query.min || req.query.max) {
+                if (!query[0].$match.$and) query[0].$match.$and = [];
+            }
             if (q) query[0].$match.$and.push({$or: q});
             if (res.locals.category) query[0].$match.$and.push({categories: res.locals.category._id});
             if (res.locals.brand) query[0].$match.$and.push({brand: res.locals.brand._id});
@@ -200,14 +207,14 @@ module.exports = {
                 max=Number(req.query.max);
                 query[0].$match.$and.push({price: {$lt: max+1}});
             }
-        } else if (req.query.sort) {
-            sort = req.query.sort;
-            let sortArr = req.query.sort.split('_');
-            let sortObj = {$sort: {}};
-            sortObj.$sort[sortArr[0]] = Number(sortArr[1]);
-            query.splice(1,0,sortObj)
-        }
-        else if(q) query[0].$match.$or = q;
+            if (req.query.sort) {
+                sort = req.query.sort;
+                let sortArr = req.query.sort.split('_');
+                let sortObj = {$sort: {}};
+                sortObj.$sort[sortArr[0]] = Number(sortArr[1]);
+                query.splice(1,0,sortObj)
+            }
+        } else if(q) query[0].$match.$or = q;
         // Thực thi aggregate query
         model.aggregate(query, function (err, result) {
             if (err) {
@@ -225,10 +232,12 @@ module.exports = {
             }
             if (sort !== '') res.locals.sort = sort;
             res.locals.products = result[0].data;
+            res.locals.nProducts = result[0].nProducts;
             let totalItems = result[0].meta[0].totalItems;
             res.locals.meta = {
                 totalItems: totalItems,
                 total: Math.ceil(totalItems / limit),
+                ntotal: Math.ceil(totalItems / nlimit),
                 limit: !req.lp?limit:'none',
                 offset: skip,
                 page: page,

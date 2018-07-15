@@ -9,3 +9,8 @@ $('.cate-container').hover(function () {
 }).mouseleave(function () {
     $('.cat_menu').attr('hidden', true)
 });
+
+$('.header_search_button').click(function () {
+    let s = $('.header_search_input').val();
+    location.href = '/shop?search=' + s;
+});
