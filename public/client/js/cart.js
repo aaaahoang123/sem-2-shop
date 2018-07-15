@@ -11,6 +11,9 @@ function countTotalPrice(e) {
 }
 
 function removeProduct(e) {
+    cartLength = Object.keys(cart).length;
+    $('#sticky').html(cartLength - 1);
+    $('#cartHeader').html(cartLength - 1);
     delete cart[$(e).data('code')];
     Cookies.set("cart", cart);
     if ($('.tr').length === 1) {
