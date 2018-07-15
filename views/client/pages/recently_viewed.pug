@@ -31,7 +31,8 @@
                                                 .viewed_content.text-center
                                                     .viewed_price $ #{rvProducts[i].price}
                                                     .viewed_name
-                                                        a.product_code(href='/product/'+rvProducts[i].code) #{rvProducts[i].name}
+                                                        a.product_code(href='/product/'+rvProducts[i].code)
+                                                            p.char-25 #{rvProducts[i].name}
                     - if (rvProducts.length<=6)
                         .viewed_slider_container
                             .row
@@ -46,7 +47,8 @@
                                                         .viewed_content.text-center
                                                             .viewed_price $ #{rvProducts[i].price}
                                                             .viewed_name
-                                                                a.product_code(href='/product/' + rvProducts[i].code title=rvProducts[i].name): p.char-25 #{rvProducts[i].name}
+                                                                a.product_code(href='/product/' + rvProducts[i].code title=rvProducts[i].name)
+                                                                    p.char-25 #{rvProducts[i].name}
 // Brands
 .brands
    .container
