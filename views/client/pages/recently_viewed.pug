@@ -6,6 +6,7 @@
             overflow: hidden;
             max-width: 25ch;
         }
+
     .viewed
         .container
             .row
@@ -31,7 +32,7 @@
                                                 .viewed_content.text-center
                                                     .viewed_price $ #{rvProducts[i].price}
                                                     .viewed_name
-                                                        a.product_code(href='/product/'+rvProducts[i].code)
+                                                        a.product_code(href='/product/'+rvProducts[i].code title=rvProducts[i].name)
                                                             p.char-25 #{rvProducts[i].name}
                     - if (rvProducts.length<=6)
                         .viewed_slider_container
@@ -50,19 +51,21 @@
                                                                 a.product_code(href='/product/' + rvProducts[i].code title=rvProducts[i].name)
                                                                     p.char-25 #{rvProducts[i].name}
 // Brands
-.brands
-   .container
-       .row
-           .col
-               .brands_slider_container
-                   // Brands Slider
-                   .owl-carousel.owl-theme.brands_slider
-                       - for (let b of brands)
-                           .owl-item
-                               .brands_item.d-flex.flex-column.justify-content-center
-                                   img(src=b.logo alt='' style='width: 100px; height: 50px')
-                   // Brands Slider Navigation
-                   .brands_nav.brands_prev
-                       i.fas.fa-chevron-left
-                   .brands_nav.brands_next
-                       i.fas.fa-chevron-right
+-if (brands)
+    .brands
+       .container
+           .row
+               .col
+                   .brands_slider_container
+                       // Brands Slider
+                       .owl-carousel.owl-theme.brands_slider
+                           - for (let b of brands)
+                               .owl-item
+                                   .brands_item.d-flex.flex-column.justify-content-center
+                                       div(style='max-width: 100px; overflow: hidden')
+                                            img(src=b.logo alt='')
+                       // Brands Slider Navigation
+                       .brands_nav.brands_prev
+                           i.fas.fa-chevron-left
+                       .brands_nav.brands_next
+                           i.fas.fa-chevron-right

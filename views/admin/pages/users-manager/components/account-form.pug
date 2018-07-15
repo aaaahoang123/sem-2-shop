@@ -14,7 +14,7 @@
                     li
                         a(href='javascript:void(0);') Something else here
     .body
-        - acc_action = String(method)==='PUT'?'/manager/dashboard/users-manager/users/account/'+account.username+'?_method=PUT':'/manager/dashboard/users-manager/users/'+ user.mid +'/account'
+        - acc_action = String(method)==='PUT'?'/manager/users-manager/users/account/'+account.username+'?_method=PUT':'/manager/users-manager/users/'+ user.mid +'/account'
         form(method='POST' action=acc_action name='account-form')
             .row.clearfix
                 .col-lg-1

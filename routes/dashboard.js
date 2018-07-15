@@ -14,10 +14,6 @@ const ordersController = require('../app/controllers/order');
 /* GET users listing. */
 router.get('/', function (req, res, next) {
     res.render('admin/pages/index', {path: '/'});
-}).get('/home', function (req, res, next) {
-    res.render('admin/pages/home');
-}).get('/user', function (req, res, next) {
-    res.render('admin/pages/user');
 })
 
     .get('/orders', cdController.getAllCities, ordersController.getList, ordersController.responseOrdersTable)
@@ -33,7 +29,7 @@ router.get('/', function (req, res, next) {
                 });
             } else {
                 res.render('index', {
-                    link: '/manager/dashboard/orders/create'
+                    link: '/manager/orders/create'
                 });
             }
         });
@@ -50,7 +46,6 @@ router.use('/warehouse-manager', express.Router()
         res.render('admin/pages/demo');
     }).get('/logs', function (req, res, next) {
         res.render('admin/pages/demo');
-    })
-);
+    }));
 
 module.exports = router;

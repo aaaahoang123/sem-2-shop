@@ -11,7 +11,7 @@ block content
             - else
                 include ./components/user-form
                 - if (!user.account || user.account.length === 0)
-                    - link = '/manager/dashboard/users-manager/users/' + user.mid + '/account'
+                    - link = '/manager/users-manager/users/' + user.mid + '/account'
                     include ./components/404-account
                 - else
                     - account = user.account[0]
