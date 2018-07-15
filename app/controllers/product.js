@@ -65,7 +65,7 @@ module.exports = {
             res.locals.successResponse = {
                 title: 'Success',
                 detail: 'Add Product successfully',
-                link: '/manager/dashboard/products-manager/add-brand',
+                link: '/manager/products-manager/add-brand',
                 result: result,
                 status: 201
             };
@@ -273,7 +273,7 @@ module.exports = {
             res.locals.successResponse = {
                 title: 'Success',
                 detail: 'Edit product successfully',
-                link: '/manager/dashboard/products-manager/products',
+                link: '/manager/products-manager/products',
                 result: result,
                 status: 200
             };
@@ -303,7 +303,7 @@ module.exports = {
             res.locals.successResponse = {
                 title: 'Success',
                 detail: 'Delete product successfully',
-                link: '/manager/dashboard/products-manager/product',
+                link: '/manager/products-manager/product',
                 status: 200,
                 result: result
             };
@@ -341,7 +341,7 @@ module.exports = {
         res.render('admin/pages/products-manager/products-form', {
             path: '/products-manager/products',
             title: 'EDIT PRODUCTS',
-            link: '/manager/dashboard/products-manager/products',
+            link: '/manager/products-manager/products',
             extraJs: '/admin/js/pages/products-manager/edit-product.js',
             editBtnSubmit: 'edit-btn-submit'
         });

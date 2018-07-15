@@ -14,7 +14,7 @@
                     li
                         a(href='javascript:void(0);') Something else here
     .body
-        - u_action = method==='PUT'?'/manager/dashboard/users-manager/users/'+user.mid+'?_method=PUT':'/manager/dashboard/users-manager/users/create'
+        - u_action = method==='PUT'?'/manager/users-manager/users/'+user.mid+'?_method=PUT':'/manager/users-manager/users/create'
         form(method='POST' action=u_action name='user-form')
             .row.clearfix
                 .col-lg-1

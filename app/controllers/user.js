@@ -36,15 +36,15 @@ module.exports = {
             if (err) {
                 if (!res.locals.errs) res.locals.errs = {};
                 res.locals.errs.database = err.message;
-                console.log(err);
-                next();
+                console.log(err.code);
+                return next();
             }
-            res.locals = {
+            res.locals = Object.assign(res.locals, {
                 title: 'Success',
                 detail: 'Add user successfully',
-                link: '/manager/dashboard/users-manager/users/create',
+                link: '/manager/users-manager/users/create',
                 result: result
-            };
+            });
             next();
         });
     },
@@ -203,7 +203,7 @@ module.exports = {
             res.locals = {
                 title: 'Success',
                 detail: 'Update user successfully',
-                link: '/manager/dashboard/users-manager/users/' + req.params.mid,
+                link: '/manager/users-manager/users/' + req.params.mid,
                 result: result
             };
             next();
@@ -236,7 +236,7 @@ module.exports = {
             req.successResponse = {
                 title: 'Success',
                 detail: 'Delete user successfully',
-                link: '/manager/dashboard/users-manager/users',
+                link: '/manager/users-manager/users',
                 result: result
             };
             next();
@@ -275,7 +275,7 @@ module.exports = {
             req.successResponse = {
                 title: 'Success',
                 detail: 'Delete users successfully',
-                link: '/manager/dashboard/users-manager/users',
+                link: '/manager/users-manager/users',
                 result: affected
             };
             next();
@@ -287,7 +287,7 @@ module.exports = {
     responseUsersView: (req, res) => {
         res.render('admin/pages/users-manager/users', {
             path: '/users-manager/users',
-            link: '/manager/dashboard/users-manager/users'
+            link: '/manager/users-manager/users'
         });
     },
 

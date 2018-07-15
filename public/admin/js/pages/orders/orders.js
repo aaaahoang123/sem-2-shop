@@ -15,7 +15,7 @@ function showAjaxLoaderMessage(type, el) {
         showLoaderOnConfirm: true,
     }, function () {
         $.ajax({
-            url: '/manager/dashboard/orders/' + type + '/' + _id,
+            url: '/manager/orders/' + type + '/' + _id,
             type: 'PUT',
             success: function (res) {
                 console.log(res);

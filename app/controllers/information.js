@@ -16,7 +16,7 @@ module.exports = {
             res.locals = {
                 title: "Success",
                 detail: "Config Information Success",
-                link: "/manager/dashboard/web-config/information"
+                link: "/manager/web-config/information"
             };
             next();
         })

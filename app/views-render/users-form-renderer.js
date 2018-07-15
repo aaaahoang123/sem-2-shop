@@ -5,7 +5,7 @@ const UserFormRenderer = (config, req) => {
     this.config = {
         user_form: {
             display: false,
-            action: '/manager/dashboard/users-manager/users/create',
+            action: '/manager/users-manager/users/create',
             user: req.user?req.user:false,
             errs: req.errs?req.errs:false,
             user_required: false

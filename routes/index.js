@@ -14,12 +14,13 @@ const renderer = require('../app/controllers/client'),
     cityNDistrict = require('../app/controllers/city-and-district'),
     orderController = require('../app/controllers/order'),
     navController = require('../app/controllers/nav-bar'),
-    blogController = require('../app/controllers/blog');
+    blogController = require('../app/controllers/blog'),
+    webConfig = require('../app/resource/web-config');
 
-router.use('/*', categoryController.findAll, navController.getNavBar, (req, res, next) => {
+router.use(categoryController.findAll, navController.getNavBar, (req, res, next) => {
     if (req.cookies.token) res.locals.logedIn = true;
     if (req.cookies.username) res.locals.username = req.cookies.username;
-    res.locals.webConfig = require('../app/resource/web-config');
+    res.locals.webConfig = webConfig;
     res.locals.cartLength = 0;
     console.log(req.cookies.cart);
     if (req.cookies.cart && req.cookies.cart !== []) {
@@ -108,15 +109,17 @@ router.get('/shop', categoryController.findAll, categoryController.getOne,
 );
 
 router.get('/register', (req, res) => res.render('client/pages/register'))
+
     .post('/register', userController.validate,
         (req,res,next) => {req.body.type = 1;next()},
         accountController.validate,
         userController.insertOne,
         accountController.setUserIdAfterInsertUser,
         accountController.insertOne,
+        userController.deleteOne,
         (req, res) => {
+        console.log(res.locals);
             if (res.locals.errs && Object.keys(res.locals.errs).length !== 0) {
-                console.log(res.locals.errs);
                 res.render('client/pages/register', {user_account: req.body});
                 return;
             }

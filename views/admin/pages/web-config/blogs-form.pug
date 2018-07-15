@@ -14,10 +14,10 @@ block content
 
         .body
             - if (!blog && method==='PUT')
-                - link = '/manager/dashboard/web-config/brands'
+                - link = '/manager/web-config/brands'
                 include 404
             - else
-                - action = method==='PUT'?'/manager/dashboard/web-config/blogs/'+blog.uri_title+'?_method=PUT':'/manager/dashboard/web-config/blogs'
+                - action = method==='PUT'?'/manager/web-config/blogs/'+blog.uri_title+'?_method=PUT':'/manager/web-config/blogs'
                 form#form1(action=action method='POST' name='form-blog')
                     .row
                         .col-md-6

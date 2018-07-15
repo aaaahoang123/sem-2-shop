@@ -51,7 +51,7 @@ block content
                     button#search-btn.btn.btn-danger.btn-circle.waves-effect.waves-circle.waves-float(type='button')
                         i.material-icons search
         - if (brands.length === 0)
-            - link = '/manager/dashboard/products-manager/brands'
+            - link = '/manager/products-manager/brands'
             include 404
         - else
             .body
@@ -76,7 +76,7 @@ block content
                                             td(align='center')
                                                 div(style='background-image: url('+brands[i].logo+');background-size: cover; height: 70px; width: 100px;')
                                             td
-                                                a.btn.btn-link(href='/manager/dashboard/products-manager/brands/' + brands[i].name + '/edit')
+                                                a.btn.btn-link(href='/manager/products-manager/brands/' + brands[i].name + '/edit')
                                                     i.material-icons edit
                                                 button.btn.btn-link.waves-effect(type='button', data-type="ajax-loader" data-b=brands[i].name)
                                                     i.material-icons delete
@@ -95,7 +95,7 @@ block content
                                         a First
                                 - else
                                     li.paginate_button
-                                        a(href='/manager/dashboard/products-manager/brands?' + limit.substring(1) + q) First
+                                        a(href='/manager/products-manager/brands?' + limit.substring(1) + q) First
                                 - let i = bmeta.page > 5 ? bmeta.page - 4 : 1
                                 - if (i !== 1)
                                     li.paginate_button.disabled
@@ -106,7 +106,7 @@ block content
                                             a= i
                                     - else
                                         li.paginate_button
-                                            a(href='/manager/dashboard/products-manager/brands?bpage=' + i + limit + q)= i
+                                            a(href='/manager/products-manager/brands?bpage=' + i + limit + q)= i
                                     - if (i === bmeta.page + 4 && i < bmeta.total)
                                         li.paginate_button.disabled
                                             a ...
@@ -115,4 +115,4 @@ block content
                                         a Last
                                 - else
                                     li.paginate_button
-                                        a(href='/manager/dashboard/products-manager/brands?bpage=' + bmeta.total + limit + q) Last
+                                        a(href='/manager/products-manager/brands?bpage=' + bmeta.total + limit + q) Last

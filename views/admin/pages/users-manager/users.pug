@@ -103,7 +103,7 @@ block content
                                                 - for (a of u.account)
                                                     | #{a.username}
                                             td
-                                                a.btn.btn-link(href='/manager/dashboard/users-manager/users/' + u.mid)
+                                                a.btn.btn-link(href='/manager/users-manager/users/' + u.mid)
                                                     i.material-icons edit
                                                 a.btn.btn-link.delete-btn(data-delete=u.mid)
                                                     i.material-icons delete
@@ -122,7 +122,7 @@ block content
                                             a First
                                     - else
                                         li.paginate_button
-                                            a(href='/manager/dashboard/users-manager/users?' + limit.substring(1) + q + type) First
+                                            a(href='/manager/users-manager/users?' + limit.substring(1) + q + type) First
                                     - let i=meta.page>5?meta.page-4:1
                                     - if (i !== 1)
                                         li.paginate_button.disabled
@@ -133,7 +133,7 @@ block content
                                                 a #{i}
                                         - else
                                             li.paginate_button
-                                                a(href='/manager/dashboard/users-manager/users?page=' + i + limit + q)= i
+                                                a(href='/manager/users-manager/users?page=' + i + limit + q)= i
                                         - if (i === meta.page + 4 && i < meta.total)
                                             li.paginate_button.disabled
                                                 a ...
@@ -143,4 +143,4 @@ block content
                                             a Last
                                     - else
                                         li.paginate_button
-                                            a(href='/manager/dashboard/users-manager/users?page=' + meta.total + limit + q + type) Last
+                                            a(href='/manager/users-manager/users?page=' + meta.total + limit + q + type) Last
