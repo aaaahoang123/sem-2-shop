@@ -12,6 +12,12 @@ function addToCart(el) {
             "quantity": 1,
             "selected": true
         };
+        carLength = 0;
+        if (Cookies.get('cart')) {
+            var carLength = Object.keys(JSON.parse(Cookies.get('cart'))).length;
+        }
+        $('#sticky').html(carLength + 1);
+        $('#cartHeader').html(carLength + 1);
     }
     showNotification("alert-success", "Add to cart Success", "bottom", "left", "animated bounceIn", "animated bounceOut");
     Cookies.set('cart', cart);

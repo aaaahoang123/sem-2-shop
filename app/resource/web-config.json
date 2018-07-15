@@ -5,12 +5,12 @@
     "5b33b59cbb75c6097016da48"
   ],
   "contact": {
-    "email": "sonhtd00496@fpt.edu.vn",
-    "phone": "0965080258",
+    "email": "shinkenger.vn9x@gmail.com",
+    "phone": "+84123456879",
     "address": "8 Tôn Thất Thuyết, Cầu Giấy, Hà Nội",
-    "facebook": "afjs",
-    "instagram": "123123",
-    "twitter": "huhuhu#twitter"
+    "facebook": "https://www.facebook.com",
+    "instagram": "https://instagram.com",
+    "twitter": "https://twitter.com"
   },
   "information": {
     "aboutUs": "<p>ds</p>\r\n",
@@ -34,6 +34,10 @@
     {
       "name": "Blog",
       "href": "/blog"
+    },
+    {
+      "name": "Contact",
+      "href": "/contact"
     }
   ],
   "footer": [

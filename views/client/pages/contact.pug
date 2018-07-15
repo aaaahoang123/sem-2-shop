@@ -17,24 +17,24 @@ block content
                         // Contact Item
                         .contact_info_item.d-flex.flex-row.align-items-center.justify-content-start
                             .contact_info_image
-                                img(src='client/images/contact_1.png' alt='')
+                                img(src='/client/images/contact_1.png' alt='')
                             .contact_info_content
                                 .contact_info_title Phone
-                                .contact_info_text +38 068 005 3570
+                                .contact_info_text #{webConfig.contact.phone}
                         // Contact Item
                         .contact_info_item.d-flex.flex-row.align-items-center.justify-content-start
                             .contact_info_image
-                                img(src='client/images/contact_2.png' alt='')
+                                img(src='/client/images/contact_2.png' alt='')
                             .contact_info_content
                                 .contact_info_title Email
-                                .contact_info_text fastsales@gmail.com
+                                .contact_info_text #{webConfig.contact.email}
                         // Contact Item
                         .contact_info_item.d-flex.flex-row.align-items-center.justify-content-start
                             .contact_info_image
-                                img(src='client/images/contact_3.png' alt='')
+                                img(src='/client/images/contact_3.png' alt='')
                             .contact_info_content
                                 .contact_info_title Address
-                                .contact_info_text 10 Suffolk at Soho, London, UK
+                                .contact_info_text #{webConfig.contact.address}
     // Contact Form
     .contact_form
         .container

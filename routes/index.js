@@ -32,7 +32,7 @@ router.use('/*', categoryController.findAll, navController.getNavBar, (req, res,
 router.get('/', webConfigController.getTopCategories,
     productController.setProductCodeArrayFromCookie,
     productController.getProductByCodesArray,
-    brandController.getList, orderController.getBestSellers,
+    brandController.getAll, orderController.getBestSellers,
     renderer.renderHomePage);
 
 router.get('/blog',blogController.setLimit, blogController.getList, function(req, res, next) {
@@ -73,7 +73,7 @@ router.get('/product/:code',categoryController.findAll,
     productController.getOne,
     productController.setProductCodeArrayFromCookie,
     productController.getProductByCodesArray,
-    brandController.getList, function(req, res, next) {
+    brandController.getAll, function(req, res, next) {
     res.render('client/pages/product');
 });
 
@@ -82,7 +82,7 @@ router.get('/regular', categoryController.findAll,function(req, res, next) {
 });
 
 router.get('/shop', categoryController.findAll, categoryController.getOne,
-    brandController.getList, brandController.getOne,
+    brandController.getAll, brandController.getOne,
     productController.getMaxPrice,
     productController.setProductCodeArrayFromCookie,
     productController.getProductByCodesArray,
