@@ -3,7 +3,7 @@
 const express = require('express');
 const router = express.Router({});
 const webConfigController = require('../app/controllers/web-config');
-
+const sendMail = require('../app/controllers/send-mail');
 const categoryController = require('../app/controllers/category');
 const productController = require('../app/controllers/product');
 const brandController = require('../app/controllers/brand');
@@ -32,7 +32,7 @@ router.use('/*', categoryController.findAll, navController.getNavBar, (req, res,
 router.get('/', webConfigController.getTopCategories,
     productController.setProductCodeArrayFromCookie,
     productController.getProductByCodesArray,
-    brandController.getList, orderController.getBestSellers,
+    brandController.getAll, orderController.getBestSellers,
     renderer.renderHomePage);
 
 router.get('/blog',blogController.setLimit, blogController.getList, function(req, res, next) {
@@ -65,15 +65,15 @@ router.post('/order', credentialController.setTokenFromCookie, credentialControl
     orderController.validate, orderController.insertOne,
     orderController.responseInsertOneCustomerFormView);
 
-router.get('/contact', function(req, res, next) {
-    res.render('client/pages/contact');
-});
+router
+    .get('/contact', function(req, res, next) {res.render('client/pages/contact');})
+    .post('/contact', sendMail.validate, sendMail.sendMail, sendMail.responseContactFormView);
 
 router.get('/product/:code',categoryController.findAll,
     productController.getOne,
     productController.setProductCodeArrayFromCookie,
     productController.getProductByCodesArray,
-    brandController.getList, function(req, res, next) {
+    brandController.getAll, function(req, res, next) {
     res.render('client/pages/product');
 });
 

@@ -100,6 +100,7 @@ block content
                                 th.text-center DATE
                                 th.text-center PRICE
                                 th.text-center PRODUCT
+                                th.text-center ADDRESS
                                 th.text-center STATUS
                                 th.text-center ACTION
                         tbody.text-center
@@ -115,7 +116,16 @@ block content
                                         - for(p of orders[i].products)
                                             p
                                                 | #{p.name + ' - ' + p.price + ' - ' + p.quantity}
-                                    td #{orders[i].status}
+                                    td #{orders[i].receiver_address}
+                                    td
+                                        - if (orders[i].status === -1)
+                                            b.text-danger Rejected
+                                        - if (orders[i].status === 0)
+                                            b.text-warning Unpaid
+                                        - if (orders[i].status === 2)
+                                            b.text-success Accepted
+                                        - if (orders[i].status === 1)
+                                            b.text-primary Done
                                     td
                                         button.btn.btn-link.waves-effect(type='button', data-type="ajax-loader" data-t='2' data-b=orders[i]._id)
                                             i.material-icons eject
