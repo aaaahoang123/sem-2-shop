@@ -19,7 +19,7 @@ module.exports = {
             res.locals = {
                 title: "Success",
                 detail: "Config Top-Category Success",
-                link: "/manager/dashboard/web-config/top-category"
+                link: "/manager/web-config/top-category"
             };
             console.log('write success');
             next();

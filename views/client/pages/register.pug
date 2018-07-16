@@ -18,6 +18,8 @@ block append link
 block content
     .container.mt-2
         h4 Register Form
+        - if (errs&&errs.database)
+            .alert.alert-danger= errs.database
         form(method='POST' action='/register')
             .form-row
                 .form-group.col-md-6

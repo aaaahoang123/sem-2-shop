@@ -46,7 +46,7 @@ module.exports = {
             res.locals = {
                 title: 'Success',
                 detail: 'Add brand successfully',
-                link: '/manager/dashboard/products-manager/brands/create',
+                link: '/manager/products-manager/brands/create',
                 result: result
             };
             next();
@@ -188,7 +188,7 @@ module.exports = {
             res.locals = {
                 title: 'Success',
                 detail: 'Edit brand successfully',
-                link: '/manager/dashboard/products-manager/brands',
+                link: '/manager/products-manager/brands',
                 result: result
             };
             next();
@@ -214,7 +214,7 @@ module.exports = {
             res.locals = {
                 title: 'Success',
                 detail: 'Delete brand successfully',
-                link: '/manager/dashboard/products-manager/brands',
+                link: '/manager/products-manager/brands',
                 result: result
             };
             next();

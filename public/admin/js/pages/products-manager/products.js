@@ -42,7 +42,7 @@ $(function () {
         }
 
         var btnEdit = document.getElementById("btn-edit");
-        btnEdit.href = '/manager/dashboard/products-manager/products/'+products.code+'/edit';
+        btnEdit.href = '/manager/products-manager/products/'+products.code+'/edit';
         var btnDelete = document.getElementById("btn-delete");
         btnDelete.setAttribute('data-p',$(this).attr('data-p'));
         $('#largeModal').modal();

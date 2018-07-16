@@ -13,7 +13,7 @@ function showAjaxLoaderMessage() {
         showLoaderOnConfirm: true,
     }, function () {
         $.ajax({
-            url: '/manager/dashboard/products-manager/brands/' + name,
+            url: '/manager/products-manager/brands/' + name,
             type: 'DELETE',
             success: function (res) {
                 console.log(res);

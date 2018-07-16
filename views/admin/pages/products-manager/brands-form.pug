@@ -12,10 +12,10 @@ block content
 
         .body
             - if (!brand && method==='PUT')
-                - link = '/manager/dashboard/products-manager/brands'
+                - link = '/manager/products-manager/brands'
                 include 404
             - else
-                - action = method==='PUT'?'/manager/dashboard/products-manager/brands/'+brand.name+'?_method=PUT':'/manager/dashboard/products-manager/brands'
+                - action = method==='PUT'?'/manager/products-manager/brands/'+brand.name+'?_method=PUT':'/manager/products-manager/brands'
                 form.container(action=action method="POST")
                     .row
                         .col-sm-4(style="text-align:center")
@@ -46,7 +46,6 @@ block content
                                     input.form-control(type='text' name="name" value=(brand&&brand.name)?brand.name:'')
                             - if (errs && errs.name)
                                 p.text-danger.text-center.m-t-15 #{errs.name}
-
                             b Brand Description
                             .input-group
                                 .form-line

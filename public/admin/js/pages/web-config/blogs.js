@@ -14,7 +14,7 @@ function showAjaxLoaderMessage() {
         showLoaderOnConfirm: true,
     }, function () {
         $.ajax({
-            url: '/manager/dashboard/web-config/blogs/' + uriTitle,
+            url: '/manager/web-config/blogs/' + uriTitle,
             type: 'DELETE',
             success: function (res) {
                 console.log(res);

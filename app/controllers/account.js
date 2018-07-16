@@ -43,17 +43,20 @@ module.exports = {
                 console.log(err);
                 if (!res.locals.errs) res.locals.errs = {};
                 if (err.code === 11000) res.locals.errs.username = "This username has already existed";
-                res.locals.errs.database = res.locals.errs.message;
+                else res.locals.errs.database = err.message;
                 req.body.password = op;
                 res.locals.account = req.body;
-                next();
+                if (!req.params) req.params = {};
+                req.params.mid = res.locals.result.mid;
+                return next();
             }
-            res.locals = {
+            req.rollBack = false;
+            res.locals = Object.assign(res.locals, {
                 result: result,
                 title: 'Success',
                 detail: 'Add account successfully',
-                link: '/manager/dashboard/users-manager/users/' + req.params.mid,
-            };
+                link: '/manager/users-manager/users/' + req.params.mid,
+            });
             next();
         });
     },
@@ -92,7 +95,7 @@ module.exports = {
             return;
         }
         const op = req.body.password;
-        if (!bcrypt.compareSync(op, res.locals.account.password)) {
+        if (op !== res.locals.account.password) {
             req.body.password = bcrypt.hashSync(op, Math.floor((Math.random() * 10) + 1));
         }
         req.body.updated_at = Date.now();
@@ -105,12 +108,12 @@ module.exports = {
                 next();
                 return;
             }
-            res.locals = {
+            res.locals = Object.assign(res.locals, {
                 title: 'Success',
                 detail: 'Update account successfully',
-                link: '/manager/dashboard/users-manager/users/',
+                link: '/manager/users-manager/users/',
                 result: result
-            };
+            });
             next();
         });
     },
@@ -139,7 +142,7 @@ module.exports = {
             req.accountSuccessResponse = {
                 title: 'Success',
                 detail: 'Delete User and Account successfully',
-                link: '/manager/dashboard/users-manager/users',
+                link: '/manager/users-manager/users',
                 result: result
             };
             req.rollBack = false;
@@ -189,7 +192,7 @@ module.exports = {
             req.accountSuccessResponse = {
                 title: 'Success',
                 detail: 'Delete Users and Accounts successfully',
-                link: '/manager/dashboard/users-manager/users',
+                link: '/manager/users-manager/users',
                 result: result
             };
             req.rollBack = false;

@@ -249,7 +249,7 @@ module.exports = {
             res.locals = {
                 title: 'Success',
                 detail: 'Update Orders successfully',
-                link: '/manager/dashboard/orders',
+                link: '/manager/orders',
                 result: result
             };
             next();
