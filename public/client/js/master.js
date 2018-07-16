@@ -14,6 +14,7 @@
 
     $('.custom_list.clc > li > a').click(function () {
         categories = $(this).attr('data-c');
+        globalDoSearch();
     });
 
     $('#btn-search').click(globalDoSearch);
