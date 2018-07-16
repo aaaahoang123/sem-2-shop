@@ -105,11 +105,15 @@ module.exports = {
                 next();
                 return;
             }
+            let dataUser = res.locals.dataUser;
+            dataUser.account = [result];
+            console.log(dataUser);
             res.locals = {
                 title: 'Success',
                 detail: 'Update account successfully',
                 link: '/manager/dashboard/users-manager/users/',
-                result: result
+                result: result,
+                dataUser: dataUser
             };
             next();
         });

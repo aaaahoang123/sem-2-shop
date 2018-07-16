@@ -1,6 +1,7 @@
 'use strict';
 
 const model = require('../models/user');
+const credentialModel = require('../models/credential');
 
 module.exports = {
 
@@ -81,6 +82,46 @@ module.exports = {
 
             if (result.length !== 0) {
                 res.locals.user = result[0];
+            }
+            next();
+        });
+    },
+
+    getOneFromToken: (req, res, next) => {
+        let pipeline = [
+            {
+                $match: {
+                    token: req.cookies.token,
+                    status: 1
+                }
+            },
+            {
+                $lookup: {
+                    from: "accounts",
+                    localField: "account_id",
+                    foreignField: "_id",
+                    as: "account"
+                }
+            },
+            {
+                $lookup: {
+                    from: 'users',
+                    localField: 'account.user_id',
+                    foreignField: '_id',
+                    as: 'user'
+                }
+            }
+        ];
+
+        credentialModel.aggregate(pipeline, (err, result) => {
+            if (err) {
+                if (!res.locals.errs) res.locals.errs = {};
+                res.locals.errs.database = err.message;
+                console.log(err);
+                next();
+            }
+            if (result.length !== 0) {
+                res.locals.dataUser = result[0];
             }
             next();
         });
@@ -189,6 +230,11 @@ module.exports = {
         });
     },
 
+    setParam: function(req, res, next) {
+        req.params.mid = req.body.mid;
+        next();
+    },
+
     updateOne: (req, res, next) => {
         if (res.locals.errs && Object.keys(res.locals.errs).length !== 0) return next();
 
@@ -204,7 +250,10 @@ module.exports = {
                 title: 'Success',
                 detail: 'Update user successfully',
                 link: '/manager/dashboard/users-manager/users/' + req.params.mid,
-                result: result
+                result: result,
+                dataUser: {
+                    user: [result]
+                }
             };
             next();
         });
