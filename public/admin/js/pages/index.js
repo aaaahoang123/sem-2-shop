@@ -1,8 +1,8 @@
 ﻿function MyChart(option) {
-    this.datatype = option.datatype || 'order_quantity-revenue-ratio-city_revenue_ratio-order_quantity_in_hour';
+    this.datatype = option.datatype&&typeof option.datatype==='object'?option.datatype.toString().replace(/,/g, '-'):option.datatype || 'order_quantity-revenue-ratio-city_revenue_ratio-order_quantity_in_hour';
     this.group = option.group || '$dayOfWeek';
-    this.ofrom = option.ofrom || '';
-    this.oto = option.oto || '';
+    this.ofrom = !option.ofrom?'':moment(option.ofrom).format('x');
+    this.oto = !option.oto?'':moment(option.oto).add(1, 'day').format('x');
     this.ORDER_QUANTITY_ELEM = 'bar_chart';
     this.RATIO_ELEM = 'donut_chart';
     this.REVENUE_ELEM = 'line_chart';
@@ -11,6 +11,14 @@
 }
 
 MyChart.prototype = {
+
+    render: function() {
+        var dataArr = this.datatype.split('-');
+        for (var d of dataArr) {
+            this[d]();
+        }
+        return this;
+    },
 
     order_quantity: function () {
         var self = this;
@@ -100,7 +108,6 @@ MyChart.prototype = {
             .then(function (res) {
                 if(res[0].revenue.length !== 0) {
                     var data = res[0].revenue;
-                    console.log(data);
                     if (self.group === '$dayOfWeek') {
                         var dayNames = ['', 'Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
                         data = data.map(function (d) {
@@ -120,7 +127,7 @@ MyChart.prototype = {
                         xLabelAngle: 59,
                         lineColors: ['#167f39'],
                     });
-                }else {
+                } else {
                     $('#'+self.REVENUE_ELEM).html('Can not found any data');
                 }
                 return self.Promise;
@@ -137,7 +144,6 @@ MyChart.prototype = {
         var self = this;
         this.Promise
             .then(function(res) {
-                console.log(res);
                 if (res[0].city_revenue.length !== 0) {
                     var total = res[0].total_revenue[0].revenue;
                     var data = [], totalPercent = 0;
@@ -214,7 +220,10 @@ MyChart.prototype = {
             $.ajax({
                 url: '/api/charts?datatype=' + self.datatype + '&group=' + self.group + '&ofrom=' + self.ofrom + '&oto=' + self.oto,
                 method: 'GET',
-                success: resolve,
+                success: function(res) {
+                    console.log('Load data success', res);
+                    resolve(res);
+                },
                 error: reject
             });
         });
@@ -222,53 +231,18 @@ MyChart.prototype = {
     }
 };
 
-var toDay, thisWeekStart, thisMonthStart, lastWeekStart, lastMonthStart;
-
 $(document).ready(function() {
-    //console.log(new Date(now.setDate(first)).toISOString());
-    toDay = new Date()*1;
-    var offset = new Date().getTimezoneOffset();
-    var temp = moment().millisecond(0).second(0).minute(0).hour(0);
-    thisWeekStart = temp.clone().weekday(0).subtract(offset, 'm').format('x');
-    thisMonthStart = temp.clone().date(1).subtract(offset, 'm').format('x');
-    lastWeekStart = temp.clone().weekday(-7).subtract(offset, 'm').format('x');
-    lastMonthStart = temp.clone().date(1).subtract(1, 'month').subtract(offset, 'm').format('x');
     new MyChart({
-        ofrom: thisWeekStart,
-        oto: toDay
-    }).load().order_quantity().ratio().city_revenue_ratio().revenue().order_quantity_in_hour();
+        ofrom: moment().millisecond(0).second(0).minute(0).hour(0).weekday(0).subtract(new Date().getTimezoneOffset(), 'm').format(),
+        oto: moment()
+    }).load().render();
 
-    $('.load-chart-btn').on('click', renderNewChart);
+    $('#load-charts-btn').on('click', function() {
+        new MyChart({
+            ofrom: $('input[name="input-ofrom"]').val(),
+            oto: $('input[name="input-oto"]').val(),
+            group: $('select[name="select-group"]').val(),
+            datatype: $('select[name="select-datatype"]').val()
+        }).load().render();
+    })
 });
-
-function renderNewChart() {
-    var dataType = $(this).attr('data-type');
-    var from = '', to = '', group = '$dayOfWeek';
-    if ($(this).attr('data-time') === 'thisWeek') {
-        from = thisWeekStart;
-        to = toDay;
-    }
-    if ($(this).attr('data-time') === 'lastWeek') {
-        from = lastWeekStart;
-        to = thisWeekStart;
-    }
-    if ($(this).attr('data-time') === 'thisMonth') {
-        from = thisMonthStart;
-        to = toDay;
-        group = '$week';
-    }
-    if ($(this).attr('data-time') === 'lastMonth') {
-        from = lastMonthStart;
-        to = thisMonthStart;
-        group = '$week';
-    }
-
-    new MyChart({
-        datatype: dataType,
-        ofrom: from,
-        oto: to,
-        group: group
-    }).load()[dataType]();
-
-    $(this).closest('.header').find('h2').html($(this).attr('data-message'));
-}
