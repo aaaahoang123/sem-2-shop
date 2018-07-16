@@ -8,6 +8,7 @@ const fs = require('fs');
 const webConfig = require('../app/resource/web-config');
 const navController = require('../app/controllers/nav-bar');
 const orderController = require('../app/controllers/order');
+const carouselController = require('../app/controllers/carousel');
 
 router
     .get('/products', productsController.getList,
@@ -76,6 +77,9 @@ router
     })
 
     .post('/nav-bar', navController.insert)
+
+    .post('/carousel', carouselController.insert)
+    .post('/carousel/delete', carouselController.delete)
 
     .get('/charts', orderController.getAndGroupOrder, (req, res) => {
         if (res.locals.errs && Object.keys(res.locals.errs).length !== 0) {
