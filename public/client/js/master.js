@@ -18,6 +18,6 @@ $('.custom_list.clc > li > a').click(function () {
 $('#btn-search').click(function () {
     var forms = document.forms['form-search'];
     var q = forms['input-search'].value;
-   location.href = '/shop?q=' + q + '&category=' + categories;
+   location.href = '/shop?q=' + q + '&category=' + categories.replace("&","%26");
 });
 
