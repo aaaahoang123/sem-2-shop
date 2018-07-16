@@ -95,7 +95,7 @@ module.exports = {
             return;
         }
         const op = req.body.password;
-        if (!bcrypt.compareSync(op, res.locals.account.password)) {
+        if (op !== res.locals.account.password) {
             req.body.password = bcrypt.hashSync(op, Math.floor((Math.random() * 10) + 1));
         }
         req.body.updated_at = Date.now();
