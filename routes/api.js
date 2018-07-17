@@ -29,16 +29,19 @@ router
             res.status(200);
             res.json(res.locals.products);
         })
+
     .post('/products', productsController.validate,
         categoriesController.getMultiCategories,
         productsController.filterCategoriesSet,
         productsController.insertOne,
         productsController.responseProductJson)
+
     .put('/products/:code', productsController.validate,
         categoriesController.getMultiCategories,
         productsController.filterCategoriesSet,
         productsController.editOne,
         productsController.responseProductJson)
+
     .delete('/products/:code', productsController.deleteOne, productsController.responseProductJson)
 
     .get('/cities', cdController.getAllCities, (req, res) => {
@@ -52,6 +55,7 @@ router
         }
         res.json(res.locals.cities);
     })
+
     .get('/districts', cdController.getDistrictOfCity, (req, res) => {
         if (res.locals.errs && Object.keys(res.locals.errs).length !== 0) {
             res.status(404);

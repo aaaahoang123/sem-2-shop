@@ -47,7 +47,7 @@ module.exports = {
                     detail: 'Send Message Successfully',
                     link: '/contact'
                 };
-                console.log('Email sent: ' + info.response);
+                console.log('Email sent: ', info.response);
                 next();
             }
         });

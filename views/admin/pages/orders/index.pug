@@ -21,6 +21,7 @@ block extra-js
                 success: function (res) {
                     var s = $('#select-district');
                     s.html('');
+                    s.append($('<option>').val('').text('--District Choose--'))
                     res.forEach(function (d) {
                         s.append($('<option>').val(d.ID).text(d.Title))
                     });
@@ -62,35 +63,35 @@ block content
                 .col-sm-2
                     .input-group
                         .form-line
-                            input.query-input.datepicker.form-control.show-tick.no-resize(type='text' placeholder='--From Date--' data-query='ofrom')
+                            input.query-input.datepicker.form-control.show-tick.no-resize(type='text' placeholder='--From Date--' data-query='ofrom' value=(filter && filter.ofrom)?filter.ofrom:'')
 
                 .col-sm-2
                     .input-group
                         .form-line
-                            input.query-input.datepicker.form-control.show-tick.no-resize(type='text' placeholder='--To Date--' data-query='oto')
+                            input.query-input.datepicker.form-control.show-tick.no-resize(type='text' placeholder='--To Date--' data-query='oto' value=(filter && filter.oto)?filter.oto:'')
 
                 .col-sm-2
                     .form-group
                         .form-line
-                            input.query-input.form-control(type='text', placeholder='Search' value=meta&&meta.q?meta.q : '' data-query='oq')
+                            input.query-input.form-control(type='text', placeholder='Search' value=(filter && filter.oq)?filter.oq:'' data-query='oq')
 
                 .col-sm-2
                     select.query-input.form-control.show-tick(data-query='os')
                         option(value='') --Status Choose--
-                        option(value=0) Unpaid
-                        option(value=2) Accept
-                        option(value=1) Done
-                        option(value=-1) Reject
+                        option(value=0 selected=(filter && filter.os && filter.os === '0')) Unpaid
+                        option(value=2 selected=(filter && filter.os && filter.os === '2')) Accept
+                        option(value=1 selected=(filter && filter.os && filter.os === '1')) Done
+                        option(value=-1 selected=(filter && filter.os && filter.os === '-1')) Reject
 
                 .col-sm-2
                     select#select-city.query-input.form-control.show-tick(data-live-search='true' data-query='oc')
                         option(value='') --City Choose--
                         - if (cities&&cities.length !=0)
                             - for (city of cities)
-                                option(value=city.ID)= city.Title
+                                option(value=city.ID selected=(filter && filter.oc && filter.oc === city.ID.toString()))= city.Title
 
                 .col-sm-2
-                    select#select-district.query-input.form-control.show-tick(data-live-search='true' disabled data-query='od')
+                    select#select-district.query-input.form-control.show-tick(data-live-search='true' disabled data-query='od' data-district=(filter && filter.od)?filter.od:'' data-city=(filter && filter.oc)?filter.oc:'')
 
             .row
                 .col-sm-12

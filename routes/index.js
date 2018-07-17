@@ -23,7 +23,6 @@ router.use(categoryController.findAll, navController.getNavBar, (req, res, next)
     if (req.cookies.username) res.locals.username = req.cookies.username;
     res.locals.webConfig = webConfig;
     res.locals.cartLength = 0;
-    console.log(req.cookies.cart);
     if (req.cookies.cart && req.cookies.cart !== []) {
         res.locals.cartLength = Object.keys(JSON.parse(req.cookies.cart)).length;
     }
@@ -86,7 +85,7 @@ router.get('/order', credentialController.setTokenFromCookie, credentialControll
 
 router.post('/order', credentialController.setTokenFromCookie, credentialController.checkCredential,
     productController.setSelectedProductCodeArrayFromCart, productController.getProductByCodesArray,
-    orderController.validate, orderController.insertOne,
+    orderController.validate, orderController.insertOne, cityNDistrict.getAllCities,
     orderController.responseInsertOneCustomerFormView);
 
 router
@@ -141,7 +140,6 @@ router.get('/register', (req, res) => res.render('client/pages/register'))
         accountController.insertOne,
         userController.deleteOne,
         (req, res) => {
-        console.log(res.locals);
             if (res.locals.errs && Object.keys(res.locals.errs).length !== 0) {
                 res.render('client/pages/register', {user_account: req.body});
                 return;
