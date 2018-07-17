@@ -92,7 +92,7 @@ block content
                     button#search-btn.btn.btn-danger.waves-effect.waves-float(type='button') Filter Orders
 
             .row
-                - if (brands.length === 0)
+                - if (orders.length === 0)
                     - link = '/manager/dashboard'
                     include 404
                 - else
