@@ -1,22 +1,6 @@
 (function () {
-    CKEDITOR.replace('ckeditor');
-    CKEDITOR.config.height = 300;
-
-    $('#btn-reset').on('click', function () {
-        CKEDITOR.instances.ckeditor.setData('');
-        document.forms['form-blog']['title'].value = '';
-    });
-
-    $('#form1').submit(function (e) {
-        $('#content').val(CKEDITOR.instances.ckeditor.getData());
-    });
-
-    if(location.search.includes('message=add-success')){
-        showNotification("alert-success", "Add Blog Successfully", "top", "center", "animated bounceIn", "animated bounceOut");
-    }
-
-    if(location.search.includes('message=edit-success')){
-        showNotification("alert-success", "Edit Blog Successfully", "top", "center", "animated bounceIn", "animated bounceOut");
+    if(location.search.includes('message=send-success')){
+        showNotification("alert-success", "Send Mail Successfully", "top", "center", "animated bounceIn", "animated bounceOut");
     }
 
     function showNotification(colorName, text, placementFrom, placementAlign, animateEnter, animateExit) {

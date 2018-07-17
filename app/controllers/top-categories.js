@@ -39,7 +39,7 @@ module.exports = {
                 topCategories: req.body,
             });
         } else {
-            res.render('index');
+            res.redirect('/manager/web-config/top-category?message=config-success');
         }
     }
 };

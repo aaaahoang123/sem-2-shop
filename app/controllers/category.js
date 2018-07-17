@@ -362,7 +362,7 @@ module.exports = {
             });
             return;
         }
-        res.render('index');
+        res.redirect(`/manager/products-manager/categories/${req.body.name}/edit?message=edit-success`);
     },
 
     responseCategoryEditFormView: function (req, res) {
@@ -386,7 +386,7 @@ module.exports = {
             });
             return;
         }
-        res.render('index')
+        res.redirect('/manager/products-manager/categories/create?message=add-success');
     },
 
     findAll: function (req, res, next) {
