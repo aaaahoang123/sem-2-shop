@@ -204,7 +204,6 @@ module.exports = {
 
         // Thực thi aggregate query
         model.aggregate(query, function (err, result) {
-            console.log(query);
             if (err) {
                 console.log(err);
                 if (!res.locals.errs) res.locals.errs = {};

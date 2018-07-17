@@ -219,7 +219,6 @@ module.exports = {
 
     responseInsertOneByAccountFormView: (req, res) => {
         if (res.locals.errs && Object.keys(res.locals.errs).length !== 0) {
-            console.log(req.cookies.user);
             res.render('admin/pages/users-manager/accounts-form', {
                 path: '/users-manager/users',
                 account: req.body,

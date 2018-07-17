@@ -9,7 +9,6 @@ $(document).ready(function () {
         $(this).find('option[value=""]').attr('disabled', true);
         $('#parent-selector').selectpicker('refresh');
         var selected = JSON.parse($(this).find('option[value=' + $(this).val() + ']').attr('data-category'));
-        console.log(selected.children.length);
         $('#childrenOfParent').html('');
         if (selected.children.length !== 0) {
             for (var i = 0; i < selected.children.length; i++) {
