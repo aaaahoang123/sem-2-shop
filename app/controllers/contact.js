@@ -35,7 +35,7 @@ module.exports = {
                 contacts: req.body,
             });
         } else {
-            res.render('index');
+            res.redirect('/manager/web-config/contact?message=config-success');
         }
     }
 };

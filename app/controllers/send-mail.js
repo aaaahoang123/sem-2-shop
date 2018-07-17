@@ -58,7 +58,7 @@ module.exports = {
         if (res.locals.errs && Object.keys(res.locals.errs).length !== 0) {
             res.render('client/pages/contact', {contact: req.body});
         } else {
-            res.render('index');
+            res.redirect('/contact?message=send-success');
         }
     }
 };

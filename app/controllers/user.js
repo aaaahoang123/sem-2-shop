@@ -318,6 +318,6 @@ module.exports = {
             });
             return;
         }
-        res.render('index');
+        res.redirect(`/manager/users-manager/users/${req.params.mid}?message=edit-user-success`);
     }
 };

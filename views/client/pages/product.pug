@@ -51,7 +51,8 @@ block append link
 
 block content
     - if (!product || product.length === 0)
-        include 404
+        - items = 'products'
+        include 404-item
     - else
         .single_product
             .container

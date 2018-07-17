@@ -11,7 +11,7 @@ router
     .get('/users/:mid', controller.getOne, controller.responseUserWithAccountView)
 
     .put('/users/:mid', controller.validate, controller.updateOne, controller.responseUpdateByUAView)
-    .put('/users/account/:username', accountController.validate, accountController.getOne, accountController.updateOne, accountController.responseUpdateByUAView)
+    .put('/users/account/:username-:mid', accountController.validate, accountController.getOne, accountController.updateOne, accountController.responseUpdateByUAView)
 
     .post('/users/:mid/account', accountController.validate, accountController.insertOne, accountController.responseInsertOneByAccountFormView)
     .post('/users/create', controller.validate, controller.insertOne, controller.responseInsertOneByUsersFormView)
