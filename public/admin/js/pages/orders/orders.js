@@ -65,3 +65,27 @@ $('.paginate_button:not(.disabled) > a').click(function () {
    paginate(this);
 });
 
+var district = $('#select-district').attr('data-district');
+var city = $('#select-district').attr('data-city');
+if(district !== '' || city !== ''){
+    $.ajax({
+        url: '/api/districts?cid=' + city,
+        method: 'GET',
+        success: function (res) {
+            var s = $('#select-district');
+            s.html('');
+            s.append($('<option>').val('').text('--District Choose--'));
+            res.forEach(function (d) {
+                var selected = (d.ID.toString()=== district);
+                s.append($('<option>').attr('selected', (d.ID.toString()===district)).val(d.ID).text(d.Title))
+            });
+            s.removeAttr('disabled');
+            s.selectpicker('refresh');
+        },
+        error: function (err) {
+            console.log(err);
+        }
+    });
+}
+
+

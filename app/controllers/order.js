@@ -208,6 +208,14 @@ module.exports = {
             // Kết quả trả về có dạng [{meta: [{}], data: [{}]}]. Trong trường hợp không tìm thấy thì đặt res.locals.brands = [] và next()
             if (result.length === 0 || result[0].meta.length === 0) {
                 res.locals.orders = [];
+                res.locals.filter = {
+                    oq: req.query.oq,
+                    ofrom: req.query.ofrom,
+                    oto: req.query.oto,
+                    os: req.query.os,
+                    oc: req.query.oc,
+                    od: req.query.od,
+                };
                 return next();
             }
             res.locals.orders = result[0].data;
@@ -218,7 +226,14 @@ module.exports = {
                 limit: limit,
                 offset: skip,
                 cpage: cpage,
-                q: req.query.q
+            };
+            res.locals.filter = {
+                oq: req.query.oq,
+                ofrom: req.query.ofrom,
+                oto: req.query.oto,
+                os: req.query.os,
+                oc: req.query.oc,
+                od: req.query.od,
             };
             next();
         });
