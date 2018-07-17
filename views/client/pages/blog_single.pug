@@ -6,14 +6,22 @@ block title
 block append link
     link(rel='stylesheet' type='text/css' href='/client/styles/blog_single_styles.css')
     link(rel='stylesheet' type='text/css' href='/client/styles/blog_single_responsive.css')
+    link(rel='stylesheet' type='text/css' href='/client/styles/cart_styles.css')
 
 block content
     .single_post
         .container
-            .row
-                .col-lg-8.offset-lg-2
-                    .single_post_title #{blog.title}
-                    .single_post_text !{blog.content}
+             - if (!blog)
+                 .row.text-center
+                     .col-lg-12
+                         h1 The blog does not exist
+                     .col-lg-12
+                         a.button.cart_button_clear(href="/blog" style="margin: 50px") Back to the blog list
+             - else
+                 .row
+                      .col-lg-8.offset-lg-2
+                          .single_post_title #{blog.title}
+                          .single_post_text !{blog.content}
 block append script
     script(src='/client/js/blog_single_custom.js')
     script(src='/client/plugins/parallax-js-master/parallax.min.js')
