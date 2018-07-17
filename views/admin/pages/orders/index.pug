@@ -72,7 +72,7 @@ block content
                 .col-sm-2
                     .form-group
                         .form-line
-                            input.query-input.form-control(type='text', placeholder='Search' value=meta && meta.q ? meta.q : '' data-query='oq')
+                            input.query-input.form-control(type='text', placeholder='Search' value=meta&&meta.q?meta.q : '' data-query='oq')
 
                 .col-sm-2
                     select.query-input.form-control.show-tick(data-query='os')
@@ -93,8 +93,9 @@ block content
                     select#select-district.query-input.form-control.show-tick(data-live-search='true' disabled data-query='od')
 
             .row
-                .col-sm-2
+                .col-sm-12
                     button#search-btn.btn.btn-danger.waves-effect.waves-float(type='button') Filter Orders
+                    a.btn.bg-cyan.waves-effect.waves-float.m-l-5(href='/manager/dashboard') Show Charts
             .row
                 - if (orders.length === 0)
                     - link = '/manager/dashboard'
