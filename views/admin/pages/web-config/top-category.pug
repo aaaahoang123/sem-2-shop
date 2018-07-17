@@ -30,7 +30,7 @@ block content
                 .body
                     -if(errs && errs.database)
                         label.text-danger #{errs.database}
-                    form(name='top-categories' action='/manager/dashboard/web-config/top-category' method="POST")
+                    form(name='top-categories' action='/manager/web-config/top-category' method="POST")
                         .row.clearfix
                             .col-sm-4
                                 .input-group

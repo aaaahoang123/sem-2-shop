@@ -3,7 +3,7 @@
 const express = require('express');
 const router = express.Router({});
 const webConfigController = require('../app/controllers/web-config');
-
+const sendMail = require('../app/controllers/send-mail');
 const categoryController = require('../app/controllers/category');
 const productController = require('../app/controllers/product');
 const brandController = require('../app/controllers/brand');
@@ -14,12 +14,13 @@ const renderer = require('../app/controllers/client'),
     cityNDistrict = require('../app/controllers/city-and-district'),
     orderController = require('../app/controllers/order'),
     navController = require('../app/controllers/nav-bar'),
-    blogController = require('../app/controllers/blog');
+    blogController = require('../app/controllers/blog'),
+    webConfig = require('../app/resource/web-config');
 
-router.use('/*', categoryController.findAll, navController.getNavBar, (req, res, next) => {
+router.use(categoryController.findAll, navController.getNavBar, (req, res, next) => {
     if (req.cookies.token) res.locals.logedIn = true;
     if (req.cookies.username) res.locals.username = req.cookies.username;
-    res.locals.webConfig = require('../app/resource/web-config');
+    res.locals.webConfig = webConfig;
     res.locals.cartLength = 0;
     console.log(req.cookies.cart);
     if (req.cookies.cart && req.cookies.cart !== []) {
@@ -32,7 +33,7 @@ router.use('/*', categoryController.findAll, navController.getNavBar, (req, res,
 router.get('/', webConfigController.getTopCategories,
     productController.setProductCodeArrayFromCookie,
     productController.getProductByCodesArray,
-    brandController.getList, orderController.getBestSellers,
+    brandController.getAll, orderController.getBestSellers,
     renderer.renderHomePage);
 
 router.get('/blog',blogController.setLimit, blogController.getList, function(req, res, next) {
@@ -57,16 +58,16 @@ router.get('/user',userController.getOneFromToken, function (req, res, next) {
         (req, res, next) => {
             if (res.locals.errs && Object.keys(res.locals.errs).length !== 0) return next();
             req.body.user_id = res.locals.result._id;
-            res.locals.account = {
-                username: req.body.username,
-                password: req.body.password
-            };
             req.body.type = 1;
             next();
         },
+        accountController.getOne,
         accountController.updateOne,
-        (req, res) => {res.render('client/pages/user')})
-;
+        (req, res) => {
+            if (res.locals.errs && Object.keys(res.locals.errs).length !== 0) res.render('client/pages/user');
+            else res.redirect('/user?message=update-success');
+        }
+    );
 
 router.get('/cart',productController.setProductCodeArrayFromCart, productController.getProductByCodesArray, function(req, res, next) {
     let cart = {};
@@ -87,15 +88,15 @@ router.post('/order', credentialController.setTokenFromCookie, credentialControl
     orderController.validate, orderController.insertOne,
     orderController.responseInsertOneCustomerFormView);
 
-router.get('/contact', function(req, res, next) {
-    res.render('client/pages/contact');
-});
+router
+    .get('/contact', function(req, res, next) {res.render('client/pages/contact');})
+    .post('/contact', sendMail.validate, sendMail.sendMail, sendMail.responseContactFormView);
 
 router.get('/product/:code',categoryController.findAll,
     productController.getOne,
     productController.setProductCodeArrayFromCookie,
     productController.getProductByCodesArray,
-    brandController.getList, function(req, res, next) {
+    brandController.getAll, function(req, res, next) {
     res.render('client/pages/product');
 });
 
@@ -104,7 +105,7 @@ router.get('/regular', categoryController.findAll,function(req, res, next) {
 });
 
 router.get('/shop', categoryController.findAll, categoryController.getOne,
-    brandController.getList, brandController.getOne,
+    brandController.getAll, brandController.getOne,
     productController.getMaxPrice,
     productController.setProductCodeArrayFromCookie,
     productController.getProductByCodesArray,
@@ -130,15 +131,17 @@ router.get('/shop', categoryController.findAll, categoryController.getOne,
 );
 
 router.get('/register', (req, res) => res.render('client/pages/register'))
+
     .post('/register', userController.validate,
         (req,res,next) => {req.body.type = 1;next()},
         accountController.validate,
         userController.insertOne,
         accountController.setUserIdAfterInsertUser,
         accountController.insertOne,
+        userController.deleteOne,
         (req, res) => {
+        console.log(res.locals);
             if (res.locals.errs && Object.keys(res.locals.errs).length !== 0) {
-                console.log(res.locals.errs);
                 res.render('client/pages/register', {user_account: req.body});
                 return;
             }

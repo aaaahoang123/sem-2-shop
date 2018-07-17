@@ -24,6 +24,7 @@ module.exports = {
 
         if(!req.body.phone || req.body.phone === null || req.body.phone === '') res.locals.errs.phone = 'Phone is required';
 
+        // console.log();
         next();
     },
 
@@ -37,15 +38,15 @@ module.exports = {
             if (err) {
                 if (!res.locals.errs) res.locals.errs = {};
                 res.locals.errs.database = err.message;
-                console.log(err);
-                next();
+                console.log(err.code);
+                return next();
             }
-            res.locals = {
+            res.locals = Object.assign(res.locals, {
                 title: 'Success',
                 detail: 'Add user successfully',
-                link: '/manager/dashboard/users-manager/users/create',
+                link: '/manager/users-manager/users/create',
                 result: result
-            };
+            });
             next();
         });
     },
@@ -236,7 +237,12 @@ module.exports = {
     },
 
     updateOne: (req, res, next) => {
-        if (res.locals.errs && Object.keys(res.locals.errs).length !== 0) return next();
+        if (res.locals.errs && Object.keys(res.locals.errs).length !== 0) {
+            res.locals.dataUser = {
+                user: [req.body]
+            };
+            return next();
+        }
 
         req.body.updated_at = Date.now();
         model.findOneAndUpdate({mid: req.params.mid}, {$set: req.body},{new: true}, (err, result) => {
@@ -244,9 +250,12 @@ module.exports = {
                 console.log(err);
                 if (!res.locals.errs) res.locals.errs = {};
                 res.locals.errs.database = err.message;
+                res.locals.dataUser = {
+                    user: [req.body]
+                };
                 return next();
             }
-            res.locals = {
+            res.locals = Object.assign(res.locals, {
                 title: 'Success',
                 detail: 'Update user successfully',
                 link: '/manager/dashboard/users-manager/users/' + req.params.mid,
@@ -254,7 +263,7 @@ module.exports = {
                 dataUser: {
                     user: [result]
                 }
-            };
+            });
             next();
         });
     },
@@ -285,7 +294,7 @@ module.exports = {
             req.successResponse = {
                 title: 'Success',
                 detail: 'Delete user successfully',
-                link: '/manager/dashboard/users-manager/users',
+                link: '/manager/users-manager/users',
                 result: result
             };
             next();
@@ -324,7 +333,7 @@ module.exports = {
             req.successResponse = {
                 title: 'Success',
                 detail: 'Delete users successfully',
-                link: '/manager/dashboard/users-manager/users',
+                link: '/manager/users-manager/users',
                 result: affected
             };
             next();
@@ -336,7 +345,7 @@ module.exports = {
     responseUsersView: (req, res) => {
         res.render('admin/pages/users-manager/users', {
             path: '/users-manager/users',
-            link: '/manager/dashboard/users-manager/users'
+            link: '/manager/users-manager/users'
         });
     },
 

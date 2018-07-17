@@ -22,14 +22,21 @@ $('.btn.btn-outline-primary.waves-effect').click(function () {
     var minValue = $( "#slider-range" ).slider("values", 0);
     var maxValue = $( "#slider-range" ).slider("values", 1);
     var sort = '';
-    if($('.sorting_text').text() === "priceUp") sort = 'price_1';
-    if($('.sorting_text').text() === "priceDown") sort = 'price_-1';
+     if($('input:checkbox[name="sort"]:checked').val() === "priceUp") sort = 'price_1';
+     if($('input:checkbox[name="sort"]:checked').val() === "priceDown") sort = 'price_-1';
 
      changeSearchByInput(category, brand, minValue, maxValue, sort);
 });
 
+var searchArray = location.search.replace('?', '').split('&');
+
 function changeSearchByInput(category, brand, minValue, maxValue, sort) {
     var search = '';
+    for(s of searchArray){
+        if(s.includes('q=')){
+            search += s + '&';
+        }
+    }
     if (category !== undefined) {
         search += 'category=' + category.replace("&","%26") + '&'
     }

@@ -13,11 +13,14 @@ block append link
         .form-control {
             color: black;
         }
-
+block append script
+    script(src='/client/js/custom.js')
 
 block content
     .container.mt-2
         h4 Register Form
+        - if (errs&&errs.database)
+            .alert.alert-danger= errs.database
         form(method='POST' action='/register')
             .form-row
                 .form-group.col-md-6

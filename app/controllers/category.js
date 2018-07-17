@@ -32,12 +32,12 @@ module.exports = {
     getList: function (req, res, next) {
         // if(!req.query.level || Number(req.query.level) === 1) next();
         let limit = 10, skip = 0, page = 1, level = 1;
-        if (req.query.limit && /^\d+$/.test(req.query.limit)) limit = Math.abs(Number(req.query.limit));
-        if (req.query.page && !['-1', '1'].includes(req.query.page) && /^\d+$/.test(req.query.page)) {
-            page = Math.abs(Number(req.query.page));
+        if (req.query.climit && /^\d+$/.test(req.query.climit)) limit = Math.abs(Number(req.query.climit));
+        if (req.query.cpage && !['-1', '1'].includes(req.query.cpage) && /^\d+$/.test(req.query.cpage)) {
+            page = Math.abs(Number(req.query.cpage));
             skip = (page - 1) * limit;
         }
-        if (req.query.level && /^\d+$/.test(req.query.level)) level = Math.abs(Number(req.query.level));
+        if (req.query.clevel && /^\d+$/.test(req.query.clevel)) level = Math.abs(Number(req.query.clevel));
         let query = [
             {
                 $match: {
@@ -68,8 +68,8 @@ module.exports = {
                 }
             }
         ];
-        if (req.query.q) {
-            let pattern = new RegExp(req.query.q, 'i');
+        if (req.query.cq) {
+            let pattern = new RegExp(req.query.cq, 'i');
             query[0].$match.$or = [
                 {description: pattern},
                 {name: pattern}
@@ -95,13 +95,13 @@ module.exports = {
             res.locals.categories = result[0].data;
             let totalItems = result[0].meta[0].totalItems;
 
-            res.locals.meta = {
+            res.locals.cmeta = {
                 totalItems: totalItems,
                 total: Math.ceil(totalItems / limit),
                 limit: limit,
                 offset: skip,
                 page: page,
-                q: req.query.q
+                q: req.query.cq
             };
             next();
         });
@@ -181,7 +181,7 @@ module.exports = {
             res.locals = {
                 title: 'Success',
                 detail: 'Add category successfully',
-                link: '/manager/dashboard/products-manager/categories/create',
+                link: '/manager/products-manager/categories/create',
                 result: result,
                 status: 201
             };
@@ -248,7 +248,7 @@ module.exports = {
             res.locals = {
                 title: 'Success',
                 detail: 'Edit category successfully',
-                link: '/manager/dashboard/products-manager/categories',
+                link: '/manager/products-manager/categories',
                 result: result
             };
             next();
@@ -333,7 +333,7 @@ module.exports = {
             res.locals = {
                 title: 'Success',
                 detail: 'Delete category successfully',
-                link: '/manager/dashboard/products-manager/categories',
+                link: '/manager/products-manager/categories',
                 result: result
             };
             next();
@@ -356,7 +356,7 @@ module.exports = {
                 method: 'PUT',
                 title: 'EDIT CATEGORY',
                 path: '/products-manager/categories',
-                action: '/manager/dashboard/products-manager/categories/' + req.params.name + '?_method=PUT',
+                action: '/manager/products-manager/categories/' + req.params.name + '?_method=PUT',
                 level: req.body.level,
                 category: req.body
             });
@@ -370,7 +370,7 @@ module.exports = {
             method: 'PUT',
             title: 'EDIT CATEGORY',
             path: '/products-manager/categories',
-            action: '/manager/dashboard/products-manager/categories/' + req.params.name + '?_method=PUT',
+            action: '/manager/products-manager/categories/' + req.params.name + '?_method=PUT',
             level: res.locals.category?res.locals.category.level:undefined
         })
     },

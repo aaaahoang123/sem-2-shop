@@ -40,26 +40,20 @@
                 .header_search
                     .header_search_content
                         .header_search_form_container
-                            form.header_search_form.clearfix(action='#')
-                                input.header_search_input(type='search' required='required' placeholder='Search for products...')
+                            form.header_search_form.clearfix(name='form-search')
+                                input.header_search_input(type='text' required='required' placeholder='Search for products...' name='input-search')
                                 .custom_dropdown
                                     .custom_dropdown_list
                                         span.custom_dropdown_placeholder.clc All Categories
                                         i.fas.fa-chevron-down
                                         ul.custom_list.clc
                                             li
-                                                a.clc(href='#') All Categories
-                                            li
-                                                a.clc(href='#') Computers
-                                            li
-                                                a.clc(href='#') Laptops
-                                            li
-                                                a.clc(href='#') Cameras
-                                            li
-                                                a.clc(href='#') Hardware
-                                            li
-                                                a.clc(href='#') Smartphones
-                                button.header_search_button.trans_300(type='submit' value='Submit')
+                                                a.clc(data-c='' href='javascript:void(0)') All Categories
+                                            - for (let lv1 of categories)
+                                                - if (lv1.level === 1)
+                                                    li
+                                                        a.clc(data-c=lv1.name href='javascript:void(0)') #{lv1.name}
+                                button#btn-search.header_search_button.trans_300(type='button' value='Submit')
                                     img(src='/client/images/search.png' alt='')
             .col-lg-4.col-9.order-lg-3.order-2.text-lg-left.text-right
                 .wishlist_cart.d-flex.flex-row.align-items-center.justify-content-end

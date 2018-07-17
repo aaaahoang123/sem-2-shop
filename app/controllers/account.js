@@ -43,17 +43,20 @@ module.exports = {
                 console.log(err);
                 if (!res.locals.errs) res.locals.errs = {};
                 if (err.code === 11000) res.locals.errs.username = "This username has already existed";
-                res.locals.errs.database = res.locals.errs.message;
+                else res.locals.errs.database = err.message;
                 req.body.password = op;
                 res.locals.account = req.body;
-                next();
+                if (!req.params) req.params = {};
+                req.params.mid = res.locals.result.mid;
+                return next();
             }
-            res.locals = {
+            req.rollBack = false;
+            res.locals = Object.assign(res.locals, {
                 result: result,
                 title: 'Success',
                 detail: 'Add account successfully',
-                link: '/manager/dashboard/users-manager/users/' + req.params.mid,
-            };
+                link: '/manager/users-manager/users/' + req.params.mid,
+            });
             next();
         });
     },
@@ -88,19 +91,24 @@ module.exports = {
 
     updateOne: (req, res, next) => {
         if (res.locals.errs && Object.keys(res.locals.errs).length !== 0) {
+            res.locals.dataUser.account = [req.body];
             next();
             return;
         }
         const op = req.body.password;
-        if (!bcrypt.compareSync(op, res.locals.account.password)) {
+        console.log('res.local.account', res.locals.account, 'op', op);
+        if (op !== res.locals.account.password) {
             req.body.password = bcrypt.hashSync(op, Math.floor((Math.random() * 10) + 1));
         }
         req.body.updated_at = Date.now();
         model.findOneAndUpdate({username: res.locals.account.username}, {$set: req.body}, {new: true}, (err, result) => {
             if (err) {
                 console.log(err);
+                let dataUser = res.locals.dataUser;
+                dataUser.account = [req.body];
                 if (!res.locals.errs) res.locals.errs = {};
                 res.locals.errs.database = err.message;
+                res.locals.dataUser = dataUser;
                 req.body.password = op;
                 next();
                 return;
@@ -108,13 +116,13 @@ module.exports = {
             let dataUser = res.locals.dataUser;
             dataUser.account = [result];
             console.log(dataUser);
-            res.locals = {
+            res.locals = Object.assign(res.locals, {
                 title: 'Success',
                 detail: 'Update account successfully',
                 link: '/manager/dashboard/users-manager/users/',
                 result: result,
                 dataUser: dataUser
-            };
+            });
             next();
         });
     },
@@ -143,7 +151,7 @@ module.exports = {
             req.accountSuccessResponse = {
                 title: 'Success',
                 detail: 'Delete User and Account successfully',
-                link: '/manager/dashboard/users-manager/users',
+                link: '/manager/users-manager/users',
                 result: result
             };
             req.rollBack = false;
@@ -193,7 +201,7 @@ module.exports = {
             req.accountSuccessResponse = {
                 title: 'Success',
                 detail: 'Delete Users and Accounts successfully',
-                link: '/manager/dashboard/users-manager/users',
+                link: '/manager/users-manager/users',
                 result: result
             };
             req.rollBack = false;

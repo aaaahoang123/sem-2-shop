@@ -2,11 +2,11 @@ $(document).ready(function () {
     $(".dropdown .dropdown-menu li a").click();
 
     var form = document.forms['user-form'];
-    form.action = '/manager/dashboard/users-manager/users/' + $(form).data('mid') + '?_method=PUT';
+    form.action = '/manager/users-manager/users/' + $(form).data('mid') + '?_method=PUT';
     form.onsubmit = editUser;
 
     var aform = document.forms['account-form'];
-    aform.action = '/manager/dashboard/users-manager/users/account/'+ $(aform).data('update') + '?_method=PUT';
+    aform.action = '/manager/users-manager/users/account/'+ $(aform).data('update') + '?_method=PUT';
     aform.onsubmit = editAcc;
 });
 

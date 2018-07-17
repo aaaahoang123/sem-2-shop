@@ -27,8 +27,8 @@ block content
                             a(href='javascript:void(0);') Something else here
         .row.m-t-20
             .col-sm-6
-                - if (meta)
-                    - let limit = meta.limit
+                - if (bmeta)
+                    - let limit = bmeta.limit
                     .col-xs-1.m-t-25
                         label Show
                     .col-lg-3.col-md-4.col-sm-5.col-xs-3.m-t-15
@@ -46,12 +46,12 @@ block content
                 .col-sm-5.col-xs-5.m-t-15(style='float: right')
                     .form-group
                         .form-line
-                            input#search-input.form-control(type='text', placeholder='Search' value=meta && meta.q ? meta.q : '')
+                            input#search-input.form-control(type='text', placeholder='Search' value=bmeta&&bmeta.q?bmeta.q : '')
                 .col-lg-1.col-sm-2.col-xs-1.m-t-15(style='float: right')
                     button#search-btn.btn.btn-danger.btn-circle.waves-effect.waves-circle.waves-float(type='button')
                         i.material-icons search
         - if (brands.length === 0)
-            - link = '/manager/dashboard/products-manager/brands'
+            - link = '/manager/products-manager/brands'
             include 404
         - else
             .body
@@ -76,43 +76,43 @@ block content
                                             td(align='center')
                                                 div(style='background-image: url('+brands[i].logo+');background-size: cover; height: 70px; width: 100px;')
                                             td
-                                                a.btn.btn-link(href='/manager/dashboard/products-manager/brands/' + brands[i].name + '/edit')
+                                                a.btn.btn-link(href='/manager/products-manager/brands/' + brands[i].name + '/edit')
                                                     i.material-icons edit
                                                 button.btn.btn-link.waves-effect(type='button', data-type="ajax-loader" data-b=brands[i].name)
                                                     i.material-icons delete
 
-                    - if (meta)
+                    - if (bmeta)
                         - let limit = ''
                         - let q = ''
-                        - if (meta.limit !== 10)
-                            - limit += '&limit=' + meta.limit
-                        -if (meta.q)
-                            - q = '&q=' + meta.q
+                        - if (bmeta.limit !== 10)
+                            - limit += '&blimit=' + bmeta.limit
+                        -if (bmeta.q)
+                            - q = '&bq=' + bmeta.q
                         .row.text-right
                             ul.pagination(style='margin-right: 1%')
-                                - if (meta.page === 1)
+                                - if (bmeta.page === 1)
                                     li.paginate_button.disabled
                                         a First
                                 - else
                                     li.paginate_button
-                                        a(href='/manager/dashboard/products-manager/brands?' + limit.substring(1) + q) First
-                                - let i = meta.cpage > 5 ? meta.cpage - 4 : 1
+                                        a(href='/manager/products-manager/brands?' + limit.substring(1) + q) First
+                                - let i = bmeta.page > 5 ? bmeta.page - 4 : 1
                                 - if (i !== 1)
                                     li.paginate_button.disabled
                                         a ...
-                                - for (; i <= meta.cpage + 4 && i <= meta.total; i ++)
-                                    - if (i === meta.cpage)
+                                - for (; i <= bmeta.page + 4 && i <= bmeta.total; i ++)
+                                    - if (i === bmeta.page)
                                         li.paginate_button.active
                                             a= i
                                     - else
                                         li.paginate_button
-                                            a(href='/manager/dashboard/products-manager/brands?cpage=' + i + limit + q)= i
-                                    - if (i === meta.page + 4 && i < meta.total)
+                                            a(href='/manager/products-manager/brands?bpage=' + i + limit + q)= i
+                                    - if (i === bmeta.page + 4 && i < bmeta.total)
                                         li.paginate_button.disabled
                                             a ...
-                                - if (meta.cpage === meta.total)
+                                - if (bmeta.page === bmeta.total)
                                     li.paginate_button.disabled
                                         a Last
                                 - else
                                     li.paginate_button
-                                        a(href='/manager/dashboard/products-manager/brands?cpage=' + meta.total + limit + q) Last
+                                        a(href='/manager/products-manager/brands?bpage=' + bmeta.total + limit + q) Last

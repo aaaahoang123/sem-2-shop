@@ -46,7 +46,7 @@ module.exports = {
             res.locals = {
                 title: 'Success',
                 detail: 'Add brand successfully',
-                link: '/manager/dashboard/products-manager/brands/create',
+                link: '/manager/products-manager/brands/create',
                 result: result
             };
             next();
@@ -94,11 +94,11 @@ module.exports = {
      * @param next
      */
     getList: function (req, res, next) {
-        let limit = 10, skip = 0, cpage = 1;
-        if (req.query.limit && /^\d+$/.test(req.query.limit)) limit = Math.abs(Number(req.query.limit));
-        if (req.query.cpage && !['-1', '1'].includes(req.query.cpage) && /^\d+$/.test(req.query.cpage)) {
-            cpage = Math.abs(Number(req.query.cpage));
-            skip = (cpage - 1) * limit;
+        let limit = 10, skip = 0, page = 1;
+        if (req.query.blimit && /^\d+$/.test(req.query.blimit)) limit = Math.abs(Number(req.query.blimit));
+        if (req.query.bpage && !['-1', '1'].includes(req.query.bpage) && /^\d+$/.test(req.query.bpage)) {
+            page = Math.abs(Number(req.query.bpage));
+            skip = (page - 1) * limit;
         }
         /**
          * Sử dụng mongodb aggregate, $facet
@@ -122,8 +122,8 @@ module.exports = {
          * Nếu có tìm kiếm, tạo match và đẩy vào đầu array query
          * Tham khảo: https://docs.mongodb.com/manual/reference/operator/aggregation/match/
          */
-        if (req.query.q) {
-            let pattern = new RegExp(req.query.q, 'i');
+        if (req.query.bq) {
+            let pattern = new RegExp(req.query.bq, 'i');
             query[0].$match.$or = [
                 {description: pattern},
                 {name: pattern}
@@ -146,13 +146,13 @@ module.exports = {
             }
             res.locals.brands = result[0].data;
             let totalItems = result[0].meta[0].totalItems;
-            res.locals.meta = {
+            res.locals.bmeta = {
                 totalItems: totalItems,
                 total: Math.ceil(totalItems / limit),
                 limit: limit,
                 offset: skip,
-                cpage: cpage,
-                q: req.query.q
+                page: page,
+                q: req.query.bq
             };
             next();
         });
@@ -188,7 +188,7 @@ module.exports = {
             res.locals = {
                 title: 'Success',
                 detail: 'Edit brand successfully',
-                link: '/manager/dashboard/products-manager/brands',
+                link: '/manager/products-manager/brands',
                 result: result
             };
             next();
@@ -214,7 +214,7 @@ module.exports = {
             res.locals = {
                 title: 'Success',
                 detail: 'Delete brand successfully',
-                link: '/manager/dashboard/products-manager/brands',
+                link: '/manager/products-manager/brands',
                 result: result
             };
             next();

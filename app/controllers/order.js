@@ -71,7 +71,9 @@ module.exports = {
         let query = [
                 {
                     "$match" : {
-                        "status" : 0,
+                        "status" : {
+                            "$in": [0,1,2]
+                        }
                     }
                 },
                 {
@@ -186,7 +188,7 @@ module.exports = {
         }
 
         if(req.query.oc) {
-            query[0].$match.receive_city = Number(req.query.oc);
+            query[0].$match.receiver_city = Number(req.query.oc);
         }
 
         if(req.query.od) {
@@ -247,7 +249,7 @@ module.exports = {
             res.locals = {
                 title: 'Success',
                 detail: 'Update Orders successfully',
-                link: '/manager/dashboard/orders',
+                link: '/manager/orders',
                 result: result
             };
             next();
@@ -337,7 +339,6 @@ module.exports = {
                 $match: {
                     status: {
                         $in: [1, 2]
-                        // $in: [0]
                     }
                 }
             },
@@ -412,9 +413,9 @@ module.exports = {
                         $sort: {
                             _id: 1
                         }
-                    }
+                    },
                 ];
-                pipeline[1].$facet[dataType][0].$group._id[group] = "$created_at";
+                pipeline[1].$facet[dataType][0].$group._id[group] = '$created_at';
             }
 
             if (dataType === 'ratio') {

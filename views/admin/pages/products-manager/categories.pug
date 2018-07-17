@@ -29,8 +29,8 @@ block content
                                         a(href='javascript:void(0);') Something else here
                     .row.m-t-20
                         .col-sm-4
-                            - if (meta)
-                                - let limit = meta.limit
+                            - if (cmeta)
+                                - let limit = cmeta.limit
                                 .col-xs-3.m-t-25
                                     label Show
                                 .col-lg-6.col-md-4.col-sm-5.col-xs-3.m-t-15
@@ -58,12 +58,12 @@ block content
                             .col-sm-10.col-xs-5.m-t-15(style='float: right')
                                 .form-group
                                     .form-line
-                                        input#search-input.form-control(type='text', placeholder='Search' value=meta && meta.q ? meta.q : '')
+                                        input#search-input.form-control(type='text', placeholder='Search' value=cmeta && cmeta.q ? cmeta.q : '')
                             .col-lg-2.col-sm-2.col-xs-1.m-t-15(style='float: right')
                                 button#search-btn.btn.btn-danger.btn-circle.waves-effect.waves-circle.waves-float(type='button')
                                     i.material-icons search
                     - if (!categories || categories.length === 0)
-                        - link = '/manager/dashboard/products-manager/categories/create'
+                        - link = '/manager/products-manager/categories/create'
                         include 404
                     - else
                         .body.table-responsive
@@ -110,45 +110,45 @@ block content
                                                              -for (m = 0; m < lengthP; m ++)
                                                                 p #{categories[i].parent[m].name}
                                                     td
-                                                        a.btn.btn-link(href='/manager/dashboard/products-manager/categories/' + categories[i].name + '/edit')
+                                                        a.btn.btn-link(href='/manager/products-manager/categories/' + categories[i].name + '/edit')
                                                             i.material-icons edit
                                                         button.btn.btn-link.waves-effect(type='button', data-type="ajax-loader" data-b=categories[i].name)
                                                             i.material-icons delete
 
-                            - if (meta)
+                            - if (cmeta)
                                 - let limit = ''
                                 - let q = ''
-                                - if (meta.limit !== 10)
-                                    - limit += '&limit=' + meta.limit
-                                -if (meta.q)
-                                    - q = '&q=' + meta.q
+                                - if (cmeta.limit !== 10)
+                                    - limit += '&climit=' + cmeta.limit
+                                -if (cmeta.q)
+                                    - q = '&cq=' + cmeta.q
                                 -if (level)
-                                    - level = '&level=' + level
+                                    - level = '&clevel=' + level
                                 .row.text-right
                                     ul.pagination(style='margin-right: 1%')
-                                        - if (meta.page === 1)
+                                        - if (cmeta.page === 1)
                                             li.paginate_button.disabled
                                                 a First
                                         - else
                                             li.paginate_button
-                                                a(href='/manager/dashboard/products-manager/categories?' + limit.substring(1) + q + level) First
-                                        - let i = meta.page > 5 ? meta.page - 4 : 1
+                                                a(href='/manager/products-manager/categories?' + limit.substring(1) + q + level) First
+                                        - let i = cmeta.page > 5 ? cmeta.page - 4 : 1
                                         - if (i !== 1)
                                             li.paginate_button.disabled
                                                 a ...
-                                        - for (; i <= meta.page + 4 && i <= meta.total; i ++)
-                                            - if (i === meta.page)
+                                        - for (; i <= cmeta.page + 4 && i <= cmeta.total; i ++)
+                                            - if (i === cmeta.page)
                                                 li.paginate_button.active
                                                     a= i
                                             - else
                                                 li.paginate_button
-                                                    a(href='/manager/dashboard/products-manager/categories?page=' + i + limit + q + level)= i
-                                            - if (i === meta.page + 4 && i < meta.total)
+                                                    a(href='/manager/products-manager/categories?cpage=' + i + limit + q + level)= i
+                                            - if (i === cmeta.page + 4 && i < cmeta.total)
                                                 li.paginate_button.disabled
                                                     a ...
-                                        - if (meta.page === meta.total)
+                                        - if (cmeta.page === cmeta.total)
                                             li.paginate_button.disabled
                                                 a Last
                                         - else
                                             li.paginate_button
-                                                a(href='/manager/dashboard/products-manager/categories?page=' + meta.total + limit + q + level) Last
+                                                a(href='/manager/products-manager/categories?cpage=' + cmeta.total + limit + q + level) Last

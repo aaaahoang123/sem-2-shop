@@ -22,7 +22,7 @@ block extra-js
             |         showCancelButton: true,
             |         confirmButtonText: "Yes! Create an account!",
             |     }, function () {
-            |         location.href = '/manager/dashboard/users-manager/users/#{user_mid}/account'
+            |         location.href = '/manager/users-manager/users/#{user_mid}/account'
             |     });})
 
 block content
@@ -54,7 +54,7 @@ block content
                                         li
                                             a(href='javascript:void(0);') Something else here
                         .body
-                            - user_action = '/manager/dashboard/users-manager/users';
+                            - user_action = '/manager/users-manager/users';
                             - user_action += page_type!==1?'/'+user.mid+'?_method=PUT':'';
                             - if (user)
                                 form(method='POST' action=user_action)
@@ -153,7 +153,6 @@ block content
                                         td #{user.email}
                                         td #{user.phone}
                                         td #{user.birthday.toLocaleDateString()}
-
                 // Account form card
                 - if (page_type !== 1)
                     .card
@@ -172,7 +171,7 @@ block content
                                         li
                                             a(href='javascript:void(0);') Something else here
                         .body
-                            - link = '/manager/dashboard/users-manager/users/' + user.mid + '/account'
+                            - link = '/manager/users-manager/users/' + user.mid + '/account'
                             - if (page_type === 3 && !account)
                                 include components/404-account
                             - else if ((page_type === 3 && account) || (page_type === 2 && !account))
@@ -227,4 +226,4 @@ block content
 
                             - else
                                 script(type='text/javascript')
-                                    | location.href = '/manager/dashboard/users-manager/users/'
+                                    | location.href = '/manager/users-manager/users/'

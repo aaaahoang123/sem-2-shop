@@ -13,7 +13,7 @@ function showAjaxLoaderMessage() {
         showLoaderOnConfirm: true,
     }, function () {
         $.ajax({
-            url: '/manager/dashboard/products-manager/categories/' + name,
+            url: '/manager/products-manager/categories/' + name,
             type: 'DELETE',
             success: function (res) {
                 console.log(res);
@@ -34,28 +34,28 @@ function showAjaxLoaderMessage() {
 }
 
 $('#search-btn').click(function () {
-    changeSearchByInput('#search-input', 'q=');
+    changeSearchByInput('#search-input', 'cq=');
 });
 
 $('#search-input').keyup(function (ev) {
     if(ev.keyCode === 13 || ev.which === 13) {
-        changeSearchByInput(this, 'q=');
+        changeSearchByInput(this, 'cq=');
     }
 });
 
 $('.select-limit').change(function () {
-    changeSearchByInput(this, 'limit=')
+    changeSearchByInput(this, 'climit=')
 });
 
 $('.select-level').change(function () {
-    changeSearchByInput(this, 'level=')
+    changeSearchByInput(this, 'clevel=')
 });
 
 function changeSearchByInput(el, except) {
     var searchArray = location.search.split('&');
     var href = '?';
     for (var i = 0; i < searchArray.length; i++) {
-        if (!searchArray[i].includes('page=') && !searchArray[i].includes(except) && searchArray[i] !== '') {
+        if (!searchArray[i].includes('cpage=') && !searchArray[i].includes(except) && searchArray[i] !== '') {
             href += searchArray[i].replace("?", "") + '&';
         }
     }

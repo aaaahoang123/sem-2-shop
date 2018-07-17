@@ -13,7 +13,7 @@ function showAjaxLoaderMessage() {
         showLoaderOnConfirm: true,
     }, function () {
         $.ajax({
-            url: '/manager/dashboard/products-manager/brands/' + name,
+            url: '/manager/products-manager/brands/' + name,
             type: 'DELETE',
             success: function (res) {
                 console.log(res);
@@ -34,17 +34,17 @@ function showAjaxLoaderMessage() {
 }
 
 $('#search-btn').click(function () {
-    changeSearchByInput('#search-input', 'q=');
+    changeSearchByInput('#search-input', 'bq=');
 });
 
 $('#search-input').keyup(function (ev) {
     if(ev.keyCode === 13 || ev.which === 13) {
-        changeSearchByInput(this, 'q=');
+        changeSearchByInput(this, 'bq=');
     }
 });
 
 $('#select-limit').change(function () {
-    changeSearchByInput(this, 'limit=')
+    changeSearchByInput(this, 'blimit=')
 });
 
 function changeSearchByInput(el, except) {
@@ -52,7 +52,7 @@ function changeSearchByInput(el, except) {
     var href = '?';
         // ?q=b limit=5
     for (var i = 0; i < searchArray.length; i++) {
-        if (!searchArray[i].includes('page=') && !searchArray[i].includes(except) && searchArray[i] !== "") {
+        if (!searchArray[i].includes('bpage=') && !searchArray[i].includes(except) && searchArray[i] !== "") {
             href += searchArray[i].replace("?", "") + '&';
         }
     }
