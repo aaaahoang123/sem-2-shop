@@ -13,12 +13,12 @@ router
         res.render('admin/pages/sign-in');
     })
     .post('/', accountController.getOne, accountController.comparePassword, credentialController.insertOne, (req, res) => {
-        console.log(res.locals);
         if (res.locals.errs) {
             res.render('admin/pages/sign-in', {account: req.body});
             return;
         }
         res.cookie('token', res.locals.credential.token);
+        res.cookie('username', res.locals.account.username);
         res.render('index', {
             title: 'Login success',
             detail: 'Welcome to our product',
