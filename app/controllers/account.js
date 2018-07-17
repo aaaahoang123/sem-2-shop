@@ -228,7 +228,7 @@ module.exports = {
                 user: req.cookies.user
             });
         } else {
-            res.render('index');
+            res.redirect(`/manager/users-manager/users/${req.params.mid}?message=add-account-success`);
         }
     },
 
@@ -243,7 +243,7 @@ module.exports = {
             });
             return;
         }
-        res.render('index');
+        res.redirect(`/manager/users-manager/users/${req.params.mid}?message=edit-account-success`);
     },
 
     setUserIdAfterInsertUser: (req, res, next) => {

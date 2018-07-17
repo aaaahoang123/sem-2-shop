@@ -51,7 +51,8 @@ block append link
 
 block content
     - if (!product || product.length === 0)
-        include 404
+        - items = 'products'
+        include 404-item
     - else
         .single_product
             .container
@@ -101,7 +102,8 @@ block content
                             p
                             a.readmore-btn(href='javascript:void(0)') Show more >
                             .order_info.d-flex.flex-row
-                                form(action='#')
+                                .col-md-2
+                                form
                                     .clearfix(style='z-index: 1000;')
                                         // Product Quantity
                                         .product_quantity.clearfix
@@ -113,20 +115,20 @@ block content
                                                 #quantity_dec_button.quantity_dec.quantity_control
                                                     i.fas.fa-chevron-down
                                         // Product Color
-                                        ul.product_color
-                                            li
-                                                span Color:
-                                                .color_mark_container
-                                                    #selected_color.color_mark
-                                                .color_dropdown_button
-                                                    i.fas.fa-chevron-down
-                                                ul.color_list
-                                                    li
-                                                        .color_mark(style='background: #999999;')
-                                                    li
-                                                        .color_mark(style='background: #b19c83;')
-                                                    li
-                                                        .color_mark(style='background: #000000;')
+                                        //ul.product_color
+                                        //    li
+                                        //        span Color:
+                                        //        .color_mark_container
+                                        //            #selected_color.color_mark
+                                        //        .color_dropdown_button
+                                        //            i.fas.fa-chevron-down
+                                        //        ul.color_list
+                                        //            li
+                                        //                .color_mark(style='background: #999999;')
+                                        //            li
+                                        //                .color_mark(style='background: #b19c83;')
+                                        //            li
+                                        //                .color_mark(style='background: #000000;')
                                     .product_price Price: $ #{product.price}
                                     .button_container
                                         button.button.cart_button.btn-add-to-cart(type='button' data-code=product.code) Add to Cart&nbsp;

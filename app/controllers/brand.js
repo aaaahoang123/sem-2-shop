@@ -237,7 +237,7 @@ module.exports = {
                 title: 'ADD BRAND'
             });
         } else {
-            res.render('index');
+            res.redirect('/manager/products-manager/brands/create?message=add-success');
         }
     },
 
@@ -259,7 +259,7 @@ module.exports = {
             });
             return;
         }
-        res.render('index');
+        res.redirect(`/manager/products-manager/brands/${req.body.name}/edit?message=edit-success`);
     },
 
     responseJson: function (req, res) {

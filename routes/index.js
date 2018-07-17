@@ -15,6 +15,7 @@ const renderer = require('../app/controllers/client'),
     orderController = require('../app/controllers/order'),
     navController = require('../app/controllers/nav-bar'),
     blogController = require('../app/controllers/blog'),
+    carouselController = require('../app/controllers/carousel'),
     webConfig = require('../app/resource/web-config');
 
 router.use(categoryController.findAll, navController.getNavBar, (req, res, next) => {
@@ -30,9 +31,9 @@ router.use(categoryController.findAll, navController.getNavBar, (req, res, next)
 });
 /* GET home page. */
 
-router.get('/', webConfigController.getTopCategories,
+router.get('/', webConfigController.getTopCategories, carouselController.getCarousel,
     productController.setProductCodeArrayFromCookie,
-    productController.getProductByCodesArray,
+    productController.getProductByCodesArray, productController.getSlice,
     brandController.getAll, orderController.getBestSellers,
     renderer.renderHomePage);
 

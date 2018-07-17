@@ -188,7 +188,7 @@ module.exports = {
                 title: 'ADD BLOG'
             });
         } else {
-            res.render('index');
+            res.redirect('/manager/web-config/blogs/create?message=add-success');
         }
     },
 
@@ -210,7 +210,7 @@ module.exports = {
             });
             return;
         }
-        res.render('index');
+        res.redirect(`/manager/web-config/blogs/${res.locals.result.uri_title}/edit?message=edit-success`);
     },
 
     responseBrandTable: (req, res) => res.render('admin/pages/web-config/blogs', {path: '/web-config/blogs'})

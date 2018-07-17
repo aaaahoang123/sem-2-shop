@@ -35,7 +35,7 @@ module.exports = {
                 information: req.body,
             });
         } else {
-            res.render('index');
+            res.redirect('/manager/web-config/information?message=config-success');
         }
     }
 };

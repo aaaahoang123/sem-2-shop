@@ -41,7 +41,8 @@ block content
     .shop
         .container
             - if (type === 0)
-                include 404
+                - items = 'products'
+                include 404-item
             - else
                 .row
                     .col-lg-3
