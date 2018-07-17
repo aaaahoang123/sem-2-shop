@@ -1,0 +1,98 @@
+extends ../layout/master
+
+block title
+    title User
+
+block append link
+    link(rel='stylesheet' type='text/css' href='client/styles/cart_styles.css')
+    link(rel='stylesheet' type='text/css' href='client/styles/cart_responsive.css')
+    link(rel='stylesheet' href='/admin/plugins/bootstrap-material-datetimepicker/css/bootstrap-material-datetimepicker.css')
+    style.
+        select {
+            margin-left: 0!important;
+        }
+        .form-control {
+            color: black;
+        }
+
+block append script
+    script(type='text/javascript' src='/admin/plugins/momentjs/moment.min.js')
+    script(type='text/javascript' src='/admin/plugins/bootstrap-material-datetimepicker/js/bootstrap-material-datetimepicker.js')
+    script(src='/client/js/custom.js')
+    script(type='text/javascript').
+        $(document).ready(function () {
+            $('#input-birthday').bootstrapMaterialDatePicker({ weekStart : 0, time: false });
+            if (location.search.includes('message=update-success')) {
+                $('#alert-success').html('Your account information has been updated.').css('display','');
+            }
+        });
+
+
+block content
+    - if(!dataUser)
+        .row.text-center
+            .col-lg-12
+                    h1 Please login to use this function
+            .col-lg-12
+                a.button.cart_button_clear(href="/sign-in" style="margin: 50px") Sign in
+    - else
+        .container.mt-2
+            h4 Account information
+            - if (errs && errs.database)
+                h1 #{errs.length}
+                .alert.alert-danger.text-center #{errs.database}
+            .alert.alert-success.text-center#alert-success(style='display:none')
+            form(method='POST' action='/user?_method=PUT')
+                input#mid(type='hidden' value=dataUser.user[0].mid name='mid')
+                input(type='hidden' value=dataUser.account[0].username name='username')
+                input(type='hidden' value=dataUser.user[0]._id)
+                .form-row
+                    .form-group.col-md-6
+                        label(for='input-full-name') Full Name
+                        input#input-full-name.form-control(class=errs&&errs.name?'text-danger':'' type='text' placeholder='Full Name' name='full_name' required value=dataUser.user[0].full_name)
+                        - if (errs && errs.full_name)
+                            span.text-danger #{errs.full_name}
+                    .form-group.col-md-6
+                        label(for='input-address') Address
+                        input#input-address.form-control(class=errs&&errs.address?'text-danger':'' type='text' placeholder='Address' name='address' required value=dataUser.user[0].address)
+                        - if (errs && errs.address)
+                            span.text-danger #{errs.address}
+                .form-row
+                    .form-group.col-md-6
+                        label(for='input-birthday') Birthday
+                        //input#input-birthday.form-control(class=errs&&errs.birthday?'text-danger':'' type='text' placeholder='Birthday' name='birthday' required value=dataUser.user[0].birthday)
+                        input#input-birthday.datepicker.form-control(type='text' name='birthday' placeholder='Birthday' required value=dataUser.user[0].birthday)
+                        - if (errs && errs.birthday)
+                            span.text-danger #{errs.birthday}
+                    .form-group.col-md-6
+                        label(for='input-email') Email
+                        input#input-email.form-control(class=errs&&errs.email?'text-danger':'' type='email' placeholder='Email' name='email' required value=dataUser.user[0].email)
+                        - if (errs && errs.email)
+                            span.text-danger #{errs.email}
+                .form-row
+                    .form-group.col-md-6
+                        label(for='select-gender') Gender
+                        select#select-gender.form-control(name='gender' required)
+                            option(value=0 selected=dataUser.user[0]&&dataUser.user[0].gender===0) Female
+                            option(value=1 selected=dataUser.user[0]&&dataUser.user[0].gender===1) Male
+                        - if (errs && errs.gender)
+                            span.text-danger #{errs.gender}
+                    .form-group.col-md-6
+                        label(for='input-phone') Phone
+                        input#input-phone.form-control(class=errs&&errs.phone?'text-danger':'' type='text' placeholder='Phone' name='phone' required value=dataUser.user[0].phone)
+                        - if (errs && errs.phone)
+                            span.text-danger #{errs.phone}
+
+                .form-row
+                    .form-group.col-md-6
+                        label(for='input-username') Username
+                        input#input-username.form-control(type='text' placeholder='Username' required value=dataUser.account[0].username disabled)
+                        - if (errs && errs.username)
+                            span.text-danger #{errs.username}
+                    .form-group.col-md-6
+                        label(for='input-password') Password
+                        input#input-password.form-control(class=errs&&errs.password?'text-danger':'' type='password' placeholder='Password' name='password' required value=dataUser.account[0].password disabled=dataUser.account[0].type===0)
+                        - if (errs && errs.password)
+                            span.text-danger #{errs.password}
+                button.btn.btn-primary(type='submit' disabled=dataUser.account[0].type===0) Update
+                button.btn.btn-default.ml-2(type='reset') Reset

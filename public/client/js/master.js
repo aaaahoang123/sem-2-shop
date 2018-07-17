@@ -2,7 +2,7 @@
     $('.btn-sign-out').click(function () {
         Cookies.remove('token');
         Cookies.remove('username');
-        location.reload();
+        location.href = '/';
     });
 
     $('.cate-container').hover(function () {
