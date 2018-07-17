@@ -63,7 +63,8 @@
                                .owl-item
                                    .brands_item.d-flex.flex-column.justify-content-center
                                        div(style='max-width: 100px; overflow: hidden')
-                                            img(src=b.logo alt='')
+                                           a(href='/shop?brand='+b.name)
+                                                img(src=b.logo alt='')
                        // Brands Slider Navigation
                        .brands_nav.brands_prev
                            i.fas.fa-chevron-left

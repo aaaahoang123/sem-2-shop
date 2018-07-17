@@ -432,6 +432,36 @@ module.exports = {
             req.newCart = cart;
         }
         next();
+    },
+
+    getSlice: function (req, res, next) {
+        if (!res.locals.carousel) next();
+        let query =[
+            {
+                $match: {code: {$in: res.locals.carousel}}
+            },
+            {
+                "$lookup" : {
+                    "from" : "categories",
+                    "localField" : "categories",
+                    "foreignField" : "_id",
+                    "as" : "categories"
+                }
+            }
+        ];
+        model.aggregate(query, function (err, result) {
+            if (err) {
+                console.log(err);
+                if (!req.errs) req.errs = {};
+                req.errs.database = err.message;
+                next();
+                return;
+            }
+            console.log('vaicalo');
+            console.log(result);
+            res.locals.sProducts = result;
+            next();
+        })
     }
 };
 

@@ -26,24 +26,25 @@ block content
             .banner_2_dots
             // Banner 2 Slider
             .owl-carousel.owl-theme.banner_2_slider
-                - for (i=0; i<3; i++)
-                    - if (top_categories[i].products[0])
+                - if (sProducts)
+                    - for (let sp of sProducts)
                         .owl-item
                             .banner_2_item
                                 .container.fill_height
                                     .row.fill_height
                                         .col-lg-5.col-md-6.fill_height
                                             .banner_2_content
-                                                .banner_2_category #{top_categories[i].name}
-                                                .banner_2_title #{top_categories[i].products[0].name}
+                                                .banner_2_category #{sp.categories[0].name}
+                                                .banner_2_title #{sp.name}
                                                 .banner_2_text
-                                                    h2(style='text-decoration: underline') $ #{top_categories[i].products[0].price}
+                                                    h2(style='text-decoration: underline') $ #{sp.price}
                                                 .button.banner_2_button
-                                                    a(href='/product/'+top_categories[i].products[0].code) Shop now
+                                                    a(href='/product/'+sp.code) Shop now
                                         .col-lg-7.col-md-6.fill_height
                                             .banner_2_image_container
                                                 .banner_2_image
-                                                    img(src=top_categories[i].products[0].images[0] alt='')
+                                                    a(href='/product/'+sp.code)
+                                                        img(src=sp.images[0] alt='')
     // Characteristics
     .characteristics
         .container
