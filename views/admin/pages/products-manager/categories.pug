@@ -64,6 +64,7 @@ block content
                                     i.material-icons search
                     - if (!categories || categories.length === 0)
                         - link = '/manager/products-manager/categories/create'
+                        - items = 'categories'
                         include 404
                     - else
                         .body.table-responsive

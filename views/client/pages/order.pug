@@ -22,7 +22,8 @@ block append script
 
 block content
     - if(!rvProducts || rvProducts.length == 0)
-        include 404
+        - items = 'orders'
+        include 404-item
     - else
         - if(!acceptCredential)
             div(style='height: 500px')

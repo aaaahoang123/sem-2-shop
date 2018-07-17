@@ -52,7 +52,8 @@ block content
                         i.material-icons search
         - if (blogs.length === 0)
             - link = '/manager/web-config/blogs'
-            include 404
+            - items = 'blogs'
+            include 404-item
         - else
             .body
                 .table-responsive
