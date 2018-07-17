@@ -22,7 +22,8 @@ block append script
 
 block content
     - if(!rvProducts || rvProducts.length == 0)
-        include 404
+        - items = 'orders'
+        include 404-item
     - else
         - if(!acceptCredential)
             div(style='height: 500px')
@@ -102,14 +103,14 @@ block content
                                                         option(selected='' disabled='') -- Choose your city --
                                                         - if(cities && cities.length !== 0)
                                                             - for (let city of cities)
-                                                                option(value=city.ID) #{city.Title}
+                                                                option(value=city.ID selected=customer&&Number(customer.receiver_city)===city.ID) #{city.Title}
                                                 - if (errs && errs.receiver_city)
                                                     p.text-danger.text-center.m-t-15 #{errs.receiver_city}
                                             .col-md-6
                                                 .input-group-btn
                                                     a.btn.btn-default
                                                         i.fa.fa-list.fa-lg
-                                                    select.district-select.form-control(name='receiver_district' style='color: black; margin-left: 0px' disabled='')
+                                                    select.district-select.form-control(name='receiver_district' style='color: black; margin-left: 0px' disabled='' data-selected=customer?customer.receiver_district:undefined)
                                                         option(selected='' disabled='') -- Choose your district --
                                                 - if (errs && errs.receiver_district)
                                                     p.text-danger.text-center.m-t-15 #{errs.receiver_district}

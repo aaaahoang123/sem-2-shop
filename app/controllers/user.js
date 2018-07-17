@@ -1,6 +1,7 @@
 'use strict';
 
 const model = require('../models/user');
+const credentialModel = require('../models/credential');
 
 module.exports = {
 
@@ -23,6 +24,7 @@ module.exports = {
 
         if(!req.body.phone || req.body.phone === null || req.body.phone === '') res.locals.errs.phone = 'Phone is required';
 
+        // console.log();
         next();
     },
 
@@ -81,6 +83,46 @@ module.exports = {
 
             if (result.length !== 0) {
                 res.locals.user = result[0];
+            }
+            next();
+        });
+    },
+
+    getOneFromToken: (req, res, next) => {
+        let pipeline = [
+            {
+                $match: {
+                    token: req.cookies.token,
+                    status: 1
+                }
+            },
+            {
+                $lookup: {
+                    from: "accounts",
+                    localField: "account_id",
+                    foreignField: "_id",
+                    as: "account"
+                }
+            },
+            {
+                $lookup: {
+                    from: 'users',
+                    localField: 'account.user_id',
+                    foreignField: '_id',
+                    as: 'user'
+                }
+            }
+        ];
+
+        credentialModel.aggregate(pipeline, (err, result) => {
+            if (err) {
+                if (!res.locals.errs) res.locals.errs = {};
+                res.locals.errs.database = err.message;
+                console.log(err);
+                next();
+            }
+            if (result.length !== 0) {
+                res.locals.dataUser = result[0];
             }
             next();
         });
@@ -189,8 +231,18 @@ module.exports = {
         });
     },
 
+    setParam: function(req, res, next) {
+        req.params.mid = req.body.mid;
+        next();
+    },
+
     updateOne: (req, res, next) => {
-        if (res.locals.errs && Object.keys(res.locals.errs).length !== 0) return next();
+        if (res.locals.errs && Object.keys(res.locals.errs).length !== 0) {
+            res.locals.dataUser = {
+                user: [req.body]
+            };
+            return next();
+        }
 
         req.body.updated_at = Date.now();
         model.findOneAndUpdate({mid: req.params.mid}, {$set: req.body},{new: true}, (err, result) => {
@@ -198,14 +250,20 @@ module.exports = {
                 console.log(err);
                 if (!res.locals.errs) res.locals.errs = {};
                 res.locals.errs.database = err.message;
+                res.locals.dataUser = {
+                    user: [req.body]
+                };
                 return next();
             }
-            res.locals = {
+            res.locals = Object.assign(res.locals, {
                 title: 'Success',
                 detail: 'Update user successfully',
-                link: '/manager/users-manager/users/' + req.params.mid,
-                result: result
-            };
+                link: '/manager/dashboard/users-manager/users/' + req.params.mid,
+                result: result,
+                dataUser: {
+                    user: [result]
+                }
+            });
             next();
         });
     },
@@ -318,6 +376,6 @@ module.exports = {
             });
             return;
         }
-        res.render('index');
+        res.redirect(`/manager/users-manager/users/${req.params.mid}?message=edit-user-success`);
     }
 };

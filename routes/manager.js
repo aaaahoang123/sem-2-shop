@@ -44,9 +44,7 @@ router
                     path: '/orders/create',
                 });
             } else {
-                res.render('index', {
-                    link: '/manager/orders/create'
-                });
+                res.redirect('/manager/orders/create?message=add-success');
             }
         });
 

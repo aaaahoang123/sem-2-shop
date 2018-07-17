@@ -48,6 +48,28 @@ router.get('/blog/:uri_title',blogController.getOne, function(req, res, next) {
     res.render('client/pages/blog_single');
 });
 
+router.get('/user',userController.getOneFromToken, function (req, res, next) {
+    res.render('client/pages/user');
+})
+    .put('/user',userController.validate,
+        (req,res,next) => {req.body.type = 1;next()},
+        accountController.validate,
+        userController.setParam,
+        userController.updateOne,
+        (req, res, next) => {
+            if (res.locals.errs && Object.keys(res.locals.errs).length !== 0) return next();
+            req.body.user_id = res.locals.result._id;
+            req.body.type = 1;
+            next();
+        },
+        accountController.getOne,
+        accountController.updateOne,
+        (req, res) => {
+            if (res.locals.errs && Object.keys(res.locals.errs).length !== 0) res.render('client/pages/user');
+            else res.redirect('/user?message=update-success');
+        }
+    );
+
 router.get('/cart',productController.setProductCodeArrayFromCart, productController.getProductByCodesArray, function(req, res, next) {
     let cart = {};
     if (req.cookies.cart) cart = JSON.parse(req.cookies.cart);
@@ -64,7 +86,7 @@ router.get('/order', credentialController.setTokenFromCookie, credentialControll
 
 router.post('/order', credentialController.setTokenFromCookie, credentialController.checkCredential,
     productController.setSelectedProductCodeArrayFromCart, productController.getProductByCodesArray,
-    orderController.validate, orderController.insertOne,
+    orderController.validate, orderController.insertOne, cityNDistrict.getAllCities,
     orderController.responseInsertOneCustomerFormView);
 
 router

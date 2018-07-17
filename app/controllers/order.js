@@ -69,88 +69,93 @@ module.exports = {
          */
 
         let query = [
-                {
-                    "$match" : {
-                        "status" : {
-                            "$in": [0,1,2]
-                        }
+            {
+                "$match" : {
+                    "status" : {
+                        "$in": [0,1,2]
                     }
-                },
-                {
-                    "$unwind" : "$products"
-                },
-                {
-                    "$lookup" : {
-                        "from" : "products",
-                        "localField" : "products._id",
-                        "foreignField" : "_id",
-                        "as" : "ps"
-                    }
-                },
-                {
-                    "$group" : {
-                        "_id" : "$_id",
-                        "status" : {
-                            "$first" : "$status"
-                        },
-                        "receiver_email" : {
-                            "$first" : "$receiver_email"
-                        },
-                        "receiver_phone" : {
-                            "$first" : "$receiver_phone"
-                        },
-                        "receiver_city" : {
-                            "$first" : "$receiver_city"
-                        },
-                        "receiver_district" : {
-                            "$first" : "$receiver_district"
-                        },
-                        "receiver_address" : {
-                            "$first" : "$receiver_address"
-                        },
-                        "created_by" : {
-                            "$first" : "$created_by"
-                        },
-                        "updated_by" : {
-                            "$first" : "$updated_by"
-                        },
-                        "created_at" : {
-                            "$first" : "$created_at"
-                        },
-                        "updated_at" : {
-                            "$first" : "$updated_at"
-                        },
-                        "total" : {
-                            "$first" : "$total"
-                        },
-                        "products" : {
-                            "$push" : {
-                                "$arrayToObject" : {
-                                    "$setUnion" : [
-                                        {
-                                            "$objectToArray" : "$products"
-                                        },
-                                        {
-                                            "$objectToArray" : {
-                                                "$arrayElemAt" : [
-                                                    "$ps",
-                                                    0.0
-                                                ]
-                                            }
+                }
+            },
+            {
+                "$unwind" : "$products"
+            },
+            {
+                "$lookup" : {
+                    "from" : "products",
+                    "localField" : "products._id",
+                    "foreignField" : "_id",
+                    "as" : "ps"
+                }
+            },
+            {
+                "$group" : {
+                    "_id" : "$_id",
+                    "status" : {
+                        "$first" : "$status"
+                    },
+                    "receiver_email" : {
+                        "$first" : "$receiver_email"
+                    },
+                    "receiver_phone" : {
+                        "$first" : "$receiver_phone"
+                    },
+                    "receiver_city" : {
+                        "$first" : "$receiver_city"
+                    },
+                    "receiver_district" : {
+                        "$first" : "$receiver_district"
+                    },
+                    "receiver_address" : {
+                        "$first" : "$receiver_address"
+                    },
+                    "created_by" : {
+                        "$first" : "$created_by"
+                    },
+                    "updated_by" : {
+                        "$first" : "$updated_by"
+                    },
+                    "created_at" : {
+                        "$first" : "$created_at"
+                    },
+                    "updated_at" : {
+                        "$first" : "$updated_at"
+                    },
+                    "total" : {
+                        "$first" : "$total"
+                    },
+                    "products" : {
+                        "$push" : {
+                            "$arrayToObject" : {
+                                "$setUnion" : [
+                                    {
+                                        "$objectToArray" : "$products"
+                                    },
+                                    {
+                                        "$objectToArray" : {
+                                            "$arrayElemAt" : [
+                                                "$ps",
+                                                0.0
+                                            ]
                                         }
-                                    ]
-                                }
+                                    }
+                                ]
                             }
                         }
                     }
-                },
-                {
-                    '$facet': {
-                        meta: [{$count: "totalItems"}],
-                        data: [{$skip: skip}, {$limit: limit}] // add projection here wish you re-shape the docs
-                    }
                 }
-            ];
+            },
+            {
+                $sort: {
+                    created_at: -1
+                }
+            },
+            {
+                '$facet': {
+                    meta: [{$count: "totalItems"}],
+                    data: [{$skip: skip}, {$limit: limit}] // add projection here wish you re-shape the docs
+                }
+            }
+        ];
 
         /**
          * Nếu có tìm kiếm, tạo match và đẩy vào đầu array query
