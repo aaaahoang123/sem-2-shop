@@ -38,14 +38,16 @@ module.exports = {
         };
         model.find(query, function (err, result) {
             if (err) {
+                console.log("vao day me r");
                 console.log(err);
                 if (!res.locals.errs) res.locals.errs = {};
                 res.locals.errs.database = err.message;
                 return next();
             }
+            console.log(result.length);
             if (result.length !== 0) {
                 res.locals.blog = result[0];
-                console.log(res.locals.blog);
+                console.log("blog: ", res.locals.blog);
             }
             next();
         });

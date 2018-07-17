@@ -1,5 +1,8 @@
 extends ../../layouts/master
 
+block title
+    title Footer
+
 block extra-css
     link(rel='stylesheet' href='https://use.fontawesome.com/releases/v5.0.13/css/all.css')
     link(rel='stylesheet' href='/admin/plugins/bootstrap-select/css/bootstrap-select.min.css')
@@ -7,13 +10,16 @@ block extra-css
 
 block extra-js
     script(type='text/javascript' src='/admin/plugins/autosize/autosize.min.js')
-    script(type="text/javascript" src="/admin/plugins/multi-select/js/jquery.multi-select.min.js")
+    script(type='text/javascript' src='/admin/plugins/bootstrap-select/js/bootstrap-select.min.js')
+    script(type='text/javascript' src='/client/js/footer.js')
 
 
 block content
     .container-fluid
         .block-header
             h2 CONFIG WEBSITE
+        .alert.alert-success.text-center(role='alert' style='border-radius: 5px', hidden='')
+            big Config footer successfully!
         // Input
         .row.clearfix
             .col-lg-12.col-md-12.col-sm-12.col-xs-12
@@ -22,7 +28,7 @@ block content
                         h2
                             | FOOTER
                     .body
-                        form(name="footer-form")
+                        .container-fluid
                             .row
                                 .col-md-4
                                     b Footer title 1
@@ -31,6 +37,18 @@ block content
                                             i.material-icons title
                                         .form-line
                                             input.form-control.title1(type='text' name='title1' value=(footer[0] && footer[0].title) ? footer[0].title: '')
+                                    .input-group
+                                        span.input-group-addon
+                                            i.material-icons view_list
+                                        .select-clear
+                                            select#select1.form-control.show-tick(name='blog1' multiple data-selected-text-format="count" data-max-options="5")
+                                                -if (footer[0] && footer[0].blogs)
+                                                    - blog1 = footer[0].blogs;
+                                                - else
+                                                    - blog1 = [];
+                                                -if(blogs && blogs.length !== 0)
+                                                    -for(let blog of blogs)
+                                                        option(value=blog.title selected=blog1.indexOf(blog.title) !== -1) #{blog.title}
                                 .col-md-4
                                     b Footer title 2
                                     .input-group
@@ -38,6 +56,19 @@ block content
                                             i.material-icons title
                                         .form-line
                                             input.form-control.title2(type='text' name='title2' value=(footer[1] && footer[1].title) ? footer[1].title: '')
+                                    .input-group
+                                        span.input-group-addon
+                                            i.material-icons view_list
+                                        .select-clear
+                                            select#select2.form-control.show-tick(name='blog2' multiple data-selected-text-format="count" data-max-options="5")
+                                                -if (footer[1] && footer[1].blogs)
+                                                    - blog2 = footer[1].blogs;
+                                                - else
+                                                    - blog2 = [];
+                                                -if(blogs && blogs.length !== 0)
+                                                    -for(let blog of blogs)
+                                                        option(value=blog.title selected=blog2.indexOf(blog.title) !== -1) #{blog.title}
+
                                 .col-md-4
                                     b Footer title 3
                                     .input-group
@@ -45,14 +76,21 @@ block content
                                             i.material-icons title
                                         .form-line
                                             input.form-control.title3(type='text' name='title3' value=(footer[2] && footer[2].title) ? footer[2].title: '')
-                            .row.clearfix
-                                .col-sm-4
                                     .input-group
                                         span.input-group-addon
                                             i.material-icons view_list
                                         .select-clear
-                                            select.form-control.show-tick(name='blog1')
-                                                option(value='') -- Please select --
-                                                -if(footer && footer[0].blogs && footer[0].blogs.length !== 0)
-                                                    -for(let blog of footer[0].blogs)
-                                                        option(value=blog) #{blog}
+                                            select#select3.form-control.show-tick(name='blog3' multiple data-selected-text-format="count" data-max-options="5")
+                                                -if (footer[2] && footer[2].blogs)
+                                                    - blog3 = footer[2].blogs;
+                                                - else
+                                                    - blog3 = [];
+                                                -if(blogs && blogs.length !== 0)
+                                                    -for(let blog of blogs)
+                                                        option(value=blog.title selected=blog3.indexOf(blog.title) !== -1) #{blog.title}
+                            .row
+                                .col-sm-4
+                                .col-sm-2
+                                    button.btn-sub.btn.btn-block.btn-primary.waves-effect(type='button') Submit
+                                .col-sm-2
+                                    button.btn-reset.btn.btn-block.btn-warning.waves-effect(type='button') Reset

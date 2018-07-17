@@ -69,14 +69,14 @@ router
     })
 
     .post('/footer', (req, res) => {
-        webConfig.footer = req.body;
-        fs.writeFile('app/resource/web-config.json', JSON.stringify(webConfig, null, 2), 'utf8', (err) => {
+        webConfig.footer = JSON.parse(req.body.footer);
+        fs.writeFile('app/resource/web-config.json', JSON.stringify(webConfig, null, 2), 'utf8', (err, result) => {
             if (err) {
                 console.log(err);
                 res.send(err.message);
             }
             console.log('write success');
-            res.send("thanh cong");
+            res.send(result);
         });
     })
 

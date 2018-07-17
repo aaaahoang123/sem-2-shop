@@ -7,31 +7,7 @@ section
                 img(src='/admin/images/user.png' width='48' height='48' alt='User')
             .info-container
                 .name(data-toggle='dropdown' aria-haspopup='true' aria-expanded='false')= credential&&credential.account&&credential.account.length!==0?credential.account[0].username:''
-                .btn-group.user-helper-dropdown
-                    i.material-icons(data-toggle='dropdown' aria-haspopup='true' aria-expanded='true') keyboard_arrow_down
-                    ul.dropdown-menu.pull-right
-                        li
-                            a(href='javascript:void(0);')
-                                i.material-icons person
-                                | Profile
-                        li.divider(role='seperator')
-                        li
-                            a(href='javascript:void(0);')
-                                i.material-icons group
-                                | Followers
-                        li
-                            a(href='javascript:void(0);')
-                                i.material-icons shopping_cart
-                                | Sales
-                        li
-                            a(href='javascript:void(0);')
-                                i.material-icons favorite
-                                | Likes
-                        li.divider(role='seperator')
-                        li
-                            a(href='javascript:void(0);')
-                                i.material-icons input
-                                | Sign Out
+                
         // #User Info
         // Menu
         .menu
@@ -50,13 +26,13 @@ section
                             a(href='/manager/web-config/information') Information
 
                         li(class={'active': path === '/web-config/nav-bar'})
-                            a(href='/manager/web-config/nav-bar') Nav_bar
+                            a(href='/manager/web-config/nav-bar') Nav bar
 
                         li(class={'active': path === '/web-config/contact'})
                             a(href='/manager/web-config/contact') Contact
 
                         li(class={'active': path === '/web-config/top-category'})
-                            a(href='/manager/web-config/top-category') Top-Category
+                            a(href='/manager/web-config/top-category') Top Category
 
                         li(class={'active': path === '/web-config/add-blog'})
                             a(href='/manager/web-config/blogs/create') Add Blog
@@ -101,37 +77,37 @@ section
                             a(href='/manager/orders') Orders
                         li(class={'active': path === '/orders/create'})
                             a(href='/manager/orders/create') Add Orders
-                li(class={'active': path.includes('/warehouse-manager')})
-                    a.menu-toggle(href='javascript:void(0);')
-                        i.material-icons store
-                        span Warehouse Manager
-                    ul.ml-menu
-                        li(class={'active': path === '/warehouse-manager/check'})
-                            a(href='/manager/warehouse-manager/check') Check
-                        li(class={'active': path === '/warehouse-manager/edit'})
-                            a(href='/manager/warehouse-manager/edit') Edit
-                        li(class={'active': path === '/warehouse-manager/logs'})
-                            a(href='/manager/warehouse-manager/logs') Logs
+                //- li(class={'active': path.includes('/warehouse-manager')})
+                //-     a.menu-toggle(href='javascript:void(0);')
+                //-         i.material-icons store
+                //-         span Warehouse Manager
+                //-     ul.ml-menu
+                //-         li(class={'active': path === '/warehouse-manager/check'})
+                //-             a(href='/manager/warehouse-manager/check') Check
+                //-         li(class={'active': path === '/warehouse-manager/edit'})
+                //-             a(href='/manager/warehouse-manager/edit') Edit
+                //-         li(class={'active': path === '/warehouse-manager/logs'})
+                //-             a(href='/manager/warehouse-manager/logs') Logs
 
-                li.header LABELS
-                li
-                    a(href='javascript:void(0);')
-                        i.material-icons.col-red donut_large
-                        span Important
-                li
-                    a(href='javascript:void(0);')
-                        i.material-icons.col-amber donut_large
-                        span Warning
-                li
-                    a(href='javascript:void(0);')
-                        i.material-icons.col-light-blue donut_large
-                        span Information
+                //- li.header LABELS
+                //- li
+                //-     a(href='javascript:void(0);')
+                //-         i.material-icons.col-red donut_large
+                //-         span Important
+                //- li
+                //-     a(href='javascript:void(0);')
+                //-         i.material-icons.col-amber donut_large
+                //-         span Warning
+                //- li
+                //-     a(href='javascript:void(0);')
+                //-         i.material-icons.col-light-blue donut_large
+                //-         span Information
         // #Menu
         // Footer
         .legal
             .copyright
                 | &copy; 2016 - 2017
-                a(href='javascript:void(0);') ADMIN - Shopping WEBSITE
+                a(href='javascript:void(0);') T1707M CMS
                 | .
             .version
                 b Version:
