@@ -53,6 +53,11 @@ block content
                         li
                             a(href='javascript:void(0);') Something else here
         .body.table-responsive
+            - if (unpaid_orders_quantity&&unpaid_orders_quantity!==0)
+                .alert.alert-warning
+                    strong Unpaid orders detected!
+                    |  There are #{unpaid_orders_quantity} unpaid orders!&nbsp;
+                    a.alert-link(href='/manager/orders?os=0') Do you want to see them?
             .row
                 .col-sm-2
                     .input-group
@@ -90,7 +95,6 @@ block content
             .row
                 .col-sm-2
                     button#search-btn.btn.btn-danger.waves-effect.waves-float(type='button') Filter Orders
-
             .row
                 - if (orders.length === 0)
                     - link = '/manager/dashboard'

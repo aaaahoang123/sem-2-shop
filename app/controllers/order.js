@@ -205,7 +205,6 @@ module.exports = {
                 next();
                 return;
             }
-            console.log(result);
             // Kết quả trả về có dạng [{meta: [{}], data: [{}]}]. Trong trường hợp không tìm thấy thì đặt res.locals.brands = [] và next()
             if (result.length === 0 || result[0].meta.length === 0) {
                 res.locals.orders = [];
@@ -221,12 +220,24 @@ module.exports = {
                 cpage: cpage,
                 q: req.query.q
             };
-            console.log(res.locals.orders);
             next();
         });
     },
 
-    editOne: (req, res, next)=>{
+    countUnpaid: (req, res, next) => {
+        model.count({status: 0}, (err, result) => {
+            if (err) {
+                console.log(err);
+                if (!res.locals.errs) res.locals.errs = {};
+                res.locals.errs.database = err.message;
+                return next();
+            }
+            res.locals.unpaid_orders_quantity = result;
+            next();
+        });
+    },
+
+    editOne: (req, res, next) => {
         let query = {
             _id: req.params._id
         };
