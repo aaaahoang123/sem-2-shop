@@ -74,7 +74,7 @@ function showAjaxLoaderMessage() {
         showLoaderOnConfirm: true,
     }, function () {
         $.ajax({
-            url: "http://localhost:3000/api/products/"+ products.code,
+            url: "/api/products/"+ products.code,
             type: 'DELETE',
             success: function (res) {
                 console.log(res);
