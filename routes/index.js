@@ -86,7 +86,7 @@ router.get('/order', credentialController.setTokenFromCookie, credentialControll
 
 router.post('/order', credentialController.setTokenFromCookie, credentialController.checkCredential,
     productController.setSelectedProductCodeArrayFromCart, productController.getProductByCodesArray,
-    orderController.validate, orderController.insertOne,
+    orderController.validate, orderController.insertOne, cityNDistrict.getAllCities,
     orderController.responseInsertOneCustomerFormView);
 
 router
