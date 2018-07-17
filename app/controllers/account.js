@@ -96,7 +96,6 @@ module.exports = {
             return;
         }
         const op = req.body.password;
-        console.log('res.local.account', res.locals.account, 'op', op);
         if (op !== res.locals.account.password) {
             req.body.password = bcrypt.hashSync(op, Math.floor((Math.random() * 10) + 1));
         }
@@ -115,7 +114,6 @@ module.exports = {
             }
             let dataUser = res.locals.dataUser;
             dataUser.account = [result];
-            console.log(dataUser);
             res.locals = Object.assign(res.locals, {
                 title: 'Success',
                 detail: 'Update account successfully',
