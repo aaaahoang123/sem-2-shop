@@ -23,25 +23,6 @@ head
 
     block content
 
-    //Newsletter
-    .newsletter
-        .container
-            .row
-                .col
-                    .newsletter_container.d-flex.flex-lg-row.flex-column.align-items-lg-center.align-items-center.justify-content-lg-start.justify-content-center
-                        .newsletter_title_container
-                            .newsletter_icon
-                                img(src='/client/images/send.png' alt='')
-                            .newsletter_title Sign up for Newsletter
-                            .newsletter_text
-                                p ...and receive %20 coupon for first shopping.
-                        .newsletter_content.clearfix
-                            form.newsletter_form(action='#')
-                                input.newsletter_input(type='email' required='required' placeholder='Enter your email address')
-                                button.newsletter_button Subscribe
-                            .newsletter_unsubscribe_link
-                                a(href='#') unsubscribe
-
     // Footer
     footer.footer
         include footer
