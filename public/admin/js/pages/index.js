@@ -244,5 +244,18 @@ $(document).ready(function() {
             group: $('select[name="select-group"]').val(),
             datatype: $('select[name="select-datatype"]').val()
         }).load().render();
+    });
+
+    var chartDetails = {
+        revenue: ['Revenue', 'Revenue, or total price of orders! This charts will show the revenue of the shop through all the time you choose. Each point will show the revenue in a group of time! The default group is Date'],
+        ratio: '',
+        order_quantity: '',
+        order_quantity_in_hour: '',
+        city_revenue_ratio: ''
+    };
+
+    $('.chart-detail-btn').click(function() {
+        var data = chartDetails[$(this).attr('data-detail')];
+        swal(data[0], data[1], 'info');
     })
 });

@@ -7,7 +7,7 @@ block extra-css
     link(href="/admin/plugins/morrisjs/morris.min.css" rel="stylesheet")
     link(rel="stylesheet", href="/admin/plugins/bootstrap-material-datetimepicker/css/bootstrap-material-datetimepicker.css")
     link(rel="stylesheet", href="/admin/plugins/bootstrap-select/css/bootstrap-select.min.css")
-
+    link(rel="stylesheet", href="/admin/plugins/sweetalert/sweetalert.min.css")
 
 block extra-js
     script(type='text/javascript' src='/admin/plugins/jquery-countto/jquery.countTo.min.js')
@@ -16,6 +16,7 @@ block extra-js
     script(type='text/javascript' src='/admin/plugins/momentjs/moment.min.js')
     script(type='text/javascript' src='/admin/plugins/bootstrap-material-datetimepicker/js/bootstrap-material-datetimepicker.min.js')
     script(type='text/javascript' src='/admin/plugins/bootstrap-select/js/bootstrap-select.min.js')
+    script(type='text/javascript' src='/admin/plugins/sweetalert/sweetalert.min.js')
     script(type='text/javascript' src='/admin/js/pages/index.js')
     script(type='text/javascript').
         $(document).ready(function() {
@@ -79,7 +80,9 @@ block content
         .col-lg-12.col-md-12.col-sm-12.col-xs-12
             .card
                 .header
-                    h2 REVENUE
+                    h2 REVENUE&nbsp;
+                        a.chart-detail-btn(style='color:gray' href='javascript:void(0)' data-detail='revenue')
+                            i.material-icons.md-18.md-dark info
                 .body
                     #line_chart.graph
                     
