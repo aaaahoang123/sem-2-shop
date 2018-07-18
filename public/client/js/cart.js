@@ -72,7 +72,7 @@ function showNotification(colorName, text, placementFrom, placementAlign, animat
                 enter: animateEnter,
                 exit: animateExit
             },
-            template: '<div data-notify="container" style="background-color: #2b982b; color: #fff" class="bootstrap-notify-container alert alert-dismissible {0} ' + (allowDismiss ? "p-r-35" : "") + '" role="alert">' +
+            template: '<div data-notify="container" style="background-color: #ff9600; color: #fff" class="bootstrap-notify-container alert alert-dismissible {0} ' + (allowDismiss ? "p-r-35" : "") + '" role="alert">' +
             '<span data-notify="title">{1}</span> ' +
             '<span data-notify="message">{2}</span>' +
             '<div class="progress" data-notify="progressbar">' +

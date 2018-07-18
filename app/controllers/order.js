@@ -151,6 +151,7 @@ module.exports = {
             },
             {
                 '$facet': {
+                    total_revenue: [{$group: {_id: null, total: {$sum: '$total'}}}],
                     meta: [{$count: "totalItems"}],
                     data: [{$skip: skip}, {$limit: limit}] // add projection here wish you re-shape the docs
                 }
@@ -232,6 +233,7 @@ module.exports = {
                 offset: skip,
                 cpage: cpage,
             };
+            res.locals.total_revenue = result[0].total_revenue[0].total;
             res.locals.filter = {
                 oq: req.query.oq,
                 ofrom: req.query.ofrom,
@@ -426,7 +428,10 @@ module.exports = {
                         }
                     }
                 ];
-                if (dataType === 'order_quantity') pipeline[1].$facet[dataType][0].$group._id[group] = '$created_at';
+                if (dataType === 'order_quantity') {
+                    if (group === '$date') pipeline[1].$facet[dataType][0].$group._id = {year: {$year: '$created_at'}, month: {$month: '$created_at'}, day: {$dayOfMonth: '$created_at'}};
+                    else pipeline[1].$facet[dataType][0].$group._id[group] = '$created_at';
+                }
                 else if (dataType === 'order_quantity_in_hour') pipeline[1].$facet.order_quantity_in_hour[0].$group._id.$hour = '$created_at';
             }
 
@@ -446,7 +451,8 @@ module.exports = {
                         }
                     },
                 ];
-                pipeline[1].$facet[dataType][0].$group._id[group] = '$created_at';
+                if (group === '$date') pipeline[1].$facet[dataType][0].$group._id = {year: {$year: '$created_at'}, month: {$month: '$created_at'}, day: {$dayOfMonth: '$created_at'}};
+                else pipeline[1].$facet[dataType][0].$group._id[group] = '$created_at';
             }
 
             if (dataType === 'ratio') {

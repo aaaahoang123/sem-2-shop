@@ -1,6 +1,6 @@
 ﻿function MyChart(option) {
     this.datatype = option.datatype&&typeof option.datatype==='object'?option.datatype.toString().replace(/,/g, '-'):option.datatype || 'order_quantity-revenue-ratio-city_revenue_ratio-order_quantity_in_hour';
-    this.group = option.group || '$dayOfWeek';
+    this.group = option.group || '$date';
     this.ofrom = !option.ofrom?'':moment(option.ofrom).format('x');
     this.oto = !option.oto?'':moment(option.oto).add(1, 'day').format('x');
     this.ORDER_QUANTITY_ELEM = 'bar_chart';
@@ -32,6 +32,12 @@ MyChart.prototype = {
                             d._id = dayNames[d._id];
                             return d;
                         });
+                    }
+                    if (self.group === '$date') {
+                        data = data.map(function (d) {
+                            d._id = `${d._id.day}/${d._id.month}/${d._id.year}`;
+                            return d;
+                        })
                     }
                     var keys = Object.keys(data[0]);
                     $('#'+self.ORDER_QUANTITY_ELEM).html('');
@@ -114,6 +120,12 @@ MyChart.prototype = {
                             d._id = dayNames[d._id];
                             return d;
                         });
+                    }
+                    if (self.group === '$date') {
+                        data = data.map(function (d) {
+                            d._id = `${d._id.day}/${d._id.month}/${d._id.year}`;
+                            return d;
+                        })
                     }
                     var keys = Object.keys(data[0]);
                     $('#' + self.REVENUE_ELEM).html('');
@@ -232,9 +244,23 @@ MyChart.prototype = {
 };
 
 $(document).ready(function() {
+    var ofrom = moment().millisecond(0).second(0).minute(0).hour(0).weekday(0).subtract(new Date().getTimezoneOffset(), 'm').format(),
+        oto = moment();
+    if (location.search) {
+        var tempArr = location.search.replace('?', '').split('&');
+        tempArr.forEach(function (s) {
+            if (s.includes('ofrom=')) {
+                ofrom = s.replace('ofrom=', '');
+                $('input[name="input-ofrom"]').val(s.replace('ofrom=', ''));
+            } else if (s.includes('oto=')) {
+                oto = s.replace('oto=', '');
+                $('input[name="input-oto"]').val(s.replace('oto=', ''));
+            }
+        })
+    }
     new MyChart({
-        ofrom: moment().millisecond(0).second(0).minute(0).hour(0).weekday(0).subtract(new Date().getTimezoneOffset(), 'm').format(),
-        oto: moment()
+        ofrom: ofrom,
+        oto: oto
     }).load().render();
 
     $('#load-charts-btn').on('click', function() {
