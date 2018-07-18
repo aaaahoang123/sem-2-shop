@@ -2,6 +2,15 @@
     $('button.btn.btn-link.waves-effect[data-t="2"]').on('click', function (){showAjaxLoaderMessage('accept', this)});
     $('button.btn.btn-link.waves-effect[data-t="1"]').on('click', function (){showAjaxLoaderMessage('done', this)});
     $('button.btn.btn-link.waves-effect[data-t="-1"]').on('click', function (){showAjaxLoaderMessage('reject', this)});
+    $('#show-chart-btn').click(function () {
+        var href = '/manager/dashboard?',
+            ofrom = $('input.query-input.form-control[data-query="ofrom"]').val(),
+            oto = $('input.query-input.form-control[data-query="oto"]').val();
+        if (ofrom) href += 'ofrom=' + ofrom + '&';
+        if (oto) href += 'oto=' + oto + '&';
+        href = href.slice(0, href.length - 1);
+        location.href = href;
+    })
 })();
 
 function showAjaxLoaderMessage(type, el) {
