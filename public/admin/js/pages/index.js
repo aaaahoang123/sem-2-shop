@@ -274,10 +274,10 @@ $(document).ready(function() {
 
     var chartDetails = {
         revenue: ['Revenue', 'Revenue, or total price of orders! This charts will show the revenue of the shop through all the time you choose. Each point will show the revenue in a group of time! The default group is Date'],
-        ratio: '',
-        order_quantity: '',
-        order_quantity_in_hour: '',
-        city_revenue_ratio: ''
+        ratio: ['Ratio of Products', 'This chart show you the ratio some hot sale products, in the total quantity of products that saled in all the time you choose!'],
+        order_quantity: ["Order's Quantity", 'This chart show you the order of quantity in time. Each column will be a group of time you choose. The default group is date!'],
+        order_quantity_in_hour: ["Order's Quantity in Time Slot", 'This chart show you the time slot haved most many orders in time!'],
+        city_revenue_ratio: ['Ratio revenue of cities', 'This chart show you the ratio of revenue in each city!']
     };
 
     $('.chart-detail-btn').click(function() {

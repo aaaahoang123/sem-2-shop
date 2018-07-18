@@ -89,26 +89,34 @@ block content
         .col-lg-4.col-md-4.col-sm-12.col-xs-12
             .card
                 .header
-                    h2 RATIO OF PRODUCTS
+                    h2 RATIO OF PRODUCTS&nbsp;
+                        a.chart-detail-btn(style='color:gray' href='javascript:void(0)' data-detail='ratio')
+                            i.material-icons.md-18.md-dark info
                 .body
                     #donut_chart.graph
         .col-lg-8.col-md-8.col-sm-12.col-xs-12
             .card
                 .header
-                    h2 QUANTITY OF ORDER
+                    h2 QUANTITY OF ORDER&nbsp;
+                        a.chart-detail-btn(style='color:gray' href='javascript:void(0)' data-detail='order_quantity')
+                            i.material-icons.md-18.md-dark info
                 .body
                     #bar_chart.graph
 
         .col-lg-4.col-md-4.col-sm-12.col-xs-12
             .card
                 .header
-                    h2 RATIO REVENUE BY CITIES
+                    h2 RATIO REVENUE BY CITIES&nbsp;
+                        a.chart-detail-btn(style='color:gray' href='javascript:void(0)' data-detail='city_revenue_ratio')
+                            i.material-icons.md-18.md-dark info
                 .body
                     #city_ratio_chart.graph
 
         .col-lg-8.col-md-8.col-sm-12.col-xs-12
             .card
                 .header
-                    h2 QUANTITY OF ORDER IN TIME SLOT
+                    h2 QUANTITY OF ORDER IN TIME SLOT&nbsp;
+                        a.chart-detail-btn(style='color:gray' href='javascript:void(0)' data-detail='order_quantity_in_hour')
+                            i.material-icons.md-18.md-dark info
                 .body
                     #order_quantity_in_hour.graph
