@@ -20,48 +20,16 @@
                         li
                             a(href=webConfig.contact.instagram)
                                 i.fab.fa-instagram
-        .col-lg-2.offset-lg-2
-            .footer_column
-                .footer_title Find it Fast
-                ul.footer_list
-                    li
-                        a(href='#') Computers &amp; Laptops
-                    li
-                        a(href='#') Cameras &amp; Photos
-                    li
-                        a(href='#') Hardware
-                    li
-                        a(href='#') Smartphones &amp; Tablets
-                    li
-                        a(href='#') TV &amp; Audio
-        .col-lg-2
-            .footer_column
-                .footer_title Find it Fast
-                ul.footer_list
-                    li
-                        a(href='#') Video Games &amp; Consoles
-                    li
-                        a(href='#') Accessories
-                    li
-                        a(href='#') Cameras &amp; Photos
-                    li
-                        a(href='#') Hardware
-                    li
-                        a(href='#') Computers &amp; Laptops
-        .col-lg-2
-            .footer_column
-                .footer_title Customer Care
-                ul.footer_list
-                    li
-                        a(href='#') My Account
-                    li
-                        a(href='#') Order Tracking
-                    li
-                        a(href='#') Wish List
-                    li
-                        a(href='#') Customer Services
-                    li
-                        a(href='#') Returns / Exchange
+        - if (webConfig.footer && webConfig.footer.length !== 0)
+            - for (var i = 0; i < webConfig.footer.length; i ++)
+                .col-lg-2(class=i===0?'offset-lg-2':'')
+                    .footer_column
+                        .footer_title #{webConfig.footer[i].title}
+                        ul.footer_list
+                            - for (var j = 0; j < webConfig.footer[i].blogs.length; j ++)
+                                - uri_title = "/blog/" + webConfig.footer[i].blogs[j].replace(/\s/g, '-');
+                                li
+                                    a(href=uri_title) #{webConfig.footer[i].blogs[j]}
 // Copyright
 .copyright
     .container
@@ -73,11 +41,7 @@
                         | Copyright &copy;
                         script.
                             document.write(new Date().getFullYear());
-                        |  All rights reserved | This template is made with
-                        i.fa.fa-heart(aria-hidden='true')
-                        |  by
-                        a(href='https://colorlib.com' target='_blank') Colorlib
-                        // Link back to Colorlib can't be removed. Template is licensed under CC BY 3.0.
+                        |  All rights reserved
                     .logos.ml-sm-auto
                         ul.logos_list
                             li

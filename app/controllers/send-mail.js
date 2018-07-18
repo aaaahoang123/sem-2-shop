@@ -47,7 +47,7 @@ module.exports = {
                     detail: 'Send Message Successfully',
                     link: '/contact'
                 };
-                console.log('Email sent: ' + info.response);
+                console.log('Email sent: ', info.response);
                 next();
             }
         });
@@ -58,7 +58,7 @@ module.exports = {
         if (res.locals.errs && Object.keys(res.locals.errs).length !== 0) {
             res.render('client/pages/contact', {contact: req.body});
         } else {
-            res.render('index');
+            res.redirect('/contact?message=send-success');
         }
     }
 };

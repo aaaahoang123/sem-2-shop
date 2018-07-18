@@ -1,11 +1,15 @@
 extends ../../layouts/master
 
+block title
+    title Order Form
+
 block extra-css
     link(rel='stylesheet' href='/admin/plugins/bootstrap-select/css/bootstrap-select.min.css')
 
 block extra-js
     script(type='text/javascript' src='/admin/plugins/autosize/autosize.min.js')
     script(type='text/javascript' src='/admin/plugins/js-cookie/js.cookie.min.js')
+    script(type="text/javascript" src="/admin/plugins/bootstrap-notify/bootstrap-notify.min.js")
     script(type='text/javascript' src='/admin/js/pages/orders/order-form.js')
 
 block content

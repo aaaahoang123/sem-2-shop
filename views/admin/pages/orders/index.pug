@@ -1,5 +1,8 @@
 extends ../../layouts/master
 
+block title
+    title Orders
+
 block extra-css
     link(rel='stylesheet' href='/admin/plugins/bootstrap-material-datetimepicker/css/bootstrap-material-datetimepicker.css')
     link(rel='stylesheet' href='/admin/plugins/waitme/waitMe.min.css')
@@ -21,6 +24,7 @@ block extra-js
                 success: function (res) {
                     var s = $('#select-district');
                     s.html('');
+                    s.append($('<option>').val('').text('--District Choose--'))
                     res.forEach(function (d) {
                         s.append($('<option>').val(d.ID).text(d.Title))
                     });
@@ -53,119 +57,128 @@ block content
                         li
                             a(href='javascript:void(0);') Something else here
         .body.table-responsive
+            - if (unpaid_orders_quantity&&unpaid_orders_quantity!==0)
+                .alert.alert-warning
+                    strong Unpaid orders detected!
+                    |  There are #{unpaid_orders_quantity} unpaid orders!&nbsp;
+                    a.alert-link(href='/manager/orders?os=0') Do you want to see them?
             .row
                 .col-sm-2
                     .input-group
                         .form-line
-                            input.query-input.datepicker.form-control.show-tick.no-resize(type='text' placeholder='--From Date--' data-query='ofrom')
+                            input.query-input.datepicker.form-control.show-tick.no-resize(type='text' placeholder='--From Date--' data-query='ofrom' value=(filter && filter.ofrom)?filter.ofrom:'')
 
                 .col-sm-2
                     .input-group
                         .form-line
-                            input.query-input.datepicker.form-control.show-tick.no-resize(type='text' placeholder='--To Date--' data-query='oto')
+                            input.query-input.datepicker.form-control.show-tick.no-resize(type='text' placeholder='--To Date--' data-query='oto' value=(filter && filter.oto)?filter.oto:'')
 
                 .col-sm-2
                     .form-group
                         .form-line
-                            input.query-input.form-control(type='text', placeholder='Search' value=meta && meta.q ? meta.q : '' data-query='oq')
+                            input.query-input.form-control(type='text', placeholder='Search' value=(filter && filter.oq)?filter.oq:'' data-query='oq')
 
                 .col-sm-2
                     select.query-input.form-control.show-tick(data-query='os')
                         option(value='') --Status Choose--
-                        option(value=0) Unpaid
-                        option(value=2) Accept
-                        option(value=1) Done
-                        option(value=-1) Reject
+                        option(value=0 selected=(filter && filter.os && filter.os === '0')) Unpaid
+                        option(value=2 selected=(filter && filter.os && filter.os === '2')) Accept
+                        option(value=1 selected=(filter && filter.os && filter.os === '1')) Done
+                        option(value=-1 selected=(filter && filter.os && filter.os === '-1')) Reject
 
                 .col-sm-2
                     select#select-city.query-input.form-control.show-tick(data-live-search='true' data-query='oc')
                         option(value='') --City Choose--
                         - if (cities&&cities.length !=0)
                             - for (city of cities)
-                                option(value=city.ID)= city.Title
+                                option(value=city.ID selected=(filter && filter.oc && filter.oc === city.ID.toString()))= city.Title
 
                 .col-sm-2
-                    select#select-district.query-input.form-control.show-tick(data-live-search='true' disabled data-query='od')
-
-            .row
-                .col-sm-2
-                    button#search-btn.btn.btn-danger.waves-effect.waves-float(type='button') Filter Orders
+                    select#select-district.query-input.form-control.show-tick(data-live-search='true' disabled data-query='od' data-district=(filter && filter.od)?filter.od:'' data-city=(filter && filter.oc)?filter.oc:'')
 
             .row
                 .col-sm-12
-                    table.table.table-bordered.table-hover
-                        thead
-                            tr
-                                th.text-center #
-                                th.text-center DATE
-                                th.text-center PRICE
-                                th.text-center PRODUCT
-                                th.text-center ADDRESS
-                                th.text-center STATUS
-                                th.text-center ACTION
-                        tbody.text-center
-                            - let length = orders.length;
-                            - for (let i = 0; i < length; i ++)
+                    button#search-btn.btn.btn-danger.waves-effect.waves-float(type='button') Filter Orders
+                    a.btn.bg-cyan.waves-effect.waves-float.m-l-5(href='/manager/dashboard') Show Charts
+            .row
+                - if (orders.length === 0)
+                    - link = '/manager/dashboard'
+                    include 404
+                - else
+                    .col-sm-12
+                        table.table.table-bordered.table-hover
+                            thead
                                 tr
-                                    th(scope='row') #{i + 1}
-                                    td
-                                         -if(orders[i].created_at)
-                                             | #{new Date(orders[i].created_at).toLocaleDateString()}
-                                    td #{orders[i].total}
-                                    td
-                                        - for(p of orders[i].products)
-                                            p
-                                                | #{p.name + ' - ' + p.price + ' - ' + p.quantity}
-                                    td #{orders[i].receiver_address}
-                                    td
-                                        - if (orders[i].status === -1)
-                                            b.text-danger Rejected
-                                        - if (orders[i].status === 0)
-                                            b.text-warning Unpaid
-                                        - if (orders[i].status === 2)
-                                            b.text-success Accepted
-                                        - if (orders[i].status === 1)
-                                            b.text-primary Done
-                                    td
-                                        button.btn.btn-link.waves-effect(type='button', data-type="ajax-loader" data-t='2' data-b=orders[i]._id)
-                                            i.material-icons eject
-                                        button.btn.btn-link.waves-effect(type='button', data-type="ajax-loader" data-t='1' data-b=orders[i]._id)
-                                            i.material-icons check_circle
-                                        button.btn.btn-link.waves-effect(type='button', data-type="ajax-loader" data-t='-1' data-b=orders[i]._id)
-                                            i.material-icons delete
+                                    th.text-center #
+                                    th.text-center DATE
+                                    th.text-center PRICE
+                                    th.text-center PRODUCT
+                                    th.text-center ADDRESS
+                                    th.text-center STATUS
+                                    th.text-center ACTION
+                            tbody.text-center
+                                - let length = orders.length;
+                                - for (let i = 0; i < length; i ++)
+                                    tr
+                                        th(scope='row') #{i + 1}
+                                        td
+                                             -if(orders[i].created_at)
+                                                 | #{new Date(orders[i].created_at).toLocaleDateString()}
+                                        td #{orders[i].total}
+                                        td
+                                            - for(p of orders[i].products)
+                                                p
+                                                    | #{p.name + ' - ' + p.price + ' - ' + p.quantity}
+                                        td #{orders[i].receiver_address}
+                                        td
+                                            - if (orders[i].status === -1)
+                                                b.text-danger Rejected
+                                            - if (orders[i].status === 0)
+                                                b.text-warning Unpaid
+                                            - if (orders[i].status === 2)
+                                                b.text-success Accepted
+                                            - if (orders[i].status === 1)
+                                                b.text-primary Done
+                                        td
+                                            button.btn.btn-link.waves-effect(type='button', data-type="ajax-loader" data-t='2' data-b=orders[i]._id)
+                                                i.material-icons eject
+                                            button.btn.btn-link.waves-effect(type='button', data-type="ajax-loader" data-t='1' data-b=orders[i]._id)
+                                                i.material-icons check_circle
+                                            button.btn.btn-link.waves-effect(type='button', data-type="ajax-loader" data-t='-1' data-b=orders[i]._id)
+                                                i.material-icons delete
 
-            - if (meta)
-                - let limit = ''
-                - let q = ''
-                - if (meta.limit !== 10)
-                    - limit += '&limit=' + meta.limit
-                -if (meta.q)
-                    - q = '&q=' + meta.q
-                .row.text-right
-                     ul.pagination(style='margin-right: 1%')
-                        - if (meta.cpage === 1)
-                            li.paginate_button.disabled
-                                a First
-                        - else
-                            li.paginate_button
-                                a(data-page='1' href='javascript:void(0)') First
-                        - let i = meta.cpage > 5 ? meta.cpage - 4 : 1
-                        - if (i !== 1)
-                            li.paginate_button.disabled
-                                a ...
-                        - for (; i <= meta.cpage + 4 && i <= meta.total; i ++)
-                            - if (i === meta.cpage)
-                                li.paginate_button.active
-                                    a= i
+                - if (meta)
+                    - let limit = ''
+                    - let q = ''
+                    - if (meta.limit !== 10)
+                        - limit += '&limit=' + meta.limit
+                    -if (meta.q)
+                        - q = '&q=' + meta.q
+                    .row.text-right
+                         ul.pagination(style='margin-right: 1%')
+                            - if (meta.cpage === 1)
+                                li.paginate_button.disabled
+                                    a First
                             - else
                                 li.paginate_button
-                                    a(data-page=i href='javascript:void(0)')= i
-                            - if (i === meta.cpage + 4 && i < meta.total)
+                                    a(data-page='1' href='javascript:void(0)') First
+                            - let i = meta.cpage > 5 ? meta.cpage - 4 : 1
+                            - if (i !== 1)
                                 li.paginate_button.disabled
                                     a ...
-                        - if (meta.cpage === meta.total)
-                            li.paginate_button.disabled
-                                a Last
-                        - else
-                            li.paginate_button
-                                a(data-page=meta.total href='javascript:void(0)') Last
+                            - for (; i <= meta.cpage + 4 && i <= meta.total; i ++)
+                                - if (i === meta.cpage)
+                                    li.paginate_button.active
+                                        a= i
+                                - else
+                                    li.paginate_button
+                                        a(data-page=i href='javascript:void(0)')= i
+                                - if (i === meta.cpage + 4 && i < meta.total)
+                                    li.paginate_button.disabled
+                                        a ...
+                            - if (meta.cpage === meta.total)
+                                li.paginate_button.disabled
+                                    a Last
+                            - else
+                                li.paginate_button
+                                    a(data-page=meta.total href='javascript:void(0)') Last

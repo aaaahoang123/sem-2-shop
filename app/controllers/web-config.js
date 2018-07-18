@@ -68,7 +68,6 @@ module.exports = {
                 console.log(err);
                 next();
             }
-            console.log(result);
             res.locals.top_categories = result;
             next();
         });

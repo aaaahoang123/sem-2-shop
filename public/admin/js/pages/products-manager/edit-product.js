@@ -28,7 +28,7 @@ $("#edit-btn-submit").click(function () {
         };
 
         var req = new XMLHttpRequest();
-        req.open("PUT", "http://localhost:3000/api/products/"+ forms['code'].value);
+        req.open("PUT", "/api/products/"+ forms['code'].value);
         req.setRequestHeader("Content-Type", "application/json");
         req.onload = function () {
             console.log(this.responseText);

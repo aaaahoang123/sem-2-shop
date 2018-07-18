@@ -2,7 +2,13 @@
 
 const router = require('express').Router({});
 const controller = require('../../app/controllers/footer');
+const blogController = require('../../app/controllers/blog');
 router
-    .get('/', controller.getFooterBlog, (req, res) => res.render('admin/pages/web-config/footer', {path: '/web-config/footer'}));
+    .get('/',(req, res, next) => {
+    req.query.limit = '50';
+    next();
+}, blogController.getList,
+        controller.getFooterBlog,
+        (req, res) => res.render('admin/pages/web-config/footer', {path: '/web-config/footer'}));
 
 module.exports = router;

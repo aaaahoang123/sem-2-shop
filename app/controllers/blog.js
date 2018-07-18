@@ -38,14 +38,16 @@ module.exports = {
         };
         model.find(query, function (err, result) {
             if (err) {
+                console.log("vao day me r");
                 console.log(err);
                 if (!res.locals.errs) res.locals.errs = {};
                 res.locals.errs.database = err.message;
                 return next();
             }
+            console.log(result.length);
             if (result.length !== 0) {
                 res.locals.blog = result[0];
-                console.log(res.locals.blog);
+                console.log("blog: ", res.locals.blog);
             }
             next();
         });
@@ -188,7 +190,7 @@ module.exports = {
                 title: 'ADD BLOG'
             });
         } else {
-            res.render('index');
+            res.redirect('/manager/web-config/blogs/create?message=add-success');
         }
     },
 
@@ -210,7 +212,7 @@ module.exports = {
             });
             return;
         }
-        res.render('index');
+        res.redirect(`/manager/web-config/blogs/${res.locals.result.uri_title}/edit?message=edit-success`);
     },
 
     responseBrandTable: (req, res) => res.render('admin/pages/web-config/blogs', {path: '/web-config/blogs'})

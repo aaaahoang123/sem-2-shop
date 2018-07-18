@@ -91,6 +91,7 @@ module.exports = {
 
     updateOne: (req, res, next) => {
         if (res.locals.errs && Object.keys(res.locals.errs).length !== 0) {
+            res.locals.dataUser.account = [req.body];
             next();
             return;
         }
@@ -102,17 +103,23 @@ module.exports = {
         model.findOneAndUpdate({username: res.locals.account.username}, {$set: req.body}, {new: true}, (err, result) => {
             if (err) {
                 console.log(err);
+                let dataUser = res.locals.dataUser;
+                dataUser.account = [req.body];
                 if (!res.locals.errs) res.locals.errs = {};
                 res.locals.errs.database = err.message;
+                res.locals.dataUser = dataUser;
                 req.body.password = op;
                 next();
                 return;
             }
+            let dataUser = res.locals.dataUser;
+            dataUser.account = [result];
             res.locals = Object.assign(res.locals, {
                 title: 'Success',
                 detail: 'Update account successfully',
-                link: '/manager/users-manager/users/',
-                result: result
+                link: '/manager/dashboard/users-manager/users/',
+                result: result,
+                dataUser: dataUser
             });
             next();
         });
@@ -212,14 +219,13 @@ module.exports = {
 
     responseInsertOneByAccountFormView: (req, res) => {
         if (res.locals.errs && Object.keys(res.locals.errs).length !== 0) {
-            console.log(req.cookies.user);
             res.render('admin/pages/users-manager/accounts-form', {
                 path: '/users-manager/users',
                 account: req.body,
                 user: req.cookies.user
             });
         } else {
-            res.render('index');
+            res.redirect(`/manager/users-manager/users/${req.params.mid}?message=add-account-success`);
         }
     },
 
@@ -234,7 +240,7 @@ module.exports = {
             });
             return;
         }
-        res.render('index');
+        res.redirect(`/manager/users-manager/users/${req.params.mid}?message=edit-account-success`);
     },
 
     setUserIdAfterInsertUser: (req, res, next) => {

@@ -69,88 +69,93 @@ module.exports = {
          */
 
         let query = [
-                {
-                    "$match" : {
-                        "status" : {
-                            "$in": [0,1,2]
-                        }
+            {
+                "$match" : {
+                    "status" : {
+                        "$in": [0,1,2]
                     }
-                },
-                {
-                    "$unwind" : "$products"
-                },
-                {
-                    "$lookup" : {
-                        "from" : "products",
-                        "localField" : "products._id",
-                        "foreignField" : "_id",
-                        "as" : "ps"
-                    }
-                },
-                {
-                    "$group" : {
-                        "_id" : "$_id",
-                        "status" : {
-                            "$first" : "$status"
-                        },
-                        "receiver_email" : {
-                            "$first" : "$receiver_email"
-                        },
-                        "receiver_phone" : {
-                            "$first" : "$receiver_phone"
-                        },
-                        "receiver_city" : {
-                            "$first" : "$receiver_city"
-                        },
-                        "receiver_district" : {
-                            "$first" : "$receiver_district"
-                        },
-                        "receiver_address" : {
-                            "$first" : "$receiver_address"
-                        },
-                        "created_by" : {
-                            "$first" : "$created_by"
-                        },
-                        "updated_by" : {
-                            "$first" : "$updated_by"
-                        },
-                        "created_at" : {
-                            "$first" : "$created_at"
-                        },
-                        "updated_at" : {
-                            "$first" : "$updated_at"
-                        },
-                        "total" : {
-                            "$first" : "$total"
-                        },
-                        "products" : {
-                            "$push" : {
-                                "$arrayToObject" : {
-                                    "$setUnion" : [
-                                        {
-                                            "$objectToArray" : "$products"
-                                        },
-                                        {
-                                            "$objectToArray" : {
-                                                "$arrayElemAt" : [
-                                                    "$ps",
-                                                    0.0
-                                                ]
-                                            }
+                }
+            },
+            {
+                "$unwind" : "$products"
+            },
+            {
+                "$lookup" : {
+                    "from" : "products",
+                    "localField" : "products._id",
+                    "foreignField" : "_id",
+                    "as" : "ps"
+                }
+            },
+            {
+                "$group" : {
+                    "_id" : "$_id",
+                    "status" : {
+                        "$first" : "$status"
+                    },
+                    "receiver_email" : {
+                        "$first" : "$receiver_email"
+                    },
+                    "receiver_phone" : {
+                        "$first" : "$receiver_phone"
+                    },
+                    "receiver_city" : {
+                        "$first" : "$receiver_city"
+                    },
+                    "receiver_district" : {
+                        "$first" : "$receiver_district"
+                    },
+                    "receiver_address" : {
+                        "$first" : "$receiver_address"
+                    },
+                    "created_by" : {
+                        "$first" : "$created_by"
+                    },
+                    "updated_by" : {
+                        "$first" : "$updated_by"
+                    },
+                    "created_at" : {
+                        "$first" : "$created_at"
+                    },
+                    "updated_at" : {
+                        "$first" : "$updated_at"
+                    },
+                    "total" : {
+                        "$first" : "$total"
+                    },
+                    "products" : {
+                        "$push" : {
+                            "$arrayToObject" : {
+                                "$setUnion" : [
+                                    {
+                                        "$objectToArray" : "$products"
+                                    },
+                                    {
+                                        "$objectToArray" : {
+                                            "$arrayElemAt" : [
+                                                "$ps",
+                                                0.0
+                                            ]
                                         }
-                                    ]
-                                }
+                                    }
+                                ]
                             }
                         }
                     }
-                },
-                {
-                    '$facet': {
-                        meta: [{$count: "totalItems"}],
-                        data: [{$skip: skip}, {$limit: limit}] // add projection here wish you re-shape the docs
-                    }
                 }
-            ];
+            },
+            {
+                $sort: {
+                    created_at: -1
+                }
+            },
+            {
+                '$facet': {
+                    meta: [{$count: "totalItems"}],
+                    data: [{$skip: skip}, {$limit: limit}] // add projection here wish you re-shape the docs
+                }
+            }
+        ];
 
         /**
          * Nếu có tìm kiếm, tạo match và đẩy vào đầu array query
@@ -205,10 +210,17 @@ module.exports = {
                 next();
                 return;
             }
-            console.log(result);
             // Kết quả trả về có dạng [{meta: [{}], data: [{}]}]. Trong trường hợp không tìm thấy thì đặt res.locals.brands = [] và next()
             if (result.length === 0 || result[0].meta.length === 0) {
                 res.locals.orders = [];
+                res.locals.filter = {
+                    oq: req.query.oq,
+                    ofrom: req.query.ofrom,
+                    oto: req.query.oto,
+                    os: req.query.os,
+                    oc: req.query.oc,
+                    od: req.query.od,
+                };
                 return next();
             }
             res.locals.orders = result[0].data;
@@ -219,14 +231,33 @@ module.exports = {
                 limit: limit,
                 offset: skip,
                 cpage: cpage,
-                q: req.query.q
             };
-            console.log(res.locals.orders);
+            res.locals.filter = {
+                oq: req.query.oq,
+                ofrom: req.query.ofrom,
+                oto: req.query.oto,
+                os: req.query.os,
+                oc: req.query.oc,
+                od: req.query.od,
+            };
             next();
         });
     },
 
-    editOne: (req, res, next)=>{
+    countUnpaid: (req, res, next) => {
+        model.count({status: 0}, (err, result) => {
+            if (err) {
+                console.log(err);
+                if (!res.locals.errs) res.locals.errs = {};
+                res.locals.errs.database = err.message;
+                return next();
+            }
+            res.locals.unpaid_orders_quantity = result;
+            next();
+        });
+    },
+
+    editOne: (req, res, next) => {
         let query = {
             _id: req.params._id
         };

@@ -1,4 +1,18 @@
 $(function () {
+    $('input:checkbox').on('click', function () {
+        var $box = $(this);
+        if ($box.is(":checked")) {
+            let code = $box.val();
+            $.post('/api/carousel', {"data": JSON.stringify(code)}).done(function () {
+                showNotification("alert-success", "Set slice successfully!", "bottom", "right", "animated bounceIn", "animated bounceOut");
+            })
+        } else {
+            let code = $box.val();
+            $.post('/api/carousel/delete', {"data": JSON.stringify(code)}).done(function () {
+                showNotification("alert-success", "Unset slice successfully!", "bottom", "right", "animated bounceIn", "animated bounceOut");
+            })
+        }
+    });
 
     // sweetalert
     $('.js-sweetalert button[data-type="ajax-loader"]').on('click', showAjaxLoaderMessage);
@@ -60,7 +74,7 @@ function showAjaxLoaderMessage() {
         showLoaderOnConfirm: true,
     }, function () {
         $.ajax({
-            url: "http://localhost:3000/api/products/"+ products.code,
+            url: "/api/products/"+ products.code,
             type: 'DELETE',
             success: function (res) {
                 console.log(res);
@@ -104,4 +118,38 @@ function changeSearchByInput(el, except) {
     }
     href += except + $(el).val();
     location.search = href;
+}
+
+function showNotification(colorName, text, placementFrom, placementAlign, animateEnter, animateExit) {
+    if (colorName === null || colorName === '') { colorName = 'bg-black'; }
+    if (text === null || text === '') { text = 'Turning standard Bootstrap alerts'; }
+    if (animateEnter === null || animateEnter === '') { animateEnter = 'animated fadeInDown'; }
+    if (animateExit === null || animateExit === '') { animateExit = 'animated fadeOutUp'; }
+    var allowDismiss = true;
+
+    $.notify({
+            message: text
+        },
+        {
+            type: colorName,
+            allow_dismiss: allowDismiss,
+            newest_on_top: true,
+            timer: 1000,
+            placement: {
+                from: placementFrom,
+                align: placementAlign
+            },
+            animate: {
+                enter: animateEnter,
+                exit: animateExit
+            },
+            template: '<div data-notify="container" style="background-color: #2b982b; color: #fff" class="bootstrap-notify-container alert alert-dismissible {0} ' + (allowDismiss ? "p-r-35" : "") + '" role="alert">' +
+            '<span data-notify="title">{1}</span> ' +
+            '<span data-notify="message">{2}</span>' +
+            '<div class="progress" data-notify="progressbar">' +
+            '<div class="progress-bar progress-bar-{0}" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width: 0%;"></div>' +
+            '</div>' +
+            '<a href="{3}" target="{4}" data-notify="url"></a>' +
+            '</div>'
+        });
 }

@@ -1,5 +1,8 @@
 extends ../../layouts/master
 
+block title
+    title Blogs
+
 block extra-css
     link(href='/admin/css/brands.css' rel='stylesheet')
     link(rel='stylesheet' href='/admin/plugins/bootstrap-select/css/bootstrap-select.min.css')
@@ -52,7 +55,8 @@ block content
                         i.material-icons search
         - if (blogs.length === 0)
             - link = '/manager/web-config/blogs'
-            include 404
+            - items = 'blogs'
+            include 404-item
         - else
             .body
                 .table-responsive

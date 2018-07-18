@@ -1,11 +1,11 @@
 {
   "top_categories": [
-    "5b33b3ffbb75c6097016da46",
     "5b33b579bb75c6097016da47",
+    "5b33b3ffbb75c6097016da46",
     "5b33b59cbb75c6097016da48"
   ],
   "contact": {
-    "email": "shinkenger.vn9x@gmail.com",
+    "email": "sonhtd00496@fpt.edu.vn",
     "phone": "+84123456879",
     "address": "8 Tôn Thất Thuyết, Cầu Giấy, Hà Nội",
     "facebook": "https://www.facebook.com",
@@ -13,7 +13,7 @@
     "twitter": "https://twitter.com"
   },
   "information": {
-    "aboutUs": "<p>ds</p>\r\n",
+    "aboutUs": "<p>d kmm</p>\r\n",
     "slogan": "jkjkii",
     "name": "MyPhone",
     "logo": "https://res.cloudinary.com/fpt-aptech/image/upload/v1531062065/dycuga4hz2a69euuimj9.png"
@@ -42,18 +42,33 @@
   ],
   "footer": [
     {
-      "title": "Chính sách 1111111111111111",
+      "title": "Blog 12",
       "blogs": [
-        "Dien thoai iphone 111111111111",
-        "xyz"
+        "Why indestructible camera is a bad idea: Look at the \"cricket\", the first Android and Nokia",
+        "Nokia 7 Plus entered the top 10 most popular phones in the first half of 2018",
+        "Apple orders LG to produce 4 million OLEDs for the iPhone"
       ]
     },
     {
-      "title": "Chính sách 2",
+      "title": "Blog 2",
       "blogs": [
-        "Dien thoai iphone 11",
-        ""
+        "Named the most historic rocket launch ever, a rocket launcher crashed into the ground",
+        "Nokia 7 Plus entered the top 10 most popular phones in the first half of 2018",
+        "Apple's self-driving project was revealed through the arrest of former employees"
+      ]
+    },
+    {
+      "title": "Blog 3",
+      "blogs": [
+        "Galaxy Note 9 will be available for sale early on August 24 to run on sales",
+        "For only $ 200,000, Jeff Bezos can make the dream of travel into space become reality",
+        "Nokia 7 Plus entered the top 10 most popular phones in the first half of 2018"
       ]
     }
+  ],
+  "carousel": [
+    "mb-pro-13-tb-256-2017",
+    "dell-xps-13-i5",
+    "ideapad-1"
   ]
 }

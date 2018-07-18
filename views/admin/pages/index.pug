@@ -1,114 +1,111 @@
 extends ../layouts/master
 
+block title
+    title Dashboard
+
 block extra-css
     link(href="/admin/plugins/morrisjs/morris.min.css" rel="stylesheet")
+    link(rel="stylesheet", href="/admin/plugins/bootstrap-material-datetimepicker/css/bootstrap-material-datetimepicker.css")
+    link(rel="stylesheet", href="/admin/plugins/bootstrap-select/css/bootstrap-select.min.css")
+
+
 block extra-js
     script(type='text/javascript' src='/admin/plugins/jquery-countto/jquery.countTo.min.js')
     script(type='text/javascript' src='/admin/plugins/raphael/raphael.min.js')
     script(type='text/javascript' src='/admin/plugins/morrisjs/morris.min.js')
     script(type='text/javascript' src='/admin/plugins/momentjs/moment.min.js')
+    script(type='text/javascript' src='/admin/plugins/bootstrap-material-datetimepicker/js/bootstrap-material-datetimepicker.min.js')
+    script(type='text/javascript' src='/admin/plugins/bootstrap-select/js/bootstrap-select.min.js')
     script(type='text/javascript' src='/admin/js/pages/index.js')
+    script(type='text/javascript').
+        $(document).ready(function() {
+            $('.date').bootstrapMaterialDatePicker({ weekStart : 0, time: false });
+        })
 
 block content
     .container-fluid
         .block-header
             h2 DASHBOARD
-        .row.clearfix
-            .col-lg-12.col-md-12.col-sm-12.col-xs-12
-                .card
-                    .header
-                        h2 REVENUE IN WEEK
-                        ul.header-dropdown.m-r--5
-                            li.dropdown
-                                a.dropdown-toggle(href='javascript:void(0);' data-toggle='dropdown' role='button' aria-haspopup='true' aria-expanded='false')
-                                    i.material-icons more_vert
-                                ul.dropdown-menu.pull-right
-                                    li
-                                        a.load-chart-btn(href='javascript:void(0);' data-time='thisWeek' data-type='revenue' data-message='REVENUE IN WEEK') This Week
-                                    li
-                                        a.load-chart-btn(href='javascript:void(0);' data-time='lastWeek' data-type='revenue' data-message='REVENUE IN LAST WEEK') Last Week
-                                    li
-                                        a.load-chart-btn(href='javascript:void(0);' data-time='thisMonth' data-type='revenue' data-message='REVENUE IN MONTH') This Month
-                                    li
-                                        a.load-chart-btn(href='javascript:void(0);' data-time='lastMonth' data-type='revenue' data-message='REVENUE IN LAST MONTH') Last Month
-                    .body
-                        #line_chart.graph
+        .col-lg-12.col-md-12.col-sm-12.col-xs-12
+            .card
+                .body
+                    .row.clearfix
+                        .col-sm-2
+                            b From
+                            .input-group
+                                .form-line
+                                    input.form-control.date(type='text' name='input-ofrom' placeholder='From Date')
+                                label
                         
-            .col-lg-4.col-md-4.col-sm-12.col-xs-12
-                .card
-                    .header
-                        h2 RATIO OF PRODUCTS IN THIS WEEK
-                        ul.header-dropdown.m-r--5
-                            li.dropdown
-                                a.dropdown-toggle(href='javascript:void(0);' data-toggle='dropdown' role='button' aria-haspopup='true' aria-expanded='false')
-                                    i.material-icons more_vert
-                                ul.dropdown-menu.pull-right
-                                    li
-                                        a.load-chart-btn(href='javascript:void(0);' data-time='thisWeek' data-type='ratio' data-message='RATIO OF PRODUCTS IN THIS WEEK') This Week
-                                    li
-                                        a.load-chart-btn(href='javascript:void(0);' data-time='lastWeek' data-type='ratio' data-message='RATIO OF PRODUCTS IN LAST WEEK') Last Week
-                                    li
-                                        a.load-chart-btn(href='javascript:void(0);' data-time='thisMonth' data-type='ratio' data-message='RATIO OF PRODUCTS IN THIS MONTH') This Month
-                                    li
-                                        a.load-chart-btn(href='javascript:void(0);' data-time='lastMonth' data-type='ratio' data-message='RATIO OF PRODUCTS IN LAST MONTH') Last Month
-                    .body
-                        #donut_chart.graph
-            .col-lg-8.col-md-8.col-sm-12.col-xs-12
-                .card
-                    .header
-                        h2 QUANTITY OF ORDER IN WEEK
-                        ul.header-dropdown.m-r--5
-                            li.dropdown
-                                a.dropdown-toggle(href='javascript:void(0);' data-toggle='dropdown' role='button' aria-haspopup='true' aria-expanded='false')
-                                    i.material-icons more_vert
-                                ul.dropdown-menu.pull-right
-                                    li
-                                        a.load-chart-btn(href='javascript:void(0);' data-time='thisWeek' data-type='order_quantity' data-message='QUANTITY OF ORDER IN THIS WEEK') This Week
-                                    li
-                                        a.load-chart-btn(href='javascript:void(0);' data-time='lastWeek' data-type='order_quantity' data-message='QUANTITY OF ORDER IN LAST WEEK') Last Week
-                                    li
-                                        a.load-chart-btn(href='javascript:void(0);' data-time='thisMonth' data-type='order_quantity' data-message='QUANTITY OF ORDER IN THIS MONTH') This Month
-                                    li
-                                        a.load-chart-btn(href='javascript:void(0);' data-time='lastMonth' data-type='order_quantity' data-message='QUANTITY OF ORDER IN LAST MONTH') Last Month
-                    .body
-                        #bar_chart.graph
+                        .col-sm-2
+                            b To
+                            .input-group
+                                .form-line
+                                    input.form-control.date(type='text' name='input-oto' placeholder='To Date')
+                                label
 
-            .col-lg-4.col-md-4.col-sm-12.col-xs-12
-                .card
-                    .header
-                        h2 RATIO REVENUE BY CITIES THIS WEEK
-                        ul.header-dropdown.m-r--5
-                            li.dropdown
-                                a.dropdown-toggle(href='javascript:void(0);' data-toggle='dropdown' role='button' aria-haspopup='true' aria-expanded='false')
-                                    i.material-icons more_vert
-                                ul.dropdown-menu.pull-right
-                                    li
-                                        a.load-chart-btn(href='javascript:void(0);' data-time='thisWeek' data-type='city_revenue_ratio' data-message='RATIO REVENUE BY CITIES THIS WEEK') This Week
-                                    li
-                                        a.load-chart-btn(href='javascript:void(0);' data-time='lastWeek' data-type='city_revenue_ratio' data-message='RATIO REVENUE BY CITIES LAST WEEK') Last Week
-                                    li
-                                        a.load-chart-btn(href='javascript:void(0);' data-time='thisMonth' data-type='city_revenue_ratio' data-message='RATIO REVENUE BY CITIES THIS MONTH') This Month
-                                    li
-                                        a.load-chart-btn(href='javascript:void(0);' data-time='lastMonth' data-type='city_revenue_ratio' data-message='RATIO REVENUE BY CITIES LAST MONTH') Last Month
-                    .body
-                        #city_ratio_chart.graph
+                        .col-sm-3
+                            b Group By
+                            .input-group
+                                .form-line
+                                    select.form-control(name='select-group')
+                                        option(value='' disabled selected) Nothing Selected
+                                        option(value='$dayOfWeek') Day Of Week
+                                        option(value='$dayOfMonth') Day Of Month
+                                        option(value='$dayOfYear') Day Of Year
+                                        option(value='$week') Week
+                                        option(value='$month') Month
+                                        option(value='$year') Year
+                                label
 
-            .col-lg-8.col-md-8.col-sm-12.col-xs-12
-                .card
-                    .header
-                        h2 QUANTITY OF ORDER IN TIME SLOT THIS WEEK
-                        ul.header-dropdown.m-r--5
-                            li.dropdown
-                                a.dropdown-toggle(href='javascript:void(0);' data-toggle='dropdown' role='button' aria-haspopup='true' aria-expanded='false')
-                                    i.material-icons more_vert
-                                ul.dropdown-menu.pull-right
-                                    li
-                                        a.load-chart-btn(href='javascript:void(0);' data-time='thisWeek' data-type='order_quantity_in_hour' data-message='QUANTITY OF ORDER IN TIME SLOT THIS WEEK') This Week
-                                    li
-                                        a.load-chart-btn(href='javascript:void(0);' data-time='lastWeek' data-type='order_quantity_in_hour' data-message='QUANTITY OF ORDER IN TIME SLOT LAST WEEK') Last Week
-                                    li
-                                        a.load-chart-btn(href='javascript:void(0);' data-time='thisMonth' data-type='order_quantity_in_hour' data-message='QUANTITY OF ORDER IN TIME SLOT THIS MONTH') This Month
-                                    li
-                                        a.load-chart-btn(href='javascript:void(0);' data-time='lastMonth' data-type='order_quantity_in_hour' data-message='QUANTITY OF ORDER IN TIME SLOT LAST MONTH') Last Month
-                    .body
-                        #order_quantity_in_hour.graph
+                        .col-sm-3
+                            b Charts To Load
+                            .input-group
+                                .form-line
+                                    select.form-control.show-tick(multiple data-selected-text-format='count' name='select-datatype' data-actions-box='true')
+                                        option(value='revenue') Revenue
+                                        option(value='ratio') Ratio Of Products
+                                        option(value='order_quantity') Quantity Of Orders
+                                        option(value='city_revenue_ratio') Ratio Revenue By Cities
+                                        option(value='order_quantity_in_hour') Quantity Of Orders In Time Slot
+                                label
+
+                        .col-sm-2
+                            b Load Charts
+                            .input-group.m-t-5
+                                button#load-charts-btn.btn.bg-indigo.waves-effect Load
+
+
+        .col-lg-12.col-md-12.col-sm-12.col-xs-12
+            .card
+                .header
+                    h2 REVENUE
+                .body
+                    #line_chart.graph
+                    
+        .col-lg-4.col-md-4.col-sm-12.col-xs-12
+            .card
+                .header
+                    h2 RATIO OF PRODUCTS
+                .body
+                    #donut_chart.graph
+        .col-lg-8.col-md-8.col-sm-12.col-xs-12
+            .card
+                .header
+                    h2 QUANTITY OF ORDER
+                .body
+                    #bar_chart.graph
+
+        .col-lg-4.col-md-4.col-sm-12.col-xs-12
+            .card
+                .header
+                    h2 RATIO REVENUE BY CITIES
+                .body
+                    #city_ratio_chart.graph
+
+        .col-lg-8.col-md-8.col-sm-12.col-xs-12
+            .card
+                .header
+                    h2 QUANTITY OF ORDER IN TIME SLOT
+                .body
+                    #order_quantity_in_hour.graph

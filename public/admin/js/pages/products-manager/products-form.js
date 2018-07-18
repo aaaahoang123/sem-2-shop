@@ -183,7 +183,7 @@ $("#btn-submit").click(function () {
         };
 
         var req = new XMLHttpRequest();
-        req.open("POST", "http://localhost:3000/api/products");
+        req.open("POST", "/api/products");
         req.setRequestHeader("Content-Type", "application/json");
         req.onload = function () {
             console.log(this.responseText);

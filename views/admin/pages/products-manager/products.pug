@@ -1,5 +1,8 @@
 extends ../../layouts/master
 
+block title
+    title Products
+
 block extra-css
     link(rel='stylesheet' href='/admin/plugins/jquery-datatable/skin/bootstrap/css/dataTables.bootstrap.min.css')
     link(rel='stylesheet' href='/admin/plugins/sweetalert/sweetalert.min.css')
@@ -66,6 +69,7 @@ block content
                                         th.text-center IMAGE
                                         th.text-center NAME
                                         th.text-center ACTION
+                                        th(title='Set as slice').text-center SET Slice
                                 tbody.text-center
                                     - let length = products.length;
                                     - for (let i = 0; i < length; i ++)
@@ -82,6 +86,12 @@ block content
                                                     i.material-icons mode_edit
                                                 button.btn.btn-link.waves-effect(type='button', data-type="ajax-loader" data-p=products[i])
                                                     i.material-icons delete
+                                            td
+                                                -let check = false;
+                                                - for (let k=0; k<carousel.length; k++)
+                                                    - if (carousel[k] === products[i].code) check = true;
+                                                input(id=products[i].code type='checkbox' value=products[i].code checked=check).chk-col-blue
+                                                label(for=products[i].code)
                     - if (type === 2)
                         - let limit = ''
                         - let q = ''

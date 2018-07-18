@@ -13,12 +13,12 @@ router
         res.render('admin/pages/sign-in');
     })
     .post('/', accountController.getOne, accountController.comparePassword, credentialController.insertOne, (req, res) => {
-        console.log(res.locals);
         if (res.locals.errs) {
             res.render('admin/pages/sign-in', {account: req.body});
             return;
         }
         res.cookie('token', res.locals.credential.token);
+        res.cookie('username', res.locals.account.username);
         res.render('index', {
             title: 'Login success',
             detail: 'Welcome to our product',
@@ -32,7 +32,7 @@ router
         res.render('admin/pages/index', {path: '/'});
     })
 
-    .get('/orders', cdController.getAllCities, orderController.getList, orderController.responseOrdersTable)
+    .get('/orders', cdController.getAllCities, orderController.getList, orderController.countUnpaid, orderController.responseOrdersTable)
     .put('/orders/:type/:_id', orderController.editOne, orderController.responseJson)
     .get('/orders/create', cdController.getAllCities, (req, res) => res.render('admin/pages/orders/order-form', {path: '/orders/create'}))
     .post('/orders/create', productController.setSelectedProductCodeArrayFromCart,
@@ -44,9 +44,7 @@ router
                     path: '/orders/create',
                 });
             } else {
-                res.render('index', {
-                    link: '/manager/orders/create'
-                });
+                res.redirect('/manager/orders/create?message=add-success');
             }
         });
 
